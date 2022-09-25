@@ -28,7 +28,6 @@ Each assay contains:
  - Metrics (and their utility)
 2. `spec.md` with the assay sequencing library specification (defined with [`seqspec`](https://github.com/IGVF/seqspec))
 3. `example.ipynb` a Google Colab notebook executing the atomic workflow
-4. `data/` a folder containing example input data
 
 **Todo**: add contributions and citations as well as references (in the README.md) to the the workflow components.
 
