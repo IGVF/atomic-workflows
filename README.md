@@ -21,11 +21,11 @@ This repository contains standards and pipelines for processing various assay an
 Each assay contains:
 
 1. `README.md` with details on
-   a. Inputs
-   b. Preprocessing tools
-   c. Preprocessing steps
-   d . Outputs
-   e. Metrics (and their utility)
+ - Inputs
+ - Preprocessing tools
+ - Preprocessing steps
+ - Outputs
+ - Metrics (and their utility)
 2. `spec.md` with the assay sequencing library specification (defined with [`seqspec`](https://github.com/IGVF/seqspec))
 3. `example.ipynb` a Google Colab notebook executing the atomic workflow
 4. `data/` a folder containing example input data
@@ -39,6 +39,6 @@ Each assay contains:
 - [Oxford Nanopore](sequencing/nanopore/)
 
 Each sequencing company contains a `README.md` with details on
-a. Platforms produced by the company
-b. Platform specific concerns
-c. Methods for transforming platform specific files to FASTQs
+1. Platforms produced by the company
+2. Platform specific concerns
+3. Methods for transforming platform specific files to FASTQs
