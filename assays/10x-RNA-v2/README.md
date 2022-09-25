@@ -7,8 +7,8 @@ The 10x-RNA-v2 assay generates a library of DNA that is subsequently sequenced. 
 **Note**: sequencing platforms may have differing processing steps prior to FASTQ generation. Please see [sequencing](../sequencing) for more information.
 
 1. FASTQ Files
-   a. R1.fastq.gz (contains the cell barcode and UMI)
-   b. R2.fastq.gz (contains the cDNA)
+  - R1.fastq.gz (contains the cell barcode and UMI)
+  - R2.fastq.gz (contains the cDNA)
 
 ## Preprocessing tools
 
