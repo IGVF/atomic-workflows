@@ -1,6 +1,6 @@
 # Atomic Workflows
 
-This repository contains standards and pipelines for processing various assay and sequencing-platform data types. If you'd like to modify an existing workflow or contribute a new one please see the contribution guidelines here: [CONTRIBUTING.md](CONTRIBUTING.md).
+This repository contains standards and pipelines for processing various assay and sequencing-platform data types. If you'd like to modify an existing workflow or contribute a new one please see the [contribution guidelines](CONTRIBUTING.md).
 
 ## Single-cell preprocessing
 
