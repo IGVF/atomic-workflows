@@ -1,12 +1,12 @@
 # Contributing
 
-Thank you for wanting to contribute. If you have a bug please create an issue. The issue should contain
+Thank you for your interest in contributing. If you have a bug to report or a question about an atomic workflow please create an issue. In the case of a bug report, the issue should contain
 
 - the command ran,
 - the error message, and
 - the compute environment (package and language versions)
 
-If you'd like to add a workflow or make modifications to an existing one please do the following:
+If you'd like to add a workflow, or make modifications to an existing one, please do the following:
 
 1. Fork the project.
 ```
@@ -44,4 +44,4 @@ git push origin cool-new-feature
 	-  `spec.md`  with the assay sequencing library specification (defined with  [`seqspec`](https://github.com/IGVF/seqspec))
 	-  `example.ipynb`  a Google Colab notebook executing the atomic workflow
 
-**Note**: If you are unfamilar with pull requests, you find more information on the [GitHub help page.](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)
+**Note**: If you are unfamilar with pull requests, you can find more information on the [GitHub help page.](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)
