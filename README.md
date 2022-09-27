@@ -4,8 +4,8 @@ This repository contains standards and pipelines for processing various assay an
 
 ## Single-cell preprocessing
 
-- [10x-RNA-v2](assays/10x-RNA-v2/): 10x Genomics single-ccell RNAseq v2
-- [10x-RNA-v3](assays/10x-RNA-v3/): 10x Genomics single-ccell RNAseq v3
+- [10x-RNA-v2](assays/10x-RNA-v2/): 10x Genomics single-cell RNAseq v2
+- [10x-RNA-v3](assays/10x-RNA-v3/): 10x Genomics single-cell RNAseq v3
 - [10x-RNA-ATAC](assays/10x-RNA-ATAC/): 10x Genomics Multiome (single-cell RNA/ATAC)
 - [CEL-Seq](assays/CEL-Seq/): barcoding and pooling samples before amplifying RNA with in vitro transcription (v1)
 - [CEL-Seq2](assays/CEL-Seq2/): Improvement CEL-Seq, now with UMIs! Implemented on Fluidigm's C1 (v2)
@@ -15,7 +15,7 @@ This repository contains standards and pipelines for processing various assay an
 - [STRT-seq-2i](assays/STRT-seq-2i/): STRT-seq performed on microwells with dual-index 5 prime
 - [STRT-seq-C1](assays/STRT-seq-C1/): STRT-seq performed on microfluidics Fluidigm C1
 - [Smart-seq2](assays/Smart-seq2/): full-length rna-seq from individual cells
-- [Smart-seq3](assays/Smart-seq3/): full-length and five-prime rna-seq from individual cells
+- [Smart-seq3](assays/Smart-seq3/): full-length and five-prime RNA-seq from individual cells
 - [sci-RNA-seq](assays/sci-RNA-seq/): combinatorial single-cell RNA-seq
 
 Each assay contains:
