@@ -4,8 +4,8 @@ This repository contains standards and pipelines for processing various assay an
 
 ## Single-cell preprocessing
 
-- [10x-RNA-v2](assays/10x-RNA-v2/): 10x Genomics single-cell RNAseq v2
-- [10x-RNA-v3](assays/10x-RNA-v3/): 10x Genomics single-cell RNAseq v3
+- [10x-RNA-v2](assays/10x-RNA-v2/): 10x Genomics single-cell RNA-seq v2
+- [10x-RNA-v3](assays/10x-RNA-v3/): 10x Genomics single-cell RNA-seq v3
 - [10x-RNA-ATAC](assays/10x-RNA-ATAC/): 10x Genomics Multiome (single-cell RNA/ATAC)
 - [CEL-Seq](assays/CEL-Seq/): barcoding and pooling samples before amplifying RNA with in vitro transcription (v1)
 - [CEL-Seq2](assays/CEL-Seq2/): Improvement CEL-Seq, now with UMIs! Implemented on Fluidigm's C1 (v2)
