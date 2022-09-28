@@ -11,6 +11,7 @@ This repository contains standards and pipelines for processing various assay an
 - [CEL-Seq2](assays/CEL-Seq2/): Improvement CEL-Seq, now with UMIs! Implemented on Fluidigm's C1 (v2)
 - [Quartz-seq](assays/Quartz-seq/): Riken technology for single-cell RNA-seq
 - [Quartz-seq2](assays/Quartz-seq2/): Added umis to Quartz-seq (v2)
+- [SHARE-seq](assays/SHARE-seq/): combinatorial indexing stratgy for RNA + chromatin accessibility
 - [STRT-seq](assays/STRT-seq/): single-cell tagged reverse transcripton
 - [STRT-seq-2i](assays/STRT-seq-2i/): STRT-seq performed on microwells with dual-index 5 prime
 - [STRT-seq-C1](assays/STRT-seq-C1/): STRT-seq performed on microfluidics Fluidigm C1
