@@ -28,7 +28,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNNNNNNNNNN</pre>
    - min_len: 16
    - max_len: 16
-   - onlist: cell_bc_onlist.txt
+   - onlist: {'filename': 'cell_bc_onlist.txt', 'md5': None}
    </details>
 4. <details><summary>UMI</summary>
 
@@ -94,7 +94,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNNNNNNNNNN</pre>
    - min_len: 16
    - max_len: 16
-   - onlist: cell_bc_onlist.txt
+   - onlist: {'filename': 'cell_bc_onlist.txt', 'md5': None}
    </details>
 3. <details><summary>Spacer</summary>
 

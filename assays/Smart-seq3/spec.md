@@ -20,7 +20,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
    - min_len: 10
    - max_len: 10
-   - onlist: i5_onlist.txt
+   - onlist: {'filename': 'i5_onlist.txt', 'md5': None}
    </details>
 3. <details><summary>s5</summary>
 
@@ -92,7 +92,7 @@
     - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
     - min_len: 8
     - max_len: 8
-    - onlist: i7_onlist.txt
+    - onlist: {'filename': 'i7_onlist.txt', 'md5': None}
     </details>
 12. <details><summary>illumina_p7</summary>
 
@@ -118,7 +118,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
    - min_len: 10
    - max_len: 10
-   - onlist: i5_onlist.txt
+   - onlist: {'filename': 'i5_onlist.txt', 'md5': None}
    </details>
 3. <details><summary>s5</summary>
 
@@ -166,7 +166,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
    - min_len: 8
    - max_len: 8
-   - onlist: i7_onlist.txt
+   - onlist: {'filename': 'i7_onlist.txt', 'md5': None}
    </details>
 9. <details><summary>illumina_p7</summary>
 

@@ -20,7 +20,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNNNN</pre>
    - min_len: 10
    - max_len: 10
-   - onlist: i5_onlist.txt
+   - onlist: {'filename': 'i5_onlist.txt', 'md5': None}
    </details>
 3. <details><summary>truseq_read_1_adapter</summary>
 
@@ -68,7 +68,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNNNN</pre>
    - min_len: 10
    - max_len: 10
-   - onlist: i7_onlist.txt
+   - onlist: {'filename': 'i7_onlist.txt', 'md5': None}
    </details>
 9. <details><summary>illumina_p7</summary>
 

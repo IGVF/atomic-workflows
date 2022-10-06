@@ -20,7 +20,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
    - min_len: 8
    - max_len: 8
-   - onlist: RNA_i5_onlist.txt
+   - onlist: {'filename': 'RNA_i5_onlist.txt', 'md5': None}
    </details>
 3. <details><summary>s5</summary>
 
@@ -92,7 +92,7 @@
     - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
     - min_len: 8
     - max_len: 8
-    - onlist: bc_onlist.txt
+    - onlist: {'filename': 'bc_onlist.txt', 'md5': None}
     </details>
 12. <details><summary>linker2</summary>
 
@@ -108,7 +108,7 @@
     - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
     - min_len: 8
     - max_len: 8
-    - onlist: bc_onlist.txt
+    - onlist: {'filename': 'bc_onlist.txt', 'md5': None}
     </details>
 14. <details><summary>linker3</summary>
 
@@ -124,7 +124,7 @@
     - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
     - min_len: 8
     - max_len: 8
-    - onlist: bc_onlist.txt
+    - onlist: {'filename': 'bc_onlist.txt', 'md5': None}
     </details>
 16. <details><summary>illumina_p7</summary>
 
@@ -132,7 +132,7 @@
     - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">ATCTCGTATGCCGTCTTCTGCTTG</pre>
     - min_len: 24
     - max_len: 24
-    - onlist: bc_onlist.txt
+    - onlist: {'filename': 'bc_onlist.txt', 'md5': None}
     </details>
 ###### ATAC
 <pre style="overflow-x: auto; text-align: left; background-color: #f6f8fa">AATGATACGGCGACCACCGAGATCTACACNNNNNNNNTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXCTGTCTCTTATACACATCTCCGAGCCCACGAGACTCGGACGATCATGGGNNNNNNNNCAAGTATGCAGCGCGCTCAAGCACGTGGATNNNNNNNNAGTCGTACGCCGATGCGAAACATCGGCCACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG</pre>
@@ -150,7 +150,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
    - min_len: 10
    - max_len: 10
-   - onlist: ATAC_i5_onlist.txt
+   - onlist: {'filename': 'ATAC_i5_onlist.txt', 'md5': None}
    </details>
 3. <details><summary>s5</summary>
 
@@ -206,7 +206,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
    - min_len: 8
    - max_len: 8
-   - onlist: bc_onlist.txt
+   - onlist: {'filename': 'bc_onlist.txt', 'md5': None}
    </details>
 10. <details><summary>linker2</summary>
 
@@ -222,7 +222,7 @@
     - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
     - min_len: 8
     - max_len: 8
-    - onlist: bc_onlist.txt
+    - onlist: {'filename': 'bc_onlist.txt', 'md5': None}
     </details>
 12. <details><summary>linker3</summary>
 
@@ -238,7 +238,7 @@
     - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
     - min_len: 8
     - max_len: 8
-    - onlist: bc_onlist.txt
+    - onlist: {'filename': 'bc_onlist.txt', 'md5': None}
     </details>
 14. <details><summary>illumina_p7</summary>
 

@@ -44,7 +44,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNNNNNNNNN</pre>
    - min_len: 15
    - max_len: 15
-   - onlist: cell_bc_onlist.txt
+   - onlist: {'filename': 'cell_bc_onlist.txt', 'md5': None}
    </details>
 6. <details><summary>umi</summary>
 

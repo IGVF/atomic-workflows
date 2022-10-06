@@ -76,7 +76,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNN</pre>
    - min_len: 6
    - max_len: 6
-   - onlist: sample_bc_onlist.txt
+   - onlist: {'filename': 'sample_bc_onlist.txt', 'md5': None}
    </details>
 10. <details><summary>illumina_p7</summary>
 

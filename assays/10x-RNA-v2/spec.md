@@ -28,7 +28,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNNNNNNNNNN</pre>
    - min_len: 16
    - max_len: 16
-   - onlist: 737K-august-2016.txt.gz
+   - onlist: {'filename': '737K-august-2016.txt.gz', 'md5': None}
    </details>
 4. <details><summary>UMI</summary>
 
@@ -68,7 +68,7 @@
    - sequence: <pre style="overflow-x: auto; text-align: left; margin: 0; display: inline;">NNNNNNNN</pre>
    - min_len: 8
    - max_len: 8
-   - onlist: sample_bc_onlist.txt
+   - onlist: {'filename': 'sample_bc_onlist.txt', 'md5': None}
    </details>
 9. <details><summary>Illumina P7</summary>
 
