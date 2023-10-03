@@ -21,6 +21,7 @@ task rna_align_cellatlas {
         File genome_fasta
         File? feature_barcodes
         File genome_gtf
+        File barcode_whitelist
         
         String? subpool = "none"
         String genome_name # GRCh38, mm10
@@ -75,7 +76,10 @@ task rna_align_cellatlas {
         echo '------ RNA bash commands ------' 1>&2
         
         jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
-        jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json | bash
+        
+        kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
+        
+        kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) -w ~{barcode_whitelist} -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
         
         gzip -k ~{directory}
 

@@ -16,8 +16,9 @@ workflow wf_rna {
         Array[File] fastqs
         File seqspec
         File genome_fasta
-        File feature_barcodes
+        File? feature_barcodes
         File genome_gtf
+        File barcode_whitelist
         
         String? subpool = "none"
         String genome_name # GRCh38, mm10
@@ -36,6 +37,7 @@ workflow wf_rna {
             seqspec = seqspec,
             genome_fasta = genome_fasta,
             feature_barcodes = feature_barcodes,
+            barcode_whitelist = barcode_whitelist,
             genome_gtf = genome_gtf,
             subpool = subpool,
             genome_name = genome_name,
