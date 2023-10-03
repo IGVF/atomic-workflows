@@ -19,7 +19,7 @@ task rna_align_cellatlas {
         String modality = "rna"
         File seqspec
         File genome_fasta
-        File feature_barcodes
+        File? feature_barcodes
         File genome_gtf
         
         String? subpool = "none"
@@ -69,7 +69,7 @@ task rna_align_cellatlas {
         -o ${directory} \
         -s ~{seqspec} \
         -fa ~{genome_fasta} \
-        -fb ~{feature_barcodes} \
+        ~{"-fb " + feature_barcodes} \
         -g ~{genome_gtf} \
         -m ~{modality} \
         ~{sep=" " fastqs}
