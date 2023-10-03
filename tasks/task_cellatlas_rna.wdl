@@ -53,8 +53,6 @@ task rna_align_cellatlas {
     
     String alignment_log = "${prefix}.rna.align.cellatlas.${genome_name}/run_info.json"
 
-    #String monitor_log = "rna_align_monitor.log"
-
     command <<<
     
         set -e
