@@ -63,14 +63,14 @@ task rna_align_cellatlas {
         # cellatlas build
     
         echo '------ cell atlas build ------' 1>&2
-    
+           
         cellatlas build \
-        -o ${directory} \
+        -o ~{directory} \
+        -m ~{modality} \
         -s ~{seqspec} \
         -fa ~{genome_fasta} \
-        ~{"-fb " + feature_barcodes} \
         -g ~{genome_gtf} \
-        -m ~{modality} \
+        ~{"-fb " + feature_barcodes} \
         ~{sep=" " fastqs}
         
         echo '------ RNA bash commands ------' 1>&2
