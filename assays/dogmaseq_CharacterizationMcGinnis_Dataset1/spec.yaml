@@ -1,0 +1,253 @@
+!Assay
+seqspec_version: 0.0.0
+assay: ''
+sequencer: ''
+name: dogmaseq
+doi: ''
+publication_date: ''
+description: ''
+modalities:
+- atac
+- rna
+- tag
+lib_struct: ''
+assay_spec:
+- !Region
+  parent_id: null
+  region_id: atac
+  region_type: atac
+  name: atac
+  sequence_type: joined
+  sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCAGACGCGNNNNNNNNNNNNNNNNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  min_len: 124
+  max_len: 124
+  onlist: null
+  regions:
+  - !Region
+    parent_id: atac
+    region_id: ATAC_1_S358_L007_R1_001.fastq.gz
+    region_type: fastq
+    name: ATAC_1_S358_L007_R1_001.fastq.gz
+    sequence_type: joined
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    min_len: 50
+    max_len: 50
+    onlist: null
+    regions:
+    - !Region
+      parent_id: ATAC_1_S358_L007_R1_001.fastq.gz
+      region_id: gdna-1
+      region_type: gdna
+      name: gdna-1
+      sequence_type: random
+      sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      min_len: 50
+      max_len: 50
+      onlist: null
+      regions: null
+  - !Region
+    parent_id: atac
+    region_id: ATAC_1_S358_L007_R2_001.fastq.gz
+    region_type: fastq
+    name: ATAC_1_S358_L007_R2_001.fastq.gz
+    sequence_type: joined
+    sequence: CAGACGCGNNNNNNNNNNNNNNNN
+    min_len: 24
+    max_len: 24
+    onlist: null
+    regions:
+    - !Region
+      parent_id: ATAC_1_S358_L007_R2_001.fastq.gz
+      region_id: linker-atac
+      region_type: linker
+      name: linker-atac
+      sequence_type: fixed
+      sequence: CAGACGCG
+      min_len: 8
+      max_len: 8
+      onlist: null
+      regions: null
+    - !Region
+      parent_id: ATAC_1_S358_L007_R2_001.fastq.gz
+      region_id: barcode-atac
+      region_type: barcode
+      name: barcode-atac
+      sequence_type: onlist
+      sequence: NNNNNNNNNNNNNNNN
+      min_len: 16
+      max_len: 16
+      onlist: !Onlist
+        filename: ATA-737K-arc-v1_rc.txt
+        md5: 8d590050a51908cbfd8b027011714d43
+      regions: null
+  - !Region
+    parent_id: atac
+    region_id: ATAC_1_S358_L007_R3_001.fastq.gz
+    region_type: fastq
+    name: ATAC_1_S358_L007_R3_001.fastq.gz
+    sequence_type: joined
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    min_len: 50
+    max_len: 50
+    onlist: null
+    regions:
+    - !Region
+      parent_id: ATAC_1_S358_L007_R3_001.fastq.gz
+      region_id: gdna-2
+      region_type: gdna
+      name: gdna-2
+      sequence_type: random
+      sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      min_len: 50
+      max_len: 50
+      onlist: null
+      regions: null
+- !Region
+  parent_id: null
+  region_id: rna
+  region_type: rna
+  name: rna
+  sequence_type: joined
+  sequence: NNNNNNNNNNNNNNNNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  min_len: 118
+  max_len: 118
+  onlist: null
+  regions:
+  - !Region
+    parent_id: rna
+    region_id: GEX_1_S41_L007_R1_001.fastq.gz
+    region_type: fastq
+    name: GEX_1_S41_L007_R1_001.fastq.gz
+    sequence_type: joined
+    sequence: NNNNNNNNNNNNNNNNXXXXXXXXXXXX
+    min_len: 28
+    max_len: 28
+    onlist: null
+    regions:
+    - !Region
+      parent_id: GEX_1_S41_L007_R1_001.fastq.gz
+      region_id: barcode-rna
+      region_type: barcode
+      name: barcode-rna
+      sequence_type: onlist
+      sequence: NNNNNNNNNNNNNNNN
+      min_len: 16
+      max_len: 16
+      onlist: !Onlist
+        filename: RNA-737K-arc-v1.txt
+        md5: a88cd21e801ae6f9a7d9a48b67ccf693
+      regions: null
+    - !Region
+      parent_id: GEX_1_S41_L007_R1_001.fastq.gz
+      region_id: umi-rna
+      region_type: umi
+      name: umi-rna
+      sequence_type: random
+      sequence: XXXXXXXXXXXX
+      min_len: 12
+      max_len: 12
+      onlist: null
+      regions: null
+  - !Region
+    parent_id: rna
+    region_id: GEX_1_S41_L007_R2_001.fastq.gz
+    region_type: fastq
+    name: GEX_1_S41_L007_R2_001.fastq.gz
+    sequence_type: joined
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    min_len: 90
+    max_len: 90
+    onlist: null
+    regions:
+    - !Region
+      parent_id: GEX_1_S41_L007_R2_001.fastq.gz
+      region_id: cdna
+      region_type: cdna
+      name: cdna
+      sequence_type: random
+      sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      min_len: 90
+      max_len: 90
+      onlist: null
+      regions: null
+- !Region
+  parent_id: null
+  region_id: tag
+  region_type: tag
+  name: tag
+  sequence_type: joined
+  sequence: NNNNNNNNNNNNNNNNXXXXXXXXXXXXNNNNNNNNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  min_len: 118
+  max_len: 118
+  onlist: null
+  regions:
+  - !Region
+    parent_id: tag
+    region_id: MULTI_1_S44_L007_R1_001.fastq.gz
+    region_type: fastq
+    name: MULTI_1_S44_L007_R1_001.fastq.gz
+    sequence_type: joined
+    sequence: NNNNNNNNNNNNNNNNXXXXXXXXXXXX
+    min_len: 28
+    max_len: 28
+    onlist: null
+    regions:
+    - !Region
+      parent_id: MULTI_1_S44_L007_R1_001.fastq.gz
+      region_id: barcode-tag
+      region_type: barcode
+      name: barcode-tag
+      sequence_type: onlist
+      sequence: NNNNNNNNNNNNNNNN
+      min_len: 16
+      max_len: 16
+      onlist: !Onlist
+        filename: RNA-737K-arc-v1.txt
+        md5: a88cd21e801ae6f9a7d9a48b67ccf693
+      regions: null
+    - !Region
+      parent_id: MULTI_1_S44_L007_R1_001.fastq.gz
+      region_id: umi-tag
+      region_type: umi
+      name: umi-tag
+      sequence_type: random
+      sequence: XXXXXXXXXXXX
+      min_len: 12
+      max_len: 12
+      onlist: null
+      regions: null
+  - !Region
+    parent_id: tag
+    region_id: MULTI_1_S44_L007_R2_001.fastq.gz
+    region_type: fastq
+    name: MULTI_1_S44_L007_R2_001.fastq.gz
+    sequence_type: joined
+    sequence: NNNNNNNNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    min_len: 90
+    max_len: 90
+    onlist: null
+    regions:
+    - !Region
+      parent_id: MULTI_1_S44_L007_R2_001.fastq.gz
+      region_id: tag-feature-barcode
+      region_type: tag
+      name: tag
+      sequence_type: onlist
+      sequence: NNNNNNNN
+      min_len: 8
+      max_len: 8
+      onlist: !Onlist
+        filename: multi_feature_barcode.txt
+        md5: 735156d0f4d71376003eb9575ec006d3
+      regions: null
+    - !Region
+      parent_id: MULTI_1_S44_L007_R2_001.fastq.gz
+      region_id: linker-tag
+      region_type: linker
+      name: linker-tag
+      sequence_type: random
+      sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      min_len: 82
+      max_len: 82
+      onlist: null
+      regions: null

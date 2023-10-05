@@ -1,0 +1,171 @@
+!Assay
+seqspec_version: 0.0.0
+assay: ''
+sequencer: ''
+name: 10xMultiome
+doi: ''
+publication_date: ''
+description: ''
+modalities:
+- rna
+- atac
+lib_struct: ''
+assay_spec:
+- !Region
+  parent_id: null
+  region_id: rna
+  region_type: rna
+  name: rna
+  sequence_type: joined
+  sequence: NNNNNNNNNNNNNNNNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  min_len: 118
+  max_len: 118
+  onlist: null
+  regions:
+  - !Region
+    parent_id: rna
+    region_id: RNA_101_S1_L004_R1_001.fastq.gz
+    region_type: fastq
+    name: RNA_101_S1_L004_R1_001.fastq.gz
+    sequence_type: joined
+    sequence: NNNNNNNNNNNNNNNNXXXXXXXXXXXX
+    min_len: 28
+    max_len: 28
+    onlist: null
+    regions:
+    - !Region
+      parent_id: RNA_101_S1_L004_R1_001.fastq.gz
+      region_id: rna-barcode
+      region_type: barcode
+      name: barcode
+      sequence_type: onlist
+      sequence: NNNNNNNNNNNNNNNN
+      min_len: 16
+      max_len: 16
+      onlist: !Onlist
+        filename: RNA-737K-arc-v1.txt
+        md5: a88cd21e801ae6f9a7d9a48b67ccf693
+      regions: null
+    - !Region
+      parent_id: RNA_101_S1_L004_R1_001.fastq.gz
+      region_id: umi
+      region_type: umi
+      name: umi
+      sequence_type: random
+      sequence: XXXXXXXXXXXX
+      min_len: 12
+      max_len: 12
+      onlist: null
+      regions: null
+  - !Region
+    parent_id: rna
+    region_id: RNA_101_S1_L004_R2_001.fastq.gz
+    region_type: fastq
+    name: RNA_101_S1_L004_R2_001.fastq.gz
+    sequence_type: joined
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    min_len: 90
+    max_len: 90
+    onlist: null
+    regions:
+    - !Region
+      parent_id: RNA_101_S1_L004_R2_001.fastq.gz
+      region_id: cDNA
+      region_type: cdna
+      name: cDNA
+      sequence_type: random
+      sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      min_len: 90
+      max_len: 90
+      onlist: null
+      regions: null
+- !Region
+  parent_id: null
+  region_id: atac
+  region_type: atac
+  name: atac
+  sequence_type: joined
+  sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCAGACGCGNNNNNNNNNNNNNNNNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  min_len: 224
+  max_len: 224
+  onlist: null
+  regions:
+  - !Region
+    parent_id: atac
+    region_id: ATAC_101_S1_L001_R1_001.fastq.gz
+    region_type: fastq
+    name: ATAC_101_S1_L001_R1_001.fastq.gz
+    sequence_type: joined
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    min_len: 100
+    max_len: 100
+    onlist: null
+    regions:
+    - !Region
+      parent_id: ATAC_101_S1_L001_R1_001.fastq.gz
+      region_id: gDNA-1
+      region_type: gdna
+      name: gDNA-1
+      sequence_type: random
+      sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      min_len: 100
+      max_len: 100
+      onlist: null
+      regions: null
+  - !Region
+    parent_id: atac
+    region_id: ATAC_101_S1_L001_R2_001.fastq.gz
+    region_type: fastq
+    name: ATAC_101_S1_L001_R2_001.fastq.gz
+    sequence_type: joined
+    sequence: CAGACGCGNNNNNNNNNNNNNNNN
+    min_len: 24
+    max_len: 24
+    onlist: null
+    regions:
+    - !Region
+      parent_id: ATAC_101_S1_L001_R2_001.fastq.gz
+      region_id: linker
+      region_type: linker
+      name: linker
+      sequence_type: fixed
+      sequence: CAGACGCG
+      min_len: 8
+      max_len: 8
+      onlist: null
+      regions: null
+    - !Region
+      parent_id: ATAC_101_S1_L001_R2_001.fastq.gz
+      region_id: atac-barcode
+      region_type: barcode
+      name: barcode
+      sequence_type: onlist
+      sequence: NNNNNNNNNNNNNNNN
+      min_len: 16
+      max_len: 16
+      onlist: !Onlist
+        filename: ATA-737K-arc-v1_rc.txt
+        md5: 8d590050a51908cbfd8b027011714d43
+      regions: null
+  - !Region
+    parent_id: atac
+    region_id: ATAC_101_S1_L001_R3_001.fastq.gz
+    region_type: fastq
+    name: ATAC_101_S1_L001_R3_001.fastq.gz
+    sequence_type: joined
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    min_len: 100
+    max_len: 100
+    onlist: null
+    regions:
+    - !Region
+      parent_id: ATAC_101_S1_L001_R3_001.fastq.gz
+      region_id: gDNA-2
+      region_type: gdna
+      name: gDNA-2
+      sequence_type: random
+      sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      min_len: 100
+      max_len: 100
+      onlist: null
+      regions: null
