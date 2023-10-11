@@ -1,13 +1,13 @@
 version 1.0
 
 # TASK
-# SHARE-atac-chromap
+# atac-chromap
 
 task atac_align_chromap {
     meta {
         version: 'v0.1'
         author: 'Eugenio Mattei (emattei@broadinstitute.org) at Broad Institute of MIT and Harvard'
-        description: 'Broad Institute of MIT and Harvard SHARE-Seq pipeline: align ATAC task using chromap'
+        description: 'Broad Institute of MIT and Harvard IGVF pipeline: align ATAC task using chromap'
     }
 
     input {
