@@ -4,7 +4,7 @@ version 1.0
 # rna-cellatlas
 
     
-task rna_align_cellatlas {
+task cellatlas_rna {
 
     meta {
         version: 'v0.1'
