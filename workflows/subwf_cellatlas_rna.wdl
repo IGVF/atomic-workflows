@@ -2,6 +2,7 @@ version 1.0
 
 # Import the tasks called by the pipeline
 import "../tasks/task_cellatlas_rna.wdl" as task_cellatlas_rna
+import "../tasks/task_cellatlas_rna.wdl" as task_cellatlas_rna
 
 workflow wf_rna {
     meta {
@@ -23,15 +24,9 @@ workflow wf_rna {
         String? subpool = "none"
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
-        
-        String? docker_image
-        
-        #Runtime parameters
-        Float? disk_factor
-        Float? memory_factor
     }
 
-    call task_cellatlas_rna.rna_align_cellatlas as rna_align_cellatlas{
+    call task_cellatlas_rna.cellatlas_rna as cellatlas{
         input:
             fastqs = fastqs,
             seqspec = seqspec,
@@ -46,9 +41,21 @@ workflow wf_rna {
             disk_factor = disk_factor,
             memory_factor = memory_factor
     }
+    
+    #add qc_rna
+    
+    call task_log_rna.log_rna as log_rna {
+        input:
+        
+            alignment_json = cellatlas.rna_alignment_json,
+            barcodes_json = cellatlas.rna_barcode_matrics_json,
+            genome_name = genome_name, 
+            prefix = prefix          
+    }
 
     output {
-        File rna_output = rna_align_cellatlas.rna_output
-        File rna_alignment_log = rna_align_cellatlas.rna_alignment_log
+        File rna_kb_output = cellatlas.rna_output
+        File rna_count_matrix = cellatlas.rna_count_matrix
+        File rna_log = log_rna.rna_logfile
     }
 }
