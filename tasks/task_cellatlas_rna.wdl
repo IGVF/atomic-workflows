@@ -15,13 +15,12 @@ task rna_align_cellatlas {
     input {
          # This task takes in input the raw RNA fastqs and their associated seqspec, processes the barcodes accordingly and aligns them to the genome.
         
-        Array[File] fastqs
+        Array[File] fastqs #These filenames must EXACTLY match the ones specified in seqspec
         String modality = "rna"
         File seqspec
         File genome_fasta
-        File? feature_barcodes
         File genome_gtf
-        File barcode_whitelist
+        Array[File] barcode_whitelists #These filenames must EXACTLY match the ones specified in seqspec
         
         String? subpool = "none"
         String genome_name # GRCh38, mm10
@@ -50,15 +49,19 @@ task rna_align_cellatlas {
     String disk_type = if disk_gb > 375 then "SSD" else "LOCAL"
 
     # Define the output names
-    String directory = '${prefix}.rna.align.cellatlas.${genome_name}'
-    
-    String alignment_log = "${prefix}.rna.align.cellatlas.${genome_name}/run_info.json"
+    String directory = "${prefix}.rna.align.cellatlas.${genome_name}"
+    String count_matrix = "${prefix}.rna.align.cellatlas.${genome_name}.tar.gz"
+    String alignment_json = "${prefix}.rna.align.cellatlas.${genome_name}/run_info.json"
+    String barcode_matrics_json = "${prefix}.rna.align.cellatlas.${genome_name}/inspect.json"
 
     command <<<
     
         set -e
 
          bash $(which monitor_script.sh) 1>&2 &
+         
+        # create empty fastq files - this won't work because atac will be present in seqspec
+        # touch $(cat ~{seqspec} | grep "fastq.gz" | cut -f2 -d ':' | sort | uniq )
 
         # cellatlas build
     
@@ -70,7 +73,6 @@ task rna_align_cellatlas {
         -s ~{seqspec} \
         -fa ~{genome_fasta} \
         -g ~{genome_gtf} \
-        ~{"-fb " + feature_barcodes} \
         ~{sep=" " fastqs}
         
         echo '------ RNA bash commands ------' 1>&2
@@ -79,15 +81,19 @@ task rna_align_cellatlas {
         
         kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
-        kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) -w ~{barcode_whitelist} -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
+        kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
         
         gzip -k ~{directory}
+        
+        tar -czvf ~{count_matrix} ${prefix}.rna.align.cellatlas.${genome_name}/counts_unfiltered/*
 
     >>>
 
     output {
         File rna_output = "~{directory}.gz"
-        File rna_alignment_log = alignment_log
+        File rna_alignment_json = alignment_json
+        File rna_barcode_matrics_json = barcode_matrics_json
+        File rna_count_matrix = count_matrix
     }
 
     runtime {
