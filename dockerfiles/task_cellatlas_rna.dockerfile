@@ -1,14 +1,19 @@
 ############################################################
-# Dockerfile for cellatlas
+# Dockerfile for IGVF single-cell pipeline cellatlas RNA task
 # Based on Debian slim
 ############################################################
 
 FROM python:3.11-slim-bullseye as builder
 
+LABEL maintainer = "Siddarth Wekhande"
+LABEL software = "IGVF single-cell pipeline"
+LABEL software.version="0.0.1"
+LABEL software.organization="IGVF"
+LABEL software.version.is-production="No"
+LABEL software.task="cellatlas_rna"
+
 # To prevent time zone prompt
 ENV DEBIAN_FRONTEND=noninteractive
-
-ENV SAMTOOLS_VERSION 1.9
 
 # Install softwares from apt repo
 RUN apt-get update && apt-get install -y \
@@ -34,16 +39,6 @@ RUN git clone https://github.com/cellatlas/cellatlas.git \
     
 # Install kb-python
 RUN pip install kb-python
-
-# Install minimap
-RUN wget --quiet "https://github.com/lh3/minimap2/releases/download/v2.24/minimap2-2.24_x64-linux.tar.bz2" \
-    && tar -jxf minimap2-2.24_x64-linux.tar.bz2 \
-    && cp minimap2-2.24_x64-linux/minimap2 /usr/local/bin
-
-# Install samtools 1.9
-RUN git clone --branch ${SAMTOOLS_VERSION} --single-branch https://github.com/samtools/samtools.git && \
-    git clone --branch ${SAMTOOLS_VERSION} --single-branch https://github.com/samtools/htslib.git && \
-    cd samtools && make && make install && cd ../ && rm -rf samtools* htslib*
 
 RUN pip uninstall -y --quiet seqspec        
 RUN pip install --quiet git+https://github.com/IGVF/seqspec.git 
