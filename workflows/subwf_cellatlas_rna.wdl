@@ -1,7 +1,7 @@
 version 1.0
 
 # Import the tasks called by the pipeline
-import "../tasks/task_correct_fastq.wdl" as task_correct_fastq
+import "../tasks/share_task_correct_fastq.wdl" as share_task_correct_fastq
 import "../tasks/task_cellatlas_rna.wdl" as task_cellatlas_rna
 import "../tasks/task_qc_rna.wdl" as task_qc_rna
 import "../tasks/task_log_rna.wdl" as task_log_rna
@@ -20,6 +20,14 @@ workflow wf_rna {
         File seqspec
         File genome_fasta
         File genome_gtf
+        String chemistry
+        # Correct-specific inputs
+        Boolean correct_barcodes = true
+        # Runtime parameters
+        Int? correct_cpus
+        Float? correct_disk_factor
+        Float? correct_memory_factor
+        String? correct_docker_image
         Array[File] barcode_whitelists
         
         String? subpool = "none"
@@ -30,13 +38,13 @@ workflow wf_rna {
     
     if ( chemistry == "shareseq" && correct_barcodes ) {
         scatter (read_pair in zip(read1, read2)) {
-            call task_correct_fastq.share_correct_fastq as correct {
+            call share_task_correct_fastq.share_correct_fastq as correct {
                 input:
                     fastq_R1 = read_pair.left,
                     fastq_R2 = read_pair.right,
                     whitelist = whitelist,
                     sample_type = "RNA",
-                    pkr = pkr,
+                    pkr = subpool,
                     prefix = prefix,
                     cpus = correct_cpus,
                     disk_factor = correct_disk_factor,

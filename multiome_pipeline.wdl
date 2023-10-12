@@ -116,6 +116,7 @@ workflow share {
                 input:
                     fastqs = fastqs_rna,
                     seqspec = seqspec,
+                    chemistry = chemistry,
                     genome_fasta = genome_fasta,
                     genome_gtf = gtf,
                     prefix = prefix,
