@@ -4,7 +4,7 @@ version 1.0
 import "tasks/10x_task_preprocess.wdl" as preprocess_tenx
 import "tasks/10x_create_barcode_mapping.wdl" as tenx_barcode_map
 import "workflows/subwf-atac.wdl" as share_atac
-import "workflows/subwf-rna-starsolo.wdl" as share_rna
+import "workflows/subwf_cellatas_rna.wdl" as subwf_rna
 import "workflows/subwf-find-dorcs.wdl" as find_dorcs
 import "tasks/share_task_joint_qc.wdl" as joint_qc
 import "tasks/task_html_report.wdl" as html_report
@@ -28,8 +28,10 @@ workflow share {
         File whitelists_tsv = 'gs://broad-buenrostro-pipeline-genome-annotations/whitelists/whitelists.tsv'
         File? whitelist
         File? whitelist_atac
-        File? whitelist_rna
+        Array[File] whitelist_rna
         String? read_format
+        
+        File seqspec
 
         # ATAC-specific inputs
         Array[File] read1_atac
@@ -57,8 +59,9 @@ workflow share {
         #Int? atac_filter_shift_minus = -4
 
         # RNA-specific inputs
-        Array[File] read1_rna
-        Array[File] read2_rna
+        #Array[File] read1_rna
+        #Array[File] read2_rna
+        Array[File] fastqs_rna
 
         File? gtf
         File? idx_tar_rna
@@ -112,19 +115,16 @@ workflow share {
     }
 
     if ( process_rna ) {
-        if ( read1_rna[0] != "" ) {
-            call share_rna.wf_rna as rna{
+        if ( fastqs_rna[0] != "" ) {
+            call subwf_rna.wf_rna as rna{
                 input:
-                    chemistry = chemistry,
-                    read1 = read1_rna,
-                    read2 = read2_rna,
-                    whitelist = select_first([whitelist_rna, whitelist_rna_, whitelist, whitelist_]),
-                    idx_tar = idx_tar_rna_,
+                    fastqs = fastqs_rna,
+                    seqspec = seqspec,
+                    genome_fasta = genome_fasta,
+                    genome_gtf = gtf,
                     prefix = prefix,
-                    pkr = subpool,
-                    genome_name = genome_name_,
-                    pipeline_modality = pipeline_modality,
-                    gene_naming = gene_naming
+                    subpool = subpool,
+                    genome_name = genome_name_
             }
         }
     }
@@ -211,13 +211,11 @@ workflow share {
         Array[File]? rna_read2_processed = rna.rna_read2_processed
 
         # RNA outputs
-        File? share_rna_final_bam = rna.share_task_starsolo_output_bam
-        File? share_rna_starsolo_raw_tar = rna.share_task_starsolo_raw_tar
-        File? share_rna_h5 = rna.share_rna_h5
-        File? share_rna_barcode_metadata  = rna.share_rna_barcode_metadata
-        File? share_rna_seurat_notebook_output = rna.share_rna_seurat_notebook_output
-        File? share_rna_seurat_obj = rna.share_rna_seurat_obj
-
+        File? rna_kb_output = rna.rna_kb_output
+        File? rna_count_matrix = rna.rna_count_matrix
+        File? rna_log = rna.rna_log
+        File? rna_barcode_metadata  = rna.rna_barcode_metadata
+        
         # ATAC ouputs
         #File? share_atac_final_bam_dedup = atac.share_atac_filter_alignment_dedup
         File? share_atac_filter_fragments = atac.share_atac_fragments
