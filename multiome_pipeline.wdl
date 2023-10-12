@@ -1,14 +1,12 @@
 version 1.0
 
 # Import the sub-workflow for preprocessing the fastqs.
+import "workflows/subwf_atac.wdl" as subwf_atac
+import "workflows/subwf_cellatas_rna.wdl" as subwf_rna
 import "tasks/10x_task_preprocess.wdl" as preprocess_tenx
 import "tasks/10x_create_barcode_mapping.wdl" as tenx_barcode_map
-import "workflows/subwf-atac.wdl" as share_atac
-import "workflows/subwf_cellatas_rna.wdl" as subwf_rna
-import "workflows/subwf-find-dorcs.wdl" as find_dorcs
 import "tasks/share_task_joint_qc.wdl" as joint_qc
 import "tasks/task_html_report.wdl" as html_report
-
 
 # WDL workflow for SHARE-seq
 
@@ -67,9 +65,6 @@ workflow share {
         File? idx_tar_rna
 
         String? gene_naming = "gene_name"
-
-        # DORCs specific inputs
-        File? peak_set
 
         # Joint qc
         Int remove_low_yielding_cells = 10
@@ -131,7 +126,7 @@ workflow share {
 
     if ( process_atac ) {
         if ( read1_atac[0] != "" ) {
-            call share_atac.wf_atac as atac{
+            call subwf_atac.wf_atac as atac{
                 input:
                     read1 = select_first([read1_atac]),
                     read2 = select_first([read2_atac]),
@@ -154,20 +149,7 @@ workflow share {
     }
 
     if ( process_atac && process_rna ) {
-        if ( read1_atac[0] != "" && read1_rna[0] != "" ) {
-            if ( pipeline_modality == "full" ) {
-                if ( dorcs_flag ){
-                    call find_dorcs.wf_dorcs as dorcs{
-                        input:
-                            rna_matrix = rna.share_rna_h5,
-                            atac_fragments = atac.share_atac_fragments,
-                            peak_file = peak_set_,
-                            genome = genome_name_,
-                            prefix = prefix
-                    }
-                }
-            }
-            
+        if ( read1_atac[0] != "" && read1_rna[0] != "" ) {            
             if ( pipeline_modality != "no_align" ) {
                 call joint_qc.joint_qc_plotting as joint_qc {
                     input:
