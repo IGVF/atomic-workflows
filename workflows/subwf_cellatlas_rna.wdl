@@ -2,7 +2,8 @@ version 1.0
 
 # Import the tasks called by the pipeline
 import "../tasks/task_cellatlas_rna.wdl" as task_cellatlas_rna
-import "../tasks/task_cellatlas_rna.wdl" as task_cellatlas_rna
+import "../tasks/task_qc_rna.wdl" as task_qc_rna
+import "../tasks/task_log_rna.wdl" as task_log_rna
 
 workflow wf_rna {
     meta {
@@ -36,17 +37,20 @@ workflow wf_rna {
             genome_gtf = genome_gtf,
             subpool = subpool,
             genome_name = genome_name,
-            prefix = prefix,
-            docker_image = docker_image,
-            disk_factor = disk_factor,
-            memory_factor = memory_factor
+            prefix = prefix
     }
     
-    #add qc_rna
+    call task_qc_rna.qc_rna as qc_rna {
+        input:
+            mtx_tar = cellatlas.rna_count_matrix,
+            genome_name = genome_name,
+            subpool = subpool,
+            prefix = prefix
+    }
     
+    #need to add duplicate logs from qc_rna in this task
     call task_log_rna.log_rna as log_rna {
         input:
-        
             alignment_json = cellatlas.rna_alignment_json,
             barcodes_json = cellatlas.rna_barcode_matrics_json,
             genome_name = genome_name, 
@@ -57,5 +61,9 @@ workflow wf_rna {
         File rna_kb_output = cellatlas.rna_output
         File rna_count_matrix = cellatlas.rna_count_matrix
         File rna_log = log_rna.rna_logfile
+        File rna_barcode_metadata = qc_rna.rna_barcode_metadata
+        File? rna_umi_barcode_rank_plot = qc_rna.rna_umi_barcode_rank_plot
+        File? rna_gene_barcode_rank_plot = qc_rna.rna_gene_barcode_rank_plot
+        File? rna_gene_umi_scatter_plot = qc_rna.rna_gene_umi_scatter_plot
     }
 }
