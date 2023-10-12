@@ -2,7 +2,7 @@ version 1.0
 
 # Import the sub-workflow for preprocessing the fastqs.
 import "workflows/subwf_atac.wdl" as subwf_atac
-import "workflows/subwf_cellatas_rna.wdl" as subwf_rna
+import "workflows/subwf_cellatlas_rna.wdl" as subwf_rna
 import "tasks/10x_task_preprocess.wdl" as preprocess_tenx
 import "tasks/10x_create_barcode_mapping.wdl" as tenx_barcode_map
 import "tasks/share_task_joint_qc.wdl" as joint_qc
