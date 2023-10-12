@@ -93,10 +93,10 @@ task qc_rna {
     }
 
     parameter_meta {
-        bam: {
-                description: 'Alignment bam file',
-                help: 'Aligned reads in bam format.',
-                example: 'hg38.aligned.bam'
+        mtx_tar: {
+                description: 'gzipped directory from kb-count that contains mtx file, barcode tsv, gene tsv and anndata file',
+                help: 'gzipped directory from kb-count.',
+                example: 'counts_unfiltered.gzip'
             }
         umi_cutoff: {
                 description: 'UMI cutoff',

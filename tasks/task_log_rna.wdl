@@ -48,7 +48,7 @@ task log_rna {
             example: 'run_info.json'
         }
 
-        dups_log: {
+        barcodes_json: {
             description: 'Barcode metrics JSON from kb',
             help: 'JSON file from RNA alignment step.',
             example: 'inspect.json'
