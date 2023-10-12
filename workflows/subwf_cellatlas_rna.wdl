@@ -18,7 +18,6 @@ workflow wf_rna {
         Array[File] fastqs
         File seqspec
         File genome_fasta
-        File? feature_barcodes
         File genome_gtf
         Array[File] barcode_whitelists
         
