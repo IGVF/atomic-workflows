@@ -26,7 +26,7 @@ task qc_rna {
         Float? disk_factor = 1.0
         Float? memory_factor = 0.5
           
-        String docker_image = "swekhande/shareseq-prod:igvf-qc-rna"
+        String? docker_image = "swekhande/shareseq-prod:igvf-qc-rna"
     }
 
     # Determine the size of the input
