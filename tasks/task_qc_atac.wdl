@@ -27,10 +27,10 @@ task qc_atac {
         String? subpool="none"
 
         # Runtime
-        Int? cpus = 4
+        Int? cpus = 8
         Float? disk_factor = 10.0
         Float? memory_factor = 0.3
-        String docker_image = "docker.io/polumechanos/share_task_qc_atac"
+        String docker_image = "docker.io/polumechanos/qc_atac:igvf"
     }
 
     # Determine the size of the input
@@ -92,17 +92,19 @@ task qc_atac {
 
         # TSS enrichment stats
         echo '------ START: Compute TSS enrichment ------' 1>&2
-        time python3 $(which qc_atac_compute_tss_enrichment.py) \
+        time python3 $(which compute_tss_enrichment.py) \
             -e 2000 \
-            --tss ~{tss} \
+            -p 8 \
+            --regions ~{tss} \
             --prefix "~{prefix}.atac.qc.~{genome_name}" \
             no-singleton.bed.gz
 
+        
+        # Insert size plot bulk
+        echo '------ START: Generate Insert size plot ------' 1>&2
+
         echo "insert_size" > ~{hist_log}
         time awk '{print $3-$2}' <(zcat in.fragments.tsv.gz ) | sort --parallel 4 -n | uniq -c | awk -v OFS="\t" '{print $2,$1}' >> ~{hist_log}
-
-        # Insert size plot bulk
-        echo '------ START: Generate TSS enrichment plot for bulk ------' 1>&2
         time python3 $(which plot_insert_size_hist.py) ~{hist_log} ~{prefix} ~{hist_log_png}
 
         echo '------ START: Generate metadata ------' 1>&2
@@ -113,8 +115,8 @@ task qc_atac {
 
 
         time join -j 1  <(cat ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv | (sed -u 1q;sort -k1,1)) <(grep -wFf barcodes_passing_threshold tmp-barcode-stats | (sed -u 1q;sort -k1,1)) | \
-        join -j 1 - <(cat ~{prefix}.atac.qc.~{genome_name}.reads.in.peak.tsv | (sed -u 1q;sort -k1,1)) | \
-        awk -v FS=" " -v OFS=" " 'NR==1{print $0,"pct_reads_promoter","pct_reads_peaks","pct_mito_reads"}NR>1{print $0,$4*100/$7,$10*100/$7,$13*100/($12+$13)}' | sed 's/ /\t/g'> ~{final_barcode_metadata}
+        (sed -u 1q;sort -k1,1)) | \
+        awk -v FS=" " -v OFS=" " 'NR==1{print $0,"pct_reads_promoter","pct_mito_reads"}NR>1{print $0,$4*100/$7,$10*100/$7,$13*100/($12+$13)}' | sed 's/ /\t/g'> ~{final_barcode_metadata}
 
         # Barcode rank plot
         echo '------ START: Generate barcod rank plot ------' 1>&2
@@ -132,13 +134,10 @@ task qc_atac {
         File atac_qc_tss_enrichment_barcode_stats = "${prefix}.atac.qc.${genome_name}.tss_enrichment_barcode_stats.tsv"
         File atac_qc_tss_enrichment_plot = "${prefix}.atac.qc.${genome_name}.tss_enrichment_bulk.png"
         File atac_qc_tss_enrichment_score_bulk = "${prefix}.atac.qc.${genome_name}.tss_score_bulk.txt"
-        File atac_qc_fragments_in_peaks = "${prefix}.atac.qc.${genome_name}.reads.in.peak.tsv"
 
         File atac_qc_barcode_metadata = final_barcode_metadata
 
         File? atac_qc_barcode_rank_plot = fragment_barcode_rank_plot
-
-        #File? atac_qc_monitor_log = monitor_log
     }
 
     runtime {
