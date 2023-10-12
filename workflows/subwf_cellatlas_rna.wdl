@@ -1,6 +1,7 @@
 version 1.0
 
 # Import the tasks called by the pipeline
+import "../tasks/task_correct_fastq.wdl" as task_correct_fastq
 import "../tasks/task_cellatlas_rna.wdl" as task_cellatlas_rna
 import "../tasks/task_qc_rna.wdl" as task_qc_rna
 import "../tasks/task_log_rna.wdl" as task_log_rna
@@ -24,6 +25,25 @@ workflow wf_rna {
         String? subpool = "none"
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
+    }
+
+    
+    if ( chemistry == "shareseq" && correct_barcodes ) {
+        scatter (read_pair in zip(read1, read2)) {
+            call task_correct_fastq.share_correct_fastq as correct {
+                input:
+                    fastq_R1 = read_pair.left,
+                    fastq_R2 = read_pair.right,
+                    whitelist = whitelist,
+                    sample_type = "RNA",
+                    pkr = pkr,
+                    prefix = prefix,
+                    cpus = correct_cpus,
+                    disk_factor = correct_disk_factor,
+                    memory_factor = correct_memory_factor,
+                    docker_image = correct_docker_image
+            }
+        }
     }
 
     call task_cellatlas_rna.cellatlas_rna as cellatlas{
@@ -56,6 +76,8 @@ workflow wf_rna {
     }
 
     output {
+        Array[File]? rna_read1_processed = correct.corrected_fastq_R1
+        Array[File]? rna_read2_processed = correct.corrected_fastq_R2
         File rna_kb_output = cellatlas.rna_output
         File rna_count_matrix = cellatlas.rna_count_matrix
         File rna_log = log_rna.rna_logfile
