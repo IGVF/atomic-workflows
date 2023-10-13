@@ -16,7 +16,9 @@ workflow wf_rna {
     input {
         # RNA Cell Atlas inputs
 
-        Array[File] fastqs
+        #Array[File] fastqs
+        Array[File] read1
+        Array[File] read2
         File seqspec
         File genome_fasta
         File genome_gtf
@@ -42,7 +44,7 @@ workflow wf_rna {
                 input:
                     fastq_R1 = read_pair.left,
                     fastq_R2 = read_pair.right,
-                    whitelist = whitelist,
+                    whitelist = barcode_whitelists[0],
                     sample_type = "RNA",
                     pkr = subpool,
                     prefix = prefix,
@@ -56,7 +58,7 @@ workflow wf_rna {
 
     call task_cellatlas_rna.cellatlas_rna as cellatlas{
         input:
-            fastqs = fastqs,
+            fastqs = select_first([flatten([correct.corrected_fastq_R1,correct.corrected_fastq_R2]), flatten([read1,read2])  ]),
             seqspec = seqspec,
             genome_fasta = genome_fasta,
             barcode_whitelists = barcode_whitelists,

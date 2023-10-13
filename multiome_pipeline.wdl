@@ -59,11 +59,11 @@ workflow share {
         #Int? atac_filter_shift_minus = -4
 
         # RNA-specific inputs
-        #Array[File] read1_rna
-        #Array[File] read2_rna
-        Array[File] fastqs_rna
+        Array[File] read1_rna
+        Array[File] read2_rna
+        #Array[File] fastqs_rna
 
-        File? gtf
+        File gtf
         File? idx_tar_rna
 
         String? gene_naming = "gene_name"
@@ -111,10 +111,11 @@ workflow share {
     }
 
     if ( process_rna ) {
-        if ( fastqs_rna[0] != "" ) {
+        if ( read1_rna[0] != "" ) {
             call subwf_rna.wf_rna as rna{
                 input:
-                    fastqs = fastqs_rna,
+                    read1 = read1_rna,
+                    read2 = read2_rna,
                     seqspec = seqspec,
                     chemistry = chemistry,
                     genome_fasta = genome_fasta,
