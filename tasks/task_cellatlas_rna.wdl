@@ -25,6 +25,7 @@ task cellatlas_rna {
         String? subpool = "none"
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
+        String chemistry
         
         #Will these be used? Need to run tests to optimize
         Int? cpus = 4
@@ -81,7 +82,14 @@ task cellatlas_rna {
         
         kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
-        kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
+        #if shareseq, use fixed x_string since already corrected
+        if [[ ~{chemistry} == "shareseq" ]]; then
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,50,74:1,0,10:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
+        
+        else
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
+        
+        fi
         
         gzip -k ~{directory}
         

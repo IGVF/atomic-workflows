@@ -68,7 +68,8 @@ workflow wf_rna {
             genome_gtf = genome_gtf,
             subpool = subpool,
             genome_name = genome_name,
-            prefix = prefix
+            prefix = prefix,
+            chemistry = chemistry
     }
     
     call task_qc_rna.qc_rna as qc_rna {
