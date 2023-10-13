@@ -55,10 +55,13 @@ workflow wf_rna {
             }
         }
     }
+    
+    Array[File] fastqs_R1 = select_first([correct.corrected_fastq_R1, read1])
+    Array[File] fastqs_R2 = select_first([correct.corrected_fastq_R2, read2])
 
     call task_cellatlas_rna.cellatlas_rna as cellatlas{
         input:
-            fastqs = select_first([flatten([correct.corrected_fastq_R1,correct.corrected_fastq_R2]), flatten([read1,read2])  ]),
+            fastqs = flatten([fastqs_R1,fastqs_R2]),
             seqspec = seqspec,
             genome_fasta = genome_fasta,
             barcode_whitelists = barcode_whitelists,
