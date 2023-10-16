@@ -10,6 +10,7 @@ workflows:
          tags:
              - /.*/
 
+
    - name: "IGVF-cellatlas_rna"
      subclass: WDL
      primaryDescriptorPath: /workflows/subwf_cellatlas_rna.wdl
