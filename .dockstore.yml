@@ -1,0 +1,21 @@
+version: 1.2
+workflows:
+   - name: "IGVF-single_cell_pipeline"
+     subclass: WDL
+     primaryDescriptorPath: /multiome_pipeline.wdl
+     filters:  # Only develop or master branches and localAligner/** tags
+         branches:
+             - main
+             - dev
+         tags:
+             - /.*/
+
+   - name: "IGVF-cellatlas_rna"
+     subclass: WDL
+     primaryDescriptorPath: /workflows/subwf_cellatlas_rna.wdl
+     filters:  # Only develop or master branches and localAligner/** tags
+         branches:
+             - main
+             - dev
+         tags:
+             - /.*/
