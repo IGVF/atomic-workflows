@@ -89,7 +89,7 @@ workflow share {
 
     Map[String, File] whitelists = read_map(whitelists_tsv)
     File? whitelist_ = if chemistry=='10x_multiome' then whitelist else select_first([whitelist, whitelists[chemistry]])
-    File? whitelist_rna_ = if chemistry=="10x_multiome" then select_first([whitelist_rna, whitelists["${chemistry}_rna"]]) else whitelist_rna
+    #File? whitelist_rna_ = if chemistry=="10x_multiome" then select_first([whitelist_rna, whitelists["${chemistry}_rna"]]) else whitelist_rna
     File? whitelist_atac_ = if chemistry=="10x_multiome" then select_first([whitelist_atac, whitelists["${chemistry}_atac"]]) else whitelist_atac
 
     if ( chemistry != "shareseq" && chemistry != "parse" && process_atac) {

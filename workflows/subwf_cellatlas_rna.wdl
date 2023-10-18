@@ -23,6 +23,7 @@ workflow wf_rna {
         File genome_fasta
         File genome_gtf
         String chemistry
+        
         # Correct-specific inputs
         Boolean correct_barcodes = true
         # Runtime parameters
