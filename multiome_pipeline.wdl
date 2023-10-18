@@ -105,7 +105,7 @@ workflow share {
             call tenx_barcode_map.mapping_tenx_barcodes as barcode_mapping{
                 input:
                     whitelist_atac = select_first([whitelist_atac, whitelist_atac_]),
-                    whitelist_rna = select_first([whitelist_rna, whitelist_rna_, whitelist_]),
+                    #whitelist_rna = select_first([whitelist_rna, whitelist_rna_, whitelist_]),
             }
         }
     }

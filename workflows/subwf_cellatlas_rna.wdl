@@ -31,6 +31,7 @@ workflow wf_rna {
         Float? correct_disk_factor
         Float? correct_memory_factor
         String? correct_docker_image
+        
         Array[File] barcode_whitelists
         
         String? subpool = "none"
