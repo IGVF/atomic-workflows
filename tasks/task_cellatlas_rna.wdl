@@ -91,14 +91,14 @@ task cellatlas_rna {
         
         fi
         
-        gzip -k ~{directory}
+        tar -kzcvf ~{directory}.tar.gz ~{directory}
         
         tar -czvf ~{count_matrix} ${prefix}.rna.align.cellatlas.${genome_name}/counts_unfiltered/*
 
     >>>
 
     output {
-        File rna_output = "~{directory}.gz"
+        File rna_output = "~{directory}.tar.gz"
         File rna_alignment_json = alignment_json
         File rna_barcode_matrics_json = barcode_matrics_json
         File rna_count_matrix = count_matrix
