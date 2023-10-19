@@ -20,7 +20,7 @@ task log_rna {
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
         
-        String? docker_image = "ghcr.io/docwhat/jq-docker"
+        String? docker_image = "swekhande/shareseq-prod:igvf-log-rna"
     }
     
     String rna_log = "${prefix}.rna.log.${genome_name}.txt"
