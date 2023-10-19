@@ -93,7 +93,7 @@ task cellatlas_rna {
         
         tar -kzcvf ~{directory}.tar.gz ~{directory}
         
-        tar -czvf ~{count_matrix} ~{directory}/counts_unfiltered/*
+        tar -czvf ~{count_matrix} -C ~{directory}/counts_unfiltered/ .
 
     >>>
 

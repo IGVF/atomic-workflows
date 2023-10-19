@@ -54,7 +54,7 @@ task qc_rna {
 
         bash $(which monitor_script.sh) | tee ~{monitor_log} 1>&2 &
 
-        tar -xvzf ~{mtx_tar} .C ./
+        tar -xvzf ~{mtx_tar} 
 
         cat cells_x_genes.mtx | awk -v OFS="\t" 'NR>3{count[$2]+=$3; tot[$2]+=1}END{for (bc in count){ print bc,count[bc],tot[bc]} }' | sort -k1,1n > barcode_count_statistics_dedup.raw.tsv
         
