@@ -118,6 +118,9 @@ task qc_atac {
         (sed -u 1q;sort -k1,1)) | \
         awk -v FS=" " -v OFS=" " 'NR==1{print $0,"pct_reads_promoter"}NR>1{print $0,$4*100/$7}' | sed 's/ /\t/g'> ~{final_barcode_metadata}
 
+        head ~{final_barcode_metadata}
+        head ~{final_barcode_metadata} | awk '{print NF}'
+
         # Barcode rank plot
         echo '------ START: Generate barcod rank plot ------' 1>&2
         time Rscript $(which atac_qc_plots.R) ~{final_barcode_metadata} ~{fragment_cutoff} ~{fragment_barcode_rank_plot}
