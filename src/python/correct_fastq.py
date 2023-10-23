@@ -14,6 +14,7 @@ def parse_arguments():
     parser.add_argument("input_read2_fastq_file", help="Filename for uncorrected input read 2 FASTQ file")
     parser.add_argument("output_read1_fastq_file", help="Filename for corrected output read 1 FASTQ file")
     parser.add_argument("output_read2_fastq_file", help="Filename for corrected output read 2 FASTQ file")
+    parser.add_argument("output_barcode_fastq_file", help="Filename for corrected output barcode FASTQ file")
     parser.add_argument("whitelist_file", help="Filename for whitelisted combinations of R1R2R3 barcodes, one per line")
     parser.add_argument("sample_type", choices=["ATAC", "RNA"], help="Sample modality")
     parser.add_argument("prefix", help="Prefix for naming output QC txt file")
@@ -89,9 +90,11 @@ def process_fastqs(input_read1_fastq_file, input_read2_fastq_file,
 
     read1_out_writer = xopen.xopen(output_read1_fastq_file, mode = 'w')
     read2_out_writer = xopen.xopen(output_read2_fastq_file, mode ='w')
+    barcode_out_writer = xopen.xopen(output_barcode_fastq_file, mode ='w')
 
     buffer1 = deque()
     buffer2 = deque()
+    buffer3 = deque()
     buffer_counter = 0
     
     # process FASTQs together
@@ -162,6 +165,11 @@ def process_fastqs(input_read1_fastq_file, input_read2_fastq_file,
                     # add corrected read 2 to buffer; use corrected header, remove 99bp barcode
                     corrected_read2 = f"{corrected_header}\n{sequence2[:-99]}\n+\n{quality2[:-99]}\n"
                     buffer2.append(corrected_read2)
+                    # add corrected barcode to buffer 3
+                    corrected_sequence3 = r1 + r2 + r3
+                    corrected_quality3 = q1 + q2 + q3
+                    corrected_read3 = f"{corrected_header}\n{corrected_sequence3}\n+\n{corrected_quality3}\n"
+                    buffer3.append(corrected_read3)
                     buffer_counter += 1
 
                 # write to corrected FASTQ files
@@ -170,6 +178,8 @@ def process_fastqs(input_read1_fastq_file, input_read2_fastq_file,
                     buffer1.clear()
                     read2_out_writer.write("".join(buffer2))
                     buffer2.clear()
+                    barcode_out_writer.write("".join(buffer3))
+                    buffer3.clear()
                     buffer_counter = 0
                 
             # check for homopolymer G in uncorrected barcode windows
@@ -184,6 +194,8 @@ def process_fastqs(input_read1_fastq_file, input_read2_fastq_file,
         buffer1.clear()
         read2_out_writer.write("".join(buffer2))
         buffer2.clear()
+        barcode_out_writer.write("".join(buffer3))
+        buffer3.clear()
         buffer_counter = 0
 
     
@@ -199,6 +211,7 @@ def main():
     input_read2_fastq_file = getattr(args, "input_read2_fastq_file")
     output_read1_fastq_file = getattr(args, "output_read1_fastq_file")
     output_read2_fastq_file = getattr(args, "output_read2_fastq_file")
+    output_barcode_fastq_file = getattr(args, "output_barcode_fastq_file")
     whitelist_file = getattr(args, "whitelist_file")
     sample_type = getattr(args, "sample_type")
     prefix = getattr(args, "prefix")
@@ -214,8 +227,9 @@ def main():
 
     # write corrected FASTQs and QC stats
     process_fastqs(input_read1_fastq_file, input_read2_fastq_file,
-                   output_read1_fastq_file, output_read2_fastq_file,
-                   r1_barcode_dict, r2_barcode_dict, r3_barcode_dict,
+                   output_read1_fastq_file, output_read2_fastq_file, 
+                   output_barcode_fastq_file, r1_barcode_dict,
+                    r2_barcode_dict, r3_barcode_dict,
                    sample_type, pkr, prefix)
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ import "tasks/task_joint_qc.wdl" as joint_qc
 
 # WDL workflow for SHARE-seq
 
-workflow share {
+workflow multiome_pipeline {
 
     input {
         # Common inputs
