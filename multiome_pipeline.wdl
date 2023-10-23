@@ -28,7 +28,7 @@ workflow multiome_pipeline {
         File whitelists_tsv = 'gs://broad-buenrostro-pipeline-genome-annotations/whitelists/whitelists.tsv'
         File? whitelist
         File? whitelist_atac
-        Array[File]? whitelist_rna
+        File? whitelist_rna
         
         File seqspec
 
