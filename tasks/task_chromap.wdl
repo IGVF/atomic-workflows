@@ -14,7 +14,7 @@ task atac_align_chromap {
         # This task takes in input the preprocessed ATAC fastqs and align them to the genome.
         Array[File] fastq_R1
         Array[File] fastq_R2
-        Array[File] fastq_barcode
+        Array[File]? fastq_barcode
         File reference_fasta
         File? barcode_inclusion_list
         File? barcode_conversion_dict
@@ -58,6 +58,9 @@ task atac_align_chromap {
 
     # Determining disk type base on the size of disk.
     String disk_type = if disk_gb > 375 then "SSD" else "LOCAL"
+
+    # Determine barcode file
+    File barcode_file = select_first([fastq_barcode,fastq_R2])
 
     # Define the output names
     String fragments = '${prefix}.atac.filter.fragments.${genome_name}.tsv'
