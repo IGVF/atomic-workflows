@@ -74,6 +74,7 @@ def check_putative_barcode(barcode_str, barcode_dict, quality_str):
 
 def process_fastqs(input_read1_fastq_file, input_read2_fastq_file,
                   output_read1_fastq_file, output_read2_fastq_file,
+                  output_barcode_fastq_file,
                   r1_barcode_dict, r2_barcode_dict, r3_barcode_dict,
                   sample_type, pkr, prefix):
     """
