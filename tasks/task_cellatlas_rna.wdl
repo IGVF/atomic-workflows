@@ -33,7 +33,7 @@ task cellatlas_rna {
         Float? memory_factor = 0.15
         
         #TODO:We need to setup a docker registry.
-        String? docker_image = "swekhande/shareseq-prod:cellatlas-rna"
+        String? docker_image = "polumechanos/cellatlas:igvf"
         
     }
     
