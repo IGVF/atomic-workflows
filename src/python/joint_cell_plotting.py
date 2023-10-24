@@ -49,9 +49,9 @@ def get_metrics(rna_metrics_file, atac_metrics_file, remove_low_yielding_cells):
     rna_barcodes = []
     # remove cells that have fewer than 10 UMIs
     for line in rna_metrics_contents:
-        if int(line[3]) >= remove_low_yielding_cells:
-            umis.append(int(line[3]))
-            genes.append(int(line[4]))
+        if int(line[1]) >= remove_low_yielding_cells:
+            umis.append(int(line[1]))
+            genes.append(int(line[2]))
             rna_barcodes.append(line[0])
     rna_metrics = dict(zip(rna_barcodes, zip(umis, genes)))
 
