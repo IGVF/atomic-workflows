@@ -78,7 +78,6 @@ workflow wf_rna {
         input:
             counts_h5ad = cellatlas.rna_counts_h5ad,
             genome_name = genome_name,
-            subpool = subpool,
             prefix = prefix
     }
     

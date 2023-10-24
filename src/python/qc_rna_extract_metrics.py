@@ -29,7 +29,7 @@ def main():
 
     args = parser.parse_args()
     adata = getattr(args, "anndata")
-    subpool = getattr(args, "subpool", default="none")
+    subpool = getattr(args, "subpool", "none")
     barcode_metadata_file = getattr(args, "barcode_metadata_file")
 
     #  use scanpy libraries to extract multiple qc metrics

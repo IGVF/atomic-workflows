@@ -17,9 +17,7 @@ task qc_rna {
         Int? umi_cutoff = 100
         Int? gene_cutoff = 100
         String genome_name
-        String? subpool
-        String? prefix
-        
+        String? prefix        
         
         #Will these be used? Need to run tests to optimize
         Int? cpus = 2
@@ -56,7 +54,7 @@ task qc_rna {
 
         python3 $(which qc_rna_extract_metrics.py) ~{counts_h5ad} \
                                                  ~{barcode_metadata} \
-                                                 ~{subpool}
+                                                 "none"
 
         # Make QC plots 
         Rscript $(which rna_qc_plots.R) ~{barcode_metadata} ~{umi_cutoff} ~{gene_cutoff} ~{umi_barcode_rank_plot} ~{gene_barcode_rank_plot} ~{gene_umi_scatter_plot}
@@ -91,11 +89,6 @@ task qc_rna {
                 description: 'Gene cutoff',
                 help: 'Cutoff for number of genes required when making gene barcode rank plot.',
                 example: 10
-            }
-        subpool: {
-                description: 'Experiment subpool',
-                help: 'Id of the sample subpool. Can be used to distinguish the 10X lanes.',
-                examples: ['SS-PKR-000']
             }
         genome_name: {
                 description: 'Reference name',
