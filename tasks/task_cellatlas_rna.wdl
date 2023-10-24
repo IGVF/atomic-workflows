@@ -22,7 +22,7 @@ task cellatlas_rna {
         File genome_gtf
         Array[File] barcode_whitelists #These filenames must EXACTLY match the ones specified in seqspec
         
-        String? subpool = "none"
+        String? subpool = ""
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
         String chemistry
@@ -88,6 +88,17 @@ task cellatlas_rna {
         
         else
             kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
+        
+        fi
+        
+        #if subpool is defined add subpool suffix
+        if [[ ~{subpool} != "" ]]; then
+        
+            #add subpool suffix in .h5ad file
+            python3 modify_barcode_h5.py ~{directory}/counts_unfiltered/adata.h5ad ~{subpool}
+
+            #add subpool suffix in barcodes.txt file
+            sed -i 's/$/_~{subpool}/' ~{directory}/counts_unfiltered/cells_x_genes.barcodes.txt
         
         fi
         
