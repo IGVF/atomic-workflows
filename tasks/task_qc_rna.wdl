@@ -13,7 +13,7 @@ task qc_rna {
     input {
         # This function takes in input counts_unfiltered directory from kb-counts in a gzipped format
         
-        File mtx_tar
+        File counts_h5ad
         Int? umi_cutoff = 100
         Int? gene_cutoff = 100
         String genome_name
@@ -26,11 +26,11 @@ task qc_rna {
         Float? disk_factor = 1.0
         Float? memory_factor = 0.5
           
-        String? docker_image = "swekhande/shareseq-prod:igvf-qc-rna"
+        String? docker_image = "polumechanos/qc_rna:igvf"
     }
 
     # Determine the size of the input
-    Float input_file_size_gb = size(mtx_tar, "G")
+    Float input_file_size_gb = size(counts_h5ad, "G")
 
     # Determining memory size based on the size of the input files.
     Float mem_gb = 8.0 + memory_factor * input_file_size_gb
@@ -54,24 +54,9 @@ task qc_rna {
 
         bash $(which monitor_script.sh) | tee ~{monitor_log} 1>&2 &
 
-        tar -xvzf ~{mtx_tar} 
-
-        #cat cells_x_genes.mtx | awk -v OFS="\t" 'NR>3{count[$2]+=$3; tot[$2]+=1}END{for (bc in count){ print bc,count[bc],tot[bc]} }' | sort -k1,1n > barcode_count_statistics_dedup.raw.tsv
-        
-        #echo -e "barcode\tunique_umi\tgenes_final\n" > barcode_count_statistics_dedup.tsv
-        
-        #awk -v pkr=~{if defined(subpool) then "_~{subpool}" else ""} -v OFS="\t" 'FNR==NR{bc[NR]=$1}FNR!=NR{print bc[$1]pkr,$2,$3; delete bc[$1]}END{for(idx in bc){print bc[idx]pkr,0,0}}' <(cat cells_x_genes.barcodes.txt) barcode_count_statistics_dedup.raw.tsv | sort -k1,1 >> barcode_count_statistics_dedup.tsv
-
-        # Extract barcode metadata (total counts, genes) from anndata file
-        python3 $(which qc_rna_extract_metrics.py) adata.h5ad \
-                                                 ~{subpool} \
-                                                 ~{barcode_metadata}
-
-        #join -t $'\t' -e 0 -j1 <(cat tmp_metadata.tsv | (sed -u 1q;sort -k1,1)) barcode_count_statistics_dedup.tsv | \
-        #awk -v OFS="\t" 'NR==1{print $0,"FRIG"}NR>1{printf "%s\t%4.2f\n",$0,$9/$2}' > ~{barcode_metadata}
-
-
-        #awk 'NR>1{total+=$2; duplicate+=$2-$9; unique+=$9} END {print "total reads:", total; print "unique reads:", unique; print "duplicate reads:", duplicate; print "FRIG:",unique/total}' ~{barcode_metadata} > ~{duplicates_log}
+        python3 $(which qc_rna_extract_metrics.py) ~{counts_h5ad} \
+                                                 ~{barcode_metadata} \
+                                                 ~{subpool}
 
         # Make QC plots 
         Rscript $(which rna_qc_plots.R) ~{barcode_metadata} ~{umi_cutoff} ~{gene_cutoff} ~{umi_barcode_rank_plot} ~{gene_barcode_rank_plot} ~{gene_umi_scatter_plot}
@@ -79,7 +64,6 @@ task qc_rna {
 
     output {
         File rna_barcode_metadata = "~{barcode_metadata}"
-        #File rna_duplicates_log = "~{duplicates_log}"
         File? rna_umi_barcode_rank_plot = "~{umi_barcode_rank_plot}"
         File? rna_gene_barcode_rank_plot = "~{gene_barcode_rank_plot}"
         File? rna_gene_umi_scatter_plot = "~{gene_umi_scatter_plot}"
@@ -93,10 +77,10 @@ task qc_rna {
     }
 
     parameter_meta {
-        mtx_tar: {
-                description: 'gzipped directory from kb-count that contains mtx file, barcode tsv, gene tsv and anndata file',
-                help: 'gzipped directory from kb-count.',
-                example: 'counts_unfiltered.gzip'
+        counts_h5ad: {
+                description: 'counts in anndata file',
+                help: 'h5ad kb-count.',
+                example: 'counts_unfiltered.h5ad'
             }
         umi_cutoff: {
                 description: 'UMI cutoff',

@@ -93,7 +93,7 @@ task cellatlas_rna {
         
         tar -kzcvf ~{directory}.tar.gz ~{directory}
         
-        tar -czvf ~{count_matrix} -C ~{directory}/counts_unfiltered/ .
+        tar -czvf ~{count_matrix}  --exclude='*.h5da' -C ~{directory}/counts_unfiltered/ .
 
     >>>
 
@@ -101,7 +101,8 @@ task cellatlas_rna {
         File rna_output = "~{directory}.tar.gz"
         File rna_alignment_json = alignment_json
         File rna_barcode_matrics_json = barcode_matrics_json
-        File rna_count_matrix = count_matrix
+        File rna_mtx_tar = count_matrix
+        File rna_counts_h5ad = glob("~{directory}/counts_unfiltered/*.h5da")[0]
     }
 
     runtime {

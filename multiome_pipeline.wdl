@@ -197,7 +197,8 @@ workflow multiome_pipeline {
 
         # RNA outputs
         File? rna_kb_output = rna.rna_kb_output
-        File? rna_count_matrix = rna.rna_count_matrix
+        File? rna_mtx_tar = rna.rna_mtx_tar
+        File? rna_counts_h5ad = rna.rna_counts_h5ad
         File? rna_log = rna.rna_log
         File? rna_barcode_metadata  = rna.rna_barcode_metadata
         
