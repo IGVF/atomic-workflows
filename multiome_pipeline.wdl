@@ -6,7 +6,7 @@ import "workflows/subwf_cellatlas_rna.wdl" as subwf_rna
 import "tasks/10x_task_preprocess.wdl" as preprocess_tenx
 import "tasks/10x_create_barcode_mapping.wdl" as tenx_barcode_map
 import "tasks/task_joint_qc.wdl" as joint_qc
-#import "tasks/task_html_report.wdl" as html_report
+import "tasks/task_html_report.wdl" as html_report
 
 # WDL workflow for SHARE-seq
 
@@ -165,27 +165,23 @@ workflow multiome_pipeline {
         }
     }
 
-    # if ( pipeline_modality != "no_align" ) {
-    #     call html_report.html_report as html_report {
-    #         input:
-    #             prefix = prefix,
-    #             atac_alignment_log = atac.share_atac_alignment_log,
-    #             atac_percent_duplicates = atac.share_atac_percent_duplicates,
-    #             rna_total_reads = rna.share_rna_total_reads,
-    #             rna_aligned_uniquely = rna.share_rna_aligned_uniquely,
-    #             rna_aligned_multimap = rna.share_rna_aligned_multimap,
-    #             rna_unaligned = rna.share_rna_unaligned,
-    #             rna_feature_reads = rna.share_rna_feature_reads,
-    #             rna_duplicate_reads = rna.share_rna_duplicate_reads,
+    if ( pipeline_modality != "no_align" ) {
+        call html_report.html_report as html_report {
+            input:
+                prefix = prefix,
+                atac_metrics = atac.atac_qc_metrics,
+                rna_metrics = rna.rna_log,
+                ## JPEG files to be encoded and appended to html
+                # RNA plots
+                image_files = [joint_qc.joint_qc_plot, joint_qc.joint_density_plot,
+                            rna.rna_umi_barcode_rank_plot, rna.rna_gene_barcode_rank_plot, rna.rna_gene_umi_scatter_plot,
+                            atac.atac_qc_barcode_rank_plot, atac.atac_qc_hist_plot, atac.atac_qc_tss_enrichment],
 
-    #             ## JPEG files to be encoded and appended to html
-    #             # RNA plots
-    #             image_files = [joint_qc.joint_qc_plot, joint_qc.joint_density_plot, rna.share_rna_umi_barcode_rank_plot, rna.share_rna_gene_barcode_rank_plot, rna.share_rna_gene_umi_scatter_plot, rna.share_rna_seurat_raw_violin_plot, rna.share_rna_seurat_raw_qc_scatter_plot, rna.share_rna_seurat_filtered_violin_plot, rna.share_rna_seurat_filtered_qc_scatter_plot, rna.share_rna_seurat_variable_genes_plot, rna.share_rna_seurat_PCA_dim_loadings_plot, rna.share_rna_seurat_PCA_plot, rna.share_rna_seurat_heatmap_plot, rna.share_rna_seurat_jackstraw_plot, rna.share_rna_seurat_elbow_plot, rna.share_rna_seurat_umap_cluster_plot, rna.share_rna_seurat_umap_rna_count_plot, rna.share_rna_seurat_umap_gene_count_plot, rna.share_rna_seurat_umap_mito_plot, atac.share_atac_qc_barcode_rank_plot, atac.share_atac_qc_hist_plot, atac.share_atac_qc_tss_enrichment,  atac.share_atac_archr_raw_tss_enrichment, atac.share_atac_archr_filtered_tss_enrichment, atac.share_atac_archr_raw_fragment_size_plot, atac.share_atac_archr_filtered_fragment_size_plot, atac.share_atac_archr_umap_doublets, atac.share_atac_archr_umap_cluster_plot, atac.share_atac_archr_umap_doublets, atac.share_atac_archr_umap_num_frags_plot, atac.share_atac_archr_umap_tss_score_plot, atac.share_atac_archr_umap_frip_plot,atac.share_atac_archr_gene_heatmap_plot, dorcs.j_plot],
+                ## Links to files and logs to append to end of html
+                log_files = [rna.rna_align_log, rna.rna_log, atac.atac_alignment_log]
 
-    #             ## Links to files and logs to append to end of html
-    #             log_files = [rna.share_rna_alignment_log,  rna.share_task_starsolo_barcodes_stats, rna.share_task_starsolo_features_stats, rna.share_task_starsolo_summary_csv, rna.share_task_starsolo_umi_per_cell, rna.share_task_starsolo_raw_tar,rna.share_rna_seurat_notebook_log, atac.share_atac_alignment_log, atac.share_atac_archr_notebook_log, dorcs.dorcs_notebook_log]
-    #     }
-    # }
+        }
+    }
 
     output{
         # Fastq after correction/trimming
@@ -203,7 +199,6 @@ workflow multiome_pipeline {
         File? rna_barcode_metadata  = rna.rna_barcode_metadata
         
         # ATAC ouputs
-        #File? share_atac_final_bam_dedup = atac.share_atac_filter_alignment_dedup
         File? atac_filter_fragments = atac.atac_fragments
         File? atac_filter_fragments_index = atac.atac_fragments_index
         File? atac_barcode_metadata = atac.atac_barcode_metadata
@@ -212,7 +207,8 @@ workflow multiome_pipeline {
         File? joint_barcode_metadata = joint_qc.joint_barcode_metadata
 
         # Report
-        #File? html_summary = html_report.html_report_file
+        File? html_summary = html_report.html_report_file
+        File? csv_summary = html_report.csv_summary_file
     }
 
 }

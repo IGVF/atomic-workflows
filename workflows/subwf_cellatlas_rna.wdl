@@ -94,6 +94,7 @@ workflow wf_rna {
     output {
         Array[File]? rna_read1_processed = correct.corrected_fastq_R1
         Array[File]? rna_read2_processed = correct.corrected_fastq_R2
+        File rna_align_log = cellatlas.rna_alignment_json
         File rna_kb_output = cellatlas.rna_output
         File rna_mtx_tar = cellatlas.rna_mtx_tar
         File rna_counts_h5ad = cellatlas.rna_counts_h5ad

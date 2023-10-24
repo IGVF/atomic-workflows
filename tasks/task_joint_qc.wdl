@@ -28,7 +28,7 @@ task joint_qc_plotting {
         String? prefix
         String genome_name
 
-        String docker_image = "polumechanos/joint_qc:igvf""
+        String docker_image = "polumechanos/joint_qc:igvf"
     }
 
     # Determine the size of the input
