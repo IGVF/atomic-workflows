@@ -33,7 +33,7 @@ task html_report {
         File? atac_archr_vals
         File? atac_tss_vals
 
-        String docker_image = 'mshriver01/share_task_html_report'
+        String docker_image = ' polumechanos/html_report:igvf'
 
     }
 
