@@ -93,8 +93,7 @@ task cellatlas_rna {
         
         tar -kzcvf ~{directory}.tar.gz ~{directory}
         
-        tar -czvf ~{count_matrix}  --exclude='*.h5da' -C ~{directory}/counts_unfiltered/ .
-
+        tar -czvf ~{count_matrix}  --exclude='*.h5ad' -C ~{directory}/counts_unfiltered/ .
 
         mv ~{directory}/counts_unfiltered/adata.h5ad ~{prefix}.rna.align.cellatlas.~{genome_name}.count_matrix.h5ad
 
