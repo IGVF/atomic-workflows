@@ -95,7 +95,7 @@ task cellatlas_rna {
         if [[ ~{subpool} != "" ]]; then
         
             #add subpool suffix in .h5ad file
-            python3 modify_barcode_h5.py ~{directory}/counts_unfiltered/adata.h5ad ~{subpool}
+            python3 $(which modify_barcode_h5.py) ~{directory}/counts_unfiltered/adata.h5ad ~{subpool}
 
             #add subpool suffix in barcodes.txt file
             sed -i 's/$/_~{subpool}/' ~{directory}/counts_unfiltered/cells_x_genes.barcodes.txt
