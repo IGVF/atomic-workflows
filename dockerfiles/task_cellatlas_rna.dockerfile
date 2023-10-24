@@ -54,5 +54,6 @@ RUN pip install --quiet gget kb-python
 
 #COPY --chown=$USER:$USER src/bash/monitor_script.sh /usr/local/bin
 COPY src/bash/monitor_script.sh /usr/local/bin
+COPY src/python/modify_barcode_h5.py /usr/local/bin
 
 USER $USER
