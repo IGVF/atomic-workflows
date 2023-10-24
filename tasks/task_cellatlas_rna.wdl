@@ -91,15 +91,14 @@ task cellatlas_rna {
         
         fi
         
-        #add subpool suffix in .h5ad file
-        python3 modify_barcode_h5.py ~{directory}/counts_unfiltered/adata.h5ad ~{subpool}
+        tar -kzcvf ~{directory}.tar.gz ~{directory}
         
-        #add subpool suffix in barcodes.txt file
-        sed -i 's/$/_~{subpool}/' ~{directory}/counts_unfiltered/cells_x_genes.barcodes.txt
-        
-        tar -czvf ~{count_matrix} --exclude='*.h5ad' -C ~{directory}/counts_unfiltered/ .
+        tar -czvf ~{count_matrix}  --exclude='*.h5da' -C ~{directory}/counts_unfiltered/ .
+
 
         mv ~{directory}/counts_unfiltered/adata.h5ad ~{prefix}.rna.align.cellatlas.~{genome_name}.count_matrix.h5ad
+
+    >>>
 
     output {
         File rna_output = "~{directory}.tar.gz"
