@@ -96,7 +96,7 @@ task cellatlas_rna {
         tar -czvf ~{count_matrix}  --exclude='*.h5da' -C ~{directory}/counts_unfiltered/ .
 
 
-        mv ~{directory}/counts_unfiltered/adata.h5ad ${prefix}.rna.align.cellatlas.${genome_name}.count_matrix.h5ad
+        mv ~{directory}/counts_unfiltered/adata.h5ad ~{prefix}.rna.align.cellatlas.~{genome_name}.count_matrix.h5ad
 
     >>>
 
@@ -105,7 +105,7 @@ task cellatlas_rna {
         File rna_alignment_json = alignment_json
         File rna_barcode_matrics_json = barcode_matrics_json
         File rna_mtx_tar = count_matrix
-        File rna_counts_h5ad = "${prefix}.rna.align.cellatlas.${genome_name}.count_matrix.h5ad"
+        File rna_counts_h5ad = "~{prefix}.rna.align.cellatlas.~{genome_name}.count_matrix.h5ad"
     }
 
     runtime {
