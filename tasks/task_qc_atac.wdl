@@ -115,8 +115,8 @@ task qc_atac {
         cut -f 1 ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv > barcodes_passing_threshold
 
         time join -j 1  <(cat ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv | (sed -u 1q;sort -k1,1)) <(grep -wFf barcodes_passing_threshold tmp-barcode-stats | (sed -u 1q;sort -k1,1)) | \
-        (sed -u 1q;sort -k1,1)) | \
-        awk -v FS=" " -v OFS=" " 'NR==1{print $0,"pct_reads_promoter"}NR>1{print $0,$4*100/$7}' | sed 's/ /\t/g'> ~{final_barcode_metadata}
+        (sed -u 1q;sort -k1,1) | \
+        awk -v FS=" " -v OFS=" " 'NR==1{print $0,"pct_reads_promoter"}NR>1{print $0,$4*100/$7}' | sed 's/ /\t/g' > ~{final_barcode_metadata}
 
         head ~{final_barcode_metadata}
         head ~{final_barcode_metadata} | awk '{print NF}'
