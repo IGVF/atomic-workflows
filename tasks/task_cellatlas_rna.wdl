@@ -33,7 +33,7 @@ task cellatlas_rna {
         Float? memory_factor = 0.15
         
         #TODO:We need to setup a docker registry.
-        String? docker_image = "swekhande/shareseq-prod:cellatlas-rna"
+        String? docker_image = "polumechanos/cellatlas:igvf"
         
     }
     
@@ -84,24 +84,38 @@ task cellatlas_rna {
         
         #if shareseq, use fixed x_string since already corrected
         if [[ ~{chemistry} == "shareseq" ]]; then
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,50,74:1,0,10:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
         
         else
             kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
         
         fi
         
-        gzip -k ~{directory}
+        #if subpool is defined add subpool suffix
+        if [ '~{subpool}' != "none" ]; then
         
-        tar -czvf ~{count_matrix} ${prefix}.rna.align.cellatlas.${genome_name}/counts_unfiltered/*
+            #add subpool suffix in .h5ad file
+            python3 $(which modify_barcode_h5.py) ~{directory}/counts_unfiltered/adata.h5ad ~{subpool}
+
+            #add subpool suffix in barcodes.txt file
+            sed -i 's/$/_~{subpool}/' ~{directory}/counts_unfiltered/cells_x_genes.barcodes.txt
+        
+        fi
+        
+        tar -kzcvf ~{directory}.tar.gz ~{directory}
+        
+        tar -czvf ~{count_matrix}  --exclude='*.h5ad' -C ~{directory}/counts_unfiltered/ .
+
+        mv ~{directory}/counts_unfiltered/adata.h5ad ~{prefix}.rna.align.cellatlas.~{genome_name}.count_matrix.h5ad
 
     >>>
 
     output {
-        File rna_output = "~{directory}.gz"
+        File rna_output = "~{directory}.tar.gz"
         File rna_alignment_json = alignment_json
         File rna_barcode_matrics_json = barcode_matrics_json
-        File rna_count_matrix = count_matrix
+        File rna_mtx_tar = count_matrix
+        File rna_counts_h5ad = "~{prefix}.rna.align.cellatlas.~{genome_name}.count_matrix.h5ad"
     }
 
     runtime {

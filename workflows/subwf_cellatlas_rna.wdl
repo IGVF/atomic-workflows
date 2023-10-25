@@ -23,6 +23,7 @@ workflow wf_rna {
         File genome_fasta
         File genome_gtf
         String chemistry
+        
         # Correct-specific inputs
         Boolean correct_barcodes = true
         # Runtime parameters
@@ -30,6 +31,7 @@ workflow wf_rna {
         Float? correct_disk_factor
         Float? correct_memory_factor
         String? correct_docker_image
+        
         Array[File] barcode_whitelists
         
         String? subpool = "none"
@@ -74,9 +76,8 @@ workflow wf_rna {
     
     call task_qc_rna.qc_rna as qc_rna {
         input:
-            mtx_tar = cellatlas.rna_count_matrix,
+            counts_h5ad = cellatlas.rna_counts_h5ad,
             genome_name = genome_name,
-            subpool = subpool,
             prefix = prefix
     }
     
@@ -92,8 +93,10 @@ workflow wf_rna {
     output {
         Array[File]? rna_read1_processed = correct.corrected_fastq_R1
         Array[File]? rna_read2_processed = correct.corrected_fastq_R2
+        File rna_align_log = cellatlas.rna_alignment_json
         File rna_kb_output = cellatlas.rna_output
-        File rna_count_matrix = cellatlas.rna_count_matrix
+        File rna_mtx_tar = cellatlas.rna_mtx_tar
+        File rna_counts_h5ad = cellatlas.rna_counts_h5ad
         File rna_log = log_rna.rna_logfile
         File rna_barcode_metadata = qc_rna.rna_barcode_metadata
         File? rna_umi_barcode_rank_plot = qc_rna.rna_umi_barcode_rank_plot

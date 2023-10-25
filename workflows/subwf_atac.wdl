@@ -58,7 +58,7 @@ workflow wf_atac {
         Int? quality_filter = 0
         Int? bc_error_threshold = 2
         Float? bc_probability_threshold = 0.9
-        String? read_format
+        String? read_format = "bc:0:-1,r1:0:-1,r2:0:-1"
         # Runtime parameters
         Int? align_cpus
         Float? align_disk_factor = 8.0
@@ -145,7 +145,7 @@ workflow wf_atac {
             input:
                 fastq_R1 = select_first([trim.fastq_R1_trimmed, correct.corrected_fastq_R1, read1]),
                 fastq_R2 = select_first([trim.fastq_R2_trimmed, correct.corrected_fastq_R2, read2]),
-                fastq_barcode = fastq_barcode,
+                fastq_barcode = select_first([correct.corrected_fastq_barcode, fastq_barcode]),
                 reference_fasta = reference_fasta,
                 trim_adapters = trim_adapters,
                 genome_name = genome_name,
@@ -201,21 +201,11 @@ workflow wf_atac {
         Array[File]? atac_read2_processed = if defined(trim.fastq_R1_trimmed) then trim.fastq_R2_trimmed else correct.corrected_fastq_R2
 
         # Align
-        # File? share_atac_alignment_raw = merge.atac_merged_alignment
-        # File? share_atac_alignment_raw_index = merge.atac_merged_alignment_index
         File? atac_alignment_log = align.atac_alignment_log
 
         # Filter
-        # File? share_atac_filter_alignment_dedup = filter.atac_filter_alignment_dedup
-        # File? share_atac_filter_alignment_dedup_index = filter.atac_filter_alignment_dedup_index
-        # File? share_atac_filter_alignment_wdup = filter.atac_filter_alignment_wdup
-        # File? share_atac_filter_alignment_wdup_index = filter.atac_filter_alignment_wdup_index
         File? atac_fragments = align.atac_fragments
         File? atac_fragments_index = align.atac_fragments_index
-        # File? share_atac_filter_fragments_index = filter.atac_filter_fragments_index
-        # File? share_atac_filter_monitor_log = filter.atac_filter_monitor_log
-        # File? share_atac_filter_mito_metrics_bulk = filter.atac_filter_mito_metrics_bulk
-        # File? share_atac_filter_mito_metrics_barcode = filter.atac_filter_mito_metrics_barcode
 
         # QC
         File? atac_barcode_metadata = qc_atac.atac_qc_barcode_metadata
@@ -225,12 +215,6 @@ workflow wf_atac {
         File? atac_qc_barcode_rank_plot = qc_atac.atac_qc_barcode_rank_plot
 
         # Log
-        # Int? share_atac_total_reads = log_atac.atac_total_reads
-        # Int? share_atac_aligned_uniquely = log_atac.atac_aligned_uniquely
-        # Int? share_atac_unaligned = log_atac.atac_unaligned
-        # Int? share_atac_feature_reads = log_atac.atac_feature_reads
-        # Int? share_atac_duplicate_reads = log_atac.atac_duplicate_reads
-        #Float? share_atac_percent_duplicates = log_atac.atac_pct_dup
         File? atac_qc_metrics = log_atac.atac_statistics_csv
     }
 }

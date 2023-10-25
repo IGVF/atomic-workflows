@@ -28,7 +28,7 @@ task joint_qc_plotting {
         String? prefix
         String genome_name
 
-        String docker_image = "us.gcr.io/buenrostro-share-seq/share_task_joint_qc"
+        String docker_image = "polumechanos/joint_qc:igvf"
     }
 
     # Determine the size of the input
@@ -69,10 +69,8 @@ task joint_qc_plotting {
 
     runtime {
         memory : "${mem_gb} GB"
-        memory_retry_multiplier: 2
         disks: "local-disk ${disk_gb} ${disk_type}"
         docker : "${docker_image}"
-        maxRetries:1
     }
 
     parameter_meta {
