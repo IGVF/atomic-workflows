@@ -48,7 +48,7 @@ task html_report {
         echo "~{sep="\n" valid_image_files}" > image_list.txt
         echo "~{sep="\n" valid_log_files}" > log_list.txt
         
-        PYTHONIOENCODING=utf-8 python3 /software/write_html.py ~{output_file} image_list.txt log_list.txt ~{output_csv_file} atac_metrics rna_metrics
+        PYTHONIOENCODING=utf-8 python3 /software/write_html.py ~{output_file} image_list.txt log_list.txt ~{output_csv_file} ~{atac_metrics} ~{rna_metrics}
         
         echo 'PKR,~{prefix}' | cat - ~{output_csv_file} > temp && mv temp ~{output_csv_file} 
 
