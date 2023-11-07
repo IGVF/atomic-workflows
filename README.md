@@ -2,6 +2,10 @@
 
 This repository contains standards and pipelines for processing various assay and sequencing-platform data types. If you'd like to modify an existing workflow or contribute a new one please see the [contribution guidelines](CONTRIBUTING.md).
 
+# IGVF Single-cell pipeline
+
+[Pipeline specifications](https://docs.google.com/document/d/1NgNYDduZsThKTyND8DI1DIMwiG9q-Rt462377_NZXis/edit?usp=sharing)
+
 ## Single-cell preprocessing
 
 - [10x-RNA-v2](assays/10x-RNA-v2/): 10x Genomics single-cell RNA-seq v2
