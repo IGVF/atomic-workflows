@@ -18,6 +18,8 @@ task log_atac {
         File? alignment_log
         File? barcode_log
         String? prefix = "sample"
+        
+        String docker_image = "ubuntu:latest"
     }
 
     command <<<
@@ -32,7 +34,8 @@ task log_atac {
     }
 
     runtime {
-        docker: 'ubuntu:latest'
+        docker : "${docker_image}"
+        singularity: "docker://${docker_image}"
     }
     parameter_meta {
         alignment_log: {

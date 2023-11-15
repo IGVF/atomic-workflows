@@ -104,6 +104,7 @@ task preprocess_tenx {
         maxRetries: 1
         memory: "${mem_gb} GB"
         memory_retry_multiplier: 2
+        singularity: "docker://${docker_image}"
     }
 
     parameter_meta {

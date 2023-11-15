@@ -148,6 +148,7 @@ task qc_atac {
         disks: "local-disk ${disk_gb} ${disk_type}"
         docker: "${docker_image}"
         memory: "${mem_gb} GB"
+        singularity: "docker://${docker_image}"
     }
 
     parameter_meta {

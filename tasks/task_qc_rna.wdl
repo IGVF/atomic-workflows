@@ -72,6 +72,7 @@ task qc_rna {
         memory : "~{mem_gb} GB"
         disks: "local-disk ~{disk_gb} ~{disk_type}"
         docker : "${docker_image}"
+        singularity: "docker://${docker_image}"
     }
 
     parameter_meta {

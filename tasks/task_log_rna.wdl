@@ -40,6 +40,7 @@ task log_rna {
 
     runtime {
         docker: "${docker_image}"
+        singularity: "docker://${docker_image}"
     }
     parameter_meta {
         alignment_json: {

@@ -33,7 +33,7 @@ task html_report {
         File? atac_archr_vals
         File? atac_tss_vals
 
-        String docker_image = ' polumechanos/html_report:igvf'
+        String docker_image = 'polumechanos/html_report:igvf'
 
     }
 
@@ -60,5 +60,6 @@ task html_report {
 
     runtime {
         docker: "${docker_image}"
+        singularity: "docker://${docker_image}"
     }
 }
