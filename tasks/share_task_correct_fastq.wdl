@@ -19,9 +19,9 @@ task share_correct_fastq {
         String? prefix
 
         Int? cpus = 4
-        Float? disk_factor = 8.0
-        Float? memory_factor = 0.08
-#        String? docker_image = "us.gcr.io/buenrostro-share-seq/share_task_correct_fastq"
+        Float disk_factor = 8.0
+        Float memory_factor = 0.08
+#        String docker_image = "us.gcr.io/buenrostro-share-seq/share_task_correct_fastq"
         String docker_image = "docker.io/polumechanos/correct_fastq:igvfpipeline"
     }
 
@@ -37,23 +37,23 @@ task share_correct_fastq {
     # Determining disk type base on the size of disk.
     String disk_type = if disk_gb > 375 then "SSD" else "LOCAL"
 
-    String corrected_fastq_R1 = basename(fastq_R1, ".fastq.gz") + "_corrected.fastq"
-    String corrected_fastq_R2 = basename(fastq_R2, ".fastq.gz") + "_corrected.fastq"
-    String corrected_fastq_barcode = basename(fastq_R1, ".fastq.gz") + "_corrected_barcode.fastq"
-    String monitor_log = "correct_fastqs_monitor.log"
+    String str_corrected_fastq_R1 = basename(fastq_R1, ".fastq.gz") + "_corrected.fastq"
+    String str_corrected_fastq_R2 = basename(fastq_R2, ".fastq.gz") + "_corrected.fastq"
+    String str_corrected_fastq_barcode = basename(fastq_R1, ".fastq.gz") + "_corrected_barcode.fastq"
+    String str_monitor_log = "correct_fastqs_monitor.log"
 
     command <<<
         set -e
 
-        bash $(which monitor_script.sh) | tee ~{monitor_log} 1>&2 &
+        bash $(which monitor_script.sh) | tee ~{str_monitor_log} 1>&2 &
 
         # Perform barcode error correction on FASTQs
         python3 $(which correct_fastq.py) \
             ~{fastq_R1} \
             ~{fastq_R2} \
-            ~{corrected_fastq_R1} \
-            ~{corrected_fastq_R2} \
-            ~{corrected_fastq_barcode} \
+            ~{str_corrected_fastq_R1} \
+            ~{str_corrected_fastq_R2} \
+            ~{str_corrected_fastq_barcode} \
             ~{whitelist} \
             ~{sample_type} \
             ~{prefix} \
@@ -63,11 +63,11 @@ task share_correct_fastq {
     >>>
 
     output {
-        File corrected_fastq_R1 = "~{corrected_fastq_R1}.gz"
-        File corrected_fastq_R2 = "~{corrected_fastq_R2}.gz"
-        File corrected_fastq_barcode= "~{corrected_fastq_barcode}.gz"
+        File corrected_fastq_R1 = "~{str_corrected_fastq_R1}.gz"
+        File corrected_fastq_R2 = "~{str_corrected_fastq_R2}.gz"
+        File corrected_fastq_barcode= "~{str_corrected_fastq_barcode}.gz"
         File barcode_qc = "~{prefix}_barcode_qc.txt"
-	    File monitor_log = "~{monitor_log}"
+	    File monitor_log = "~{str_monitor_log}"
     }
 
     runtime {
