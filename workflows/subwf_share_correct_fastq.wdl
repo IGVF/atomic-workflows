@@ -14,7 +14,7 @@ workflow wf_correct_fastq {
         Array[File] read1
         Array[File] read2
         
-        String chemistry = "share-seq"
+        String chemistry = "shareseq"
         String? prefix = "sample"
         String? subpool = "none"
 
