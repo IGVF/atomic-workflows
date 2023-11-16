@@ -59,9 +59,6 @@ task atac_align_chromap {
     # Determining disk type base on the size of disk.
     String disk_type = if disk_gb > 375 then "SSD" else "LOCAL"
 
-    # Determine barcode file
-    File barcode_file = select_first([fastq_barcode,fastq_R2])
-
     # Define the output names
     String fragments = '${prefix}.atac.filter.fragments.${genome_name}.tsv'
     String barcode_log = "${prefix}.atac.align.k${multimappers}.${genome_name}.barcode.summary.csv"
