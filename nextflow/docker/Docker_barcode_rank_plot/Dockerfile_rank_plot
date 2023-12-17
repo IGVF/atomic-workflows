@@ -1,0 +1,15 @@
+# Use an official Miniconda3 as a parent image
+FROM continuumio/miniconda3
+
+RUN conda create -n rank_plot_env -y python=3.8 && \
+    conda install -y -n rank_plot_env -c anaconda pandas numpy && \
+    conda install -y -n rank_plot_env -c conda-forge plotnine && \
+    echo "source activate rank_plot_env" > ~/.bashrc
+
+# Set default command to start /bin/bash
+ENV PATH /usr/local/bin:/opt/conda/envs/rank_plot_env/bin:$PATH
+ENV CONDA_DEFAULT_ENV rank_plot_env
+
+# 1. docker build -t eilalan/rank_plot_env -f Dockerfile_rank_plot .
+# 2. docker run -it eilalan/rank_plot_env
+# 3. docker push eilalan/rank_plot_env

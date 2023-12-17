@@ -1,0 +1,144 @@
+#!/bin/bash
+NXF_CHDIR=/fusion/gs/eila-nextflow-bucket/work/c6/eddcc8def52366ea24aa825bf942b9
+# NEXTFLOW TASK: run_seqspec_print (1)
+set -e
+set -u
+NXF_DEBUG=${NXF_DEBUG:=0}; [[ $NXF_DEBUG > 1 ]] && set -x
+NXF_ENTRY=${1:-nxf_main}
+
+
+nxf_sleep() {
+  sleep $1 2>/dev/null || sleep 1;
+}
+
+nxf_date() {
+    local ts=$(date +%s%3N);
+    if [[ ${#ts} == 10 ]]; then echo ${ts}000
+    elif [[ $ts == *%3N ]]; then echo ${ts/\%3N/000}
+    elif [[ $ts == *3N ]]; then echo ${ts/3N/000}
+    elif [[ ${#ts} == 13 ]]; then echo $ts
+    else echo "Unexpected timestamp value: $ts"; exit 1
+    fi
+}
+
+nxf_env() {
+    echo '============= task environment ============='
+    env | sort | sed "s/\(.*\)AWS\(.*\)=\(.\{6\}\).*/\1AWS\2=\3xxxxxxxxxxxxx/"
+    echo '============= task output =================='
+}
+
+nxf_kill() {
+    declare -a children
+    while read P PP;do
+        children[$PP]+=" $P"
+    done < <(ps -e -o pid= -o ppid=)
+
+    kill_all() {
+        [[ $1 != $$ ]] && kill $1 2>/dev/null || true
+        for i in ${children[$1]:=}; do kill_all $i; done
+    }
+
+    kill_all $1
+}
+
+nxf_mktemp() {
+    local base=${1:-/tmp}
+    mkdir -p "$base"
+    if [[ $(uname) = Darwin ]]; then mktemp -d $base/nxf.XXXXXXXXXX
+    else TMPDIR="$base" mktemp -d -t nxf.XXXXXXXXXX
+    fi
+}
+
+nxf_fs_copy() {
+  local source=$1
+  local target=$2
+  local basedir=$(dirname $1)
+  mkdir -p $target/$basedir
+  cp -fRL $source $target/$basedir
+}
+
+nxf_fs_move() {
+  local source=$1
+  local target=$2
+  local basedir=$(dirname $1)
+  mkdir -p $target/$basedir
+  mv -f $source $target/$basedir
+}
+
+nxf_fs_rsync() {
+  rsync -rRl $1 $2
+}
+
+nxf_fs_rclone() {
+  rclone copyto $1 $2/$1
+}
+
+nxf_fs_fcp() {
+  fcp $1 $2/$1
+}
+
+on_exit() {
+    exit_status=${nxf_main_ret:=$?}
+    printf -- $exit_status > /fusion/gs/eila-nextflow-bucket/work/c6/eddcc8def52366ea24aa825bf942b9/.exitcode
+    set +u
+    rm -rf $NXF_SCRATCH || true
+    exit $exit_status
+}
+
+on_term() {
+    set +e
+    [[ "$pid" ]] && nxf_kill $pid
+}
+
+nxf_launch() {
+    /bin/bash -ue /fusion/gs/eila-nextflow-bucket/work/c6/eddcc8def52366ea24aa825bf942b9/.command.sh
+}
+
+nxf_stage() {
+    true
+    # stage input files
+    rm -f rna_R1_SRR18677638.fastq.gz
+    rm -f rna_R2_SRR18677638.fastq.gz
+    rm -f na.na
+    rm -f nf_spec_dogmaseq_dig.yaml
+    ln -s /fusion/gs/eila-nextflow-bucket/work/stage-8530333b-f6d1-49c5-aad6-8563ca21b1d4/b8/9553d76a21568487bce9c51b68a045/rna_R1_SRR18677638.fastq.gz rna_R1_SRR18677638.fastq.gz
+    ln -s /fusion/gs/eila-nextflow-bucket/work/stage-8530333b-f6d1-49c5-aad6-8563ca21b1d4/fe/1f31caa045855de4a6bc07a407e88e/rna_R2_SRR18677638.fastq.gz rna_R2_SRR18677638.fastq.gz
+    ln -s /fusion/gs/eila-nextflow-bucket/work/stage-8530333b-f6d1-49c5-aad6-8563ca21b1d4/fa/1c2942757297b496d3fbf9802933c1/na.na na.na
+    ln -s /fusion/gs/eila-nextflow-bucket/work/stage-8530333b-f6d1-49c5-aad6-8563ca21b1d4/08/a62f1af8020e04d9ac62caa4f3fecf/nf_spec_dogmaseq_dig.yaml nf_spec_dogmaseq_dig.yaml
+}
+
+nxf_unstage() {
+    true
+    cp .command.out /fusion/gs/eila-nextflow-bucket/work/c6/eddcc8def52366ea24aa825bf942b9/.command.out || true
+    cp .command.err /fusion/gs/eila-nextflow-bucket/work/c6/eddcc8def52366ea24aa825bf942b9/.command.err || true
+    [[ ${nxf_main_ret:=0} != 0 ]] && return
+    IFS=$'\n'
+    for name in $(eval "ls -1d seqspec.print.out" | sort | uniq); do
+        nxf_fs_copy "$name" /fusion/gs/eila-nextflow-bucket/work/c6/eddcc8def52366ea24aa825bf942b9 || true
+    done
+    unset IFS
+}
+
+nxf_main() {
+    trap on_exit EXIT
+    trap on_term TERM INT USR2
+    trap '' USR1
+
+    [[ "${NXF_CHDIR:-}" ]] && cd "$NXF_CHDIR"
+    NXF_SCRATCH="$(set +u; nxf_mktemp $TMPDIR)"
+    [[ $NXF_DEBUG > 0 ]] && nxf_env
+    touch /fusion/gs/eila-nextflow-bucket/work/c6/eddcc8def52366ea24aa825bf942b9/.command.begin
+    set +u
+    set -u
+    [[ $NXF_SCRATCH ]] && cd $NXF_SCRATCH
+    export NXF_TASK_WORKDIR="$PWD"
+    nxf_stage
+
+    set +e
+    (set -o pipefail; (nxf_launch | tee .command.out) 3>&1 1>&2 2>&3 | tee .command.err) &
+    pid=$!
+    wait $pid || nxf_main_ret=$?
+    nxf_unstage
+}
+
+$NXF_ENTRY

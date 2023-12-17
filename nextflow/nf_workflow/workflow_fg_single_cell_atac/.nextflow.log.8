@@ -1,0 +1,155 @@
+Dec-15 23:53:56.615 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
+Dec-15 23:53:57.271 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 23.10.0
+Dec-15 23:53:57.347 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/eila/.nextflow/plugins; core-plugins: nf-amazon@2.1.4,nf-azure@1.3.2,nf-cloudcache@0.3.0,nf-codecommit@0.1.5,nf-console@1.0.6,nf-ga4gh@1.1.0,nf-google@1.8.3,nf-tower@1.6.3,nf-wave@1.0.0
+Dec-15 23:53:57.381 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Dec-15 23:53:57.383 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Dec-15 23:53:57.393 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Dec-15 23:53:57.439 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Dec-15 23:53:57.508 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/nextflow_vm.config
+Dec-15 23:53:57.510 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/nextflow_vm.config
+Dec-15 23:53:57.607 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `google_batch_profile`
+Dec-15 23:54:01.865 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [docker_local, google_batch_profile, conda_profile]
+Dec-15 23:54:01.932 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Dec-15 23:54:01.969 [main] INFO  nextflow.cli.CmdRun - Launching `nf_wf_fg_singlecell_atac.nf` [pedantic_ampere] DSL2 - revision: c741f56046
+Dec-15 23:54:01.971 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[nf-google@1.8.3]
+Dec-15 23:54:01.973 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[nf-google@1.8.3, nf-tower@1.6.3, nf-wave@1.0.0]
+Dec-15 23:54:01.973 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-google version: 1.8.3
+Dec-15 23:54:01.997 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-google@1.8.3' resolved
+Dec-15 23:54:01.998 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-google@1.8.3'
+Dec-15 23:54:02.090 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-google@1.8.3
+Dec-15 23:54:02.091 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-tower version: 1.6.3
+Dec-15 23:54:02.095 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-tower@1.6.3' resolved
+Dec-15 23:54:02.095 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-tower@1.6.3'
+Dec-15 23:54:02.125 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-tower@1.6.3
+Dec-15 23:54:02.125 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-wave version: 1.0.0
+Dec-15 23:54:02.139 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-wave@1.0.0' resolved
+Dec-15 23:54:02.140 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-wave@1.0.0'
+Dec-15 23:54:02.157 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-wave@1.0.0
+Dec-15 23:54:02.190 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/eila/.nextflow/secrets/store.json
+Dec-15 23:54:02.199 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@3596b249] - activable => nextflow.secret.LocalSecretsProvider@3596b249
+Dec-15 23:54:02.342 [main] DEBUG nextflow.Session - Session UUID: f7e37c4b-c1ab-4ccb-a8cb-153d209e8602
+Dec-15 23:54:02.342 [main] DEBUG nextflow.Session - Run name: pedantic_ampere
+Dec-15 23:54:02.343 [main] DEBUG nextflow.Session - Executor pool size: 4
+Dec-15 23:54:02.940 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Dec-15 23:54:02.958 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=12; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Dec-15 23:54:02.974 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/nextflow_vm.config
+Dec-15 23:54:02.974 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/nextflow_vm.config
+Dec-15 23:54:02.975 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `google_batch_profile`
+Dec-15 23:54:05.596 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [docker_local, google_batch_profile, conda_profile]
+Dec-15 23:54:05.662 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 23.10.0 build 5889
+  Created: 15-10-2023 15:07 UTC 
+  System: Linux 5.10.0-26-cloud-amd64
+  Runtime: Groovy 3.0.19 on OpenJDK 64-Bit Server VM 11.0.13+7-b1751.21
+  Encoding: UTF-8 (UTF-8)
+  Process: 296258@eila-vm [10.128.0.63]
+  CPUs: 4 - Mem: 14.6 GB (904.1 MB) - Swap: 0 (0)
+Dec-15 23:54:05.904 [main] DEBUG nextflow.file.FileHelper - Can't check if specified path is NFS (1): gs://eila-nextflow-bucket/work/ATAC
+
+Dec-15 23:54:05.904 [main] DEBUG nextflow.Session - Work-dir: gs://eila-nextflow-bucket/work/ATAC [null]
+Dec-15 23:54:05.967 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[GoogleLifeSciencesExecutor, GoogleBatchExecutor]
+Dec-15 23:54:05.994 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Dec-15 23:54:06.000 [main] DEBUG nextflow.Session - Observer factory: WaveFactory
+Dec-15 23:54:06.001 [main] DEBUG io.seqera.wave.plugin.WaveFactory - Detected Fusion enabled -- Enabling bundle project resources -- Disabling upload of remote bin directory
+Dec-15 23:54:06.044 [main] DEBUG i.s.wave.plugin.config.WaveConfig - Wave strategy not specified - using default: [container, dockerfile, conda, spack]
+Dec-15 23:54:06.059 [main] DEBUG io.seqera.wave.plugin.WaveClient - Wave config: WaveConfig(enabled:true, endpoint:https://wave.seqera.io, containerConfigUrl:[], tokensCacheMaxDuration:30m, condaOpts:CondaOpts(mambaImage=mambaorg/micromamba:1.5.1; basePackages=conda-forge::procps-ng, commands=null), spackOpts:SpackOpts(basePackages=null, commands=null), strategy:[container, dockerfile, conda, spack], bundleProjectResources:true, buildRepository:null, cacheRepository:null, retryOpts:RetryOpts(delay:450ms, maxDelay:1m 30s, maxAttempts:10, jitter:0.25), httpClientOpts:HttpOpts(), freezeMode:null, dryRunMode:false)
+Dec-15 23:54:06.316 [main] DEBUG nextflow.Session - Observer factory: TowerFactory
+Dec-15 23:54:06.498 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Dec-15 23:54:06.523 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 5; maxThreads: 1000
+Dec-15 23:54:06.683 [main] DEBUG nextflow.Session - Session start
+Dec-15 23:54:06.701 [main] DEBUG io.seqera.tower.plugin.TowerClient - Creating Tower observer -- endpoint=https://api.tower.nf; requestInterval=1s; aliveInterval=1m; maxRetries=5; backOffBase=3; backOffDelay=250
+Dec-15 23:54:08.525 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Dec-15 23:54:10.193 [main] WARN  nextflow.script.ScriptBinding - `params.tss_bases_flank` is defined multiple times -- Assignments following the first are ignored
+Dec-15 23:54:10.421 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_7664153e6cd8ad6c: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_tss.nf
+  Script_ea7cdb417e42517f: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_generate_barcode_metadata.nf
+  Script_f63f7a0583acd4b8: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_bgzip.nf
+  Script_e112646bcdb899f0: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_seqspec_utils.nf
+  Script_7180cc8fa5a6505c: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_chromap_utils.nf
+  Script_a453a0e93b458b79: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/nf_wf_fg_singlecell_atac.nf
+  Script_3d78df279f932afb: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_atac_qc_plots.nf
+  Script_1aaf2ed009725448: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_filter_fragments.nf
+  Script_caef5739a3ac2dec: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_tabix.nf
+  Script_9d4639c8cd883c70: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_download_url_files.nf
+  Script_9c2ce54dcf0b5c06: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_merge_logs.nf
+Dec-15 23:54:10.443 [main] ERROR nextflow.cli.Launcher - Module compilation error
+- file : /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_atac_barcode_rank_plot.nf
+- cause: Unexpected character: '"' @ line 17, column 5.
+     """
+       ^
+
+1 error
+
+nextflow.exception.ScriptCompilationException: Module compilation error
+- file : /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_atac/./../../nf_processes/nf_prcs_atac_barcode_rank_plot.nf
+- cause: Unexpected character: '"' @ line 17, column 5.
+     """
+       ^
+
+1 error
+
+	at nextflow.script.ScriptParser.parse0(ScriptParser.groovy:196)
+	at nextflow.script.ScriptParser.parse(ScriptParser.groovy:206)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:221)
+	at nextflow.script.IncludeDef.memoizedMethodPriv$loadModule0PathMapSession(IncludeDef.groovy:151)
+	at nextflow.script.IncludeDef.access$0(IncludeDef.groovy)
+	at nextflow.script.IncludeDef$__clinit__closure2.doCall(IncludeDef.groovy)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at org.codehaus.groovy.runtime.memoize.Memoize$MemoizeFunction.lambda$call$0(Memoize.java:137)
+	at org.codehaus.groovy.runtime.memoize.ConcurrentCommonCache.getAndPut(ConcurrentCommonCache.java:137)
+	at org.codehaus.groovy.runtime.memoize.ConcurrentCommonCache.getAndPut(ConcurrentCommonCache.java:113)
+	at org.codehaus.groovy.runtime.memoize.Memoize$MemoizeFunction.call(Memoize.java:136)
+	at nextflow.script.IncludeDef.loadModule0(IncludeDef.groovy)
+	at nextflow.script.IncludeDef.load0(IncludeDef.groovy:123)
+	at nextflow.script.IncludeDef$load0$1.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+	at Script_a453a0e93b458b79.runScript(Script_a453a0e93b458b79:14)
+	at nextflow.script.BaseScript.run0(BaseScript.groovy:144)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:192)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:236)
+	at nextflow.script.ScriptRunner.run(ScriptRunner.groovy:242)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:137)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:372)
+	at nextflow.cli.Launcher.run(Launcher.groovy:499)
+	at nextflow.cli.Launcher.main(Launcher.groovy:670)
+Caused by: org.codehaus.groovy.control.MultipleCompilationErrorsException: startup failed:
+Script_d0065c3f6c86b1e0: 17: Unexpected character: '"' @ line 17, column 5.
+     """
+       ^
+
+1 error
+
+	at org.codehaus.groovy.control.ErrorCollector.failIfErrors(ErrorCollector.java:292)
+	at org.codehaus.groovy.control.ErrorCollector.addFatalError(ErrorCollector.java:148)
+	at org.apache.groovy.parser.antlr4.AstBuilder.collectSyntaxError(AstBuilder.java:4321)
+	at org.apache.groovy.parser.antlr4.AstBuilder.createParsingFailedException(AstBuilder.java:4304)
+	at org.apache.groovy.parser.antlr4.AstBuilder.convertException(AstBuilder.java:261)
+	at org.apache.groovy.parser.antlr4.AstBuilder.buildCST(AstBuilder.java:235)
+	at org.apache.groovy.parser.antlr4.AstBuilder.buildAST(AstBuilder.java:269)
+	at org.apache.groovy.parser.antlr4.Antlr4ParserPlugin.buildAST(Antlr4ParserPlugin.java:58)
+	at org.codehaus.groovy.control.SourceUnit.buildAST(SourceUnit.java:256)
+	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
+	at java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1801)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:658)
+	at org.codehaus.groovy.control.CompilationUnit.buildASTs(CompilationUnit.java:667)
+	at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:633)
+	at groovy.lang.GroovyClassLoader.doParseClass(GroovyClassLoader.java:389)
+	at groovy.lang.GroovyClassLoader.lambda$parseClass$3(GroovyClassLoader.java:332)
+	at org.codehaus.groovy.runtime.memoize.StampedCommonCache.compute(StampedCommonCache.java:163)
+	at org.codehaus.groovy.runtime.memoize.StampedCommonCache.getAndPut(StampedCommonCache.java:154)
+	at groovy.lang.GroovyClassLoader.parseClass(GroovyClassLoader.java:330)
+	at groovy.lang.GroovyShell.parseClass(GroovyShell.java:526)
+	at groovy.lang.GroovyShell.parse(GroovyShell.java:538)
+	at groovy.lang.GroovyShell.parse(GroovyShell.java:570)
+	at nextflow.script.ScriptParser.parse0(ScriptParser.groovy:175)
+	... 33 common frames omitted

@@ -1,0 +1,39 @@
+# Use a base image with Python
+# FROM python:3.9-slim-buster
+FROM continuumio/miniconda3
+
+# Install wget, tar, and other basic utilities
+RUN apt-get update && apt-get install -y wget tar make g++ autoconf cmake git build-essential
+
+# Install seqspec
+RUN pip uninstall -y seqspec
+RUN pip install --quiet git+https://github.com/IGVF/seqspec.git
+
+# # # FOR DEBUG on local machine
+# # # Create a directory for Jupyter notebooks
+# RUN mkdir /notebooks
+
+# # Copy spec.yaml, copy the notebook
+# COPY spec.yaml /notebooks
+# COPY preprocess.ipynb /notebooks
+
+# # Install Jupyter Notebook
+# RUN pip install jupyter
+
+# # Set the working directory to /notebooks
+# WORKDIR /notebooks
+
+# # Expose port 8888 for Jupyter Notebook
+# EXPOSE 8888
+
+# # Start Jupyter Notebook on container startup
+# CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+
+
+# sudo docker build -t eilalan/seqspec_env:latest -f Dockerfile_seqspec .
+# sudo docker run -it eilalan/seqspec_env:latest bash
+# sudo docker push eilalan/seqspec_env:latest
+
+
+# multienv - to try
+# sudo docker build -t --platform --platform linux/amd64,linux/arm64 eilalan/seqspec_env:latest -f Dockerfile_seqspec .

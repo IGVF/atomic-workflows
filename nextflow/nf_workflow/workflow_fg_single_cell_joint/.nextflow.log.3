@@ -1,0 +1,111 @@
+Dec-17 08:50:25.018 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nf_wf_fg_singlecell_joint.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
+Dec-17 08:50:25.208 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 23.10.0
+Dec-17 08:50:25.243 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/eila/.nextflow/plugins; core-plugins: nf-amazon@2.1.4,nf-azure@1.3.2,nf-cloudcache@0.3.0,nf-codecommit@0.1.5,nf-console@1.0.6,nf-ga4gh@1.1.0,nf-google@1.8.3,nf-tower@1.6.3,nf-wave@1.0.0
+Dec-17 08:50:25.260 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Dec-17 08:50:25.262 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Dec-17 08:50:25.268 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Dec-17 08:50:25.286 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Dec-17 08:50:25.320 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_joint/nextflow_vm.config
+Dec-17 08:50:25.321 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_joint/nextflow_vm.config
+Dec-17 08:50:25.363 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `google_batch_profile`
+Dec-17 08:50:26.787 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [google_batch_profile]
+Dec-17 08:50:26.843 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Dec-17 08:50:26.876 [main] INFO  nextflow.cli.CmdRun - Launching `nf_wf_fg_singlecell_joint.nf` [pensive_lalande] DSL2 - revision: b7831afcad
+Dec-17 08:50:26.878 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[nf-google@1.8.3]
+Dec-17 08:50:26.879 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[nf-google@1.8.3, nf-tower@1.6.3]
+Dec-17 08:50:26.879 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-google version: 1.8.3
+Dec-17 08:50:26.902 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-google@1.8.3' resolved
+Dec-17 08:50:26.903 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-google@1.8.3'
+Dec-17 08:50:26.970 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-google@1.8.3
+Dec-17 08:50:26.970 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-tower version: 1.6.3
+Dec-17 08:50:26.973 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-tower@1.6.3' resolved
+Dec-17 08:50:26.973 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-tower@1.6.3'
+Dec-17 08:50:26.988 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-tower@1.6.3
+Dec-17 08:50:27.011 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/eila/.nextflow/secrets/store.json
+Dec-17 08:50:27.017 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@20a967fe] - activable => nextflow.secret.LocalSecretsProvider@20a967fe
+Dec-17 08:50:27.130 [main] DEBUG nextflow.Session - Session UUID: c851f257-8461-446b-a040-9554df8550cb
+Dec-17 08:50:27.131 [main] DEBUG nextflow.Session - Run name: pensive_lalande
+Dec-17 08:50:27.132 [main] DEBUG nextflow.Session - Executor pool size: 4
+Dec-17 08:50:27.552 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Dec-17 08:50:27.561 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=12; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Dec-17 08:50:27.568 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_joint/nextflow_vm.config
+Dec-17 08:50:27.569 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_joint/nextflow_vm.config
+Dec-17 08:50:27.570 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `google_batch_profile`
+Dec-17 08:50:27.831 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [google_batch_profile]
+Dec-17 08:50:27.880 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 23.10.0 build 5889
+  Created: 15-10-2023 15:07 UTC 
+  System: Linux 5.10.0-26-cloud-amd64
+  Runtime: Groovy 3.0.19 on OpenJDK 64-Bit Server VM 11.0.13+7-b1751.21
+  Encoding: UTF-8 (UTF-8)
+  Process: 323158@eila-vm [10.128.0.63]
+  CPUs: 4 - Mem: 14.6 GB (1.1 GB) - Swap: 0 (0)
+Dec-17 08:50:27.945 [main] DEBUG nextflow.file.FileHelper - Can't check if specified path is NFS (1): gs://eila-nextflow-bucket/work/ATAC
+
+Dec-17 08:50:27.946 [main] DEBUG nextflow.Session - Work-dir: gs://eila-nextflow-bucket/work/ATAC [null]
+Dec-17 08:50:27.994 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[GoogleLifeSciencesExecutor, GoogleBatchExecutor]
+Dec-17 08:50:28.018 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Dec-17 08:50:28.023 [main] DEBUG nextflow.Session - Observer factory: TowerFactory
+Dec-17 08:50:28.304 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Dec-17 08:50:28.321 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 5; maxThreads: 1000
+Dec-17 08:50:28.475 [main] DEBUG nextflow.Session - Session start
+Dec-17 08:50:28.510 [main] DEBUG io.seqera.tower.plugin.TowerClient - Creating Tower observer -- endpoint=https://api.tower.nf; requestInterval=1s; aliveInterval=1m; maxRetries=5; backOffBase=3; backOffDelay=250
+Dec-17 08:50:29.614 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Dec-17 08:50:30.076 [main] INFO  nextflow.script.BaseScript - Before calling run_joint_barcode_cell_plotting
+Dec-17 08:50:30.095 [main] INFO  nextflow.script.BaseScript - RNA Metrics: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/na.na
+Dec-17 08:50:30.096 [main] INFO  nextflow.script.BaseScript - ATAC Metrics: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/na1.na
+Dec-17 08:50:30.175 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:joint_barcode_metadata_py` matches labels `joint_barcode_metadata_py` for process with name run_joint_barcode_cell_plotting
+Dec-17 08:50:30.214 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Dec-17 08:50:30.215 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Dec-17 08:50:30.219 [main] DEBUG nextflow.executor.Executor - [warm up] executor > google-batch
+Dec-17 08:50:30.227 [main] DEBUG n.processor.TaskPollingMonitor - Creating task monitor for executor 'google-batch' > capacity: 1000; pollInterval: 10s; dumpInterval: 5m 
+Dec-17 08:50:30.230 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: google-batch)
+Dec-17 08:50:30.239 [main] DEBUG nextflow.cloud.google.GoogleOpts - Google auth via application DEFAULT
+Dec-17 08:50:30.246 [main] DEBUG n.c.google.batch.GoogleBatchExecutor - [GOOGLE BATCH] Executor config=BatchConfig[googleOpts=GoogleOpts(projectId:hai-gcp-genomic, credsFile:null, location:us-central1, enableRequesterPaysBuckets:false, httpConnectTimeout:1m, httpReadTimeout:1m, credentials:UserCredentials{requestMetadata=null, temporaryAccess=null, clientId=764086051850-6qr4p6gpi6hn506pt8ejuq83di341hur.apps.googleusercontent.com, refreshToken=1//04-ZrKvCfXPa5CgYIARAAGAQSNwF-L9IrkFtcwyfUDAhTeAquw0t0utu5nMRfG-U9l5uflp_XJI0EMWlO9aPKmi0CxdbKiKRekQc, tokenServerUri=https://oauth2.googleapis.com/token, transportFactoryClassName=com.google.auth.oauth2.OAuth2Utils$DefaultHttpTransportFactory, quotaProjectId=hai-gcp-genomic})
+Dec-17 08:50:30.968 [main] INFO  n.c.google.batch.GoogleBatchExecutor - Uploading local `bin` scripts folder to gs://eila-nextflow-bucket/work/ATAC/tmp/22/fdf3ffafbaf2ced9ab19ce98c90b0b/bin
+Dec-17 08:50:33.278 [main] DEBUG n.c.google.batch.client.BatchClient - [GOOGLE BATCH] Creating service client with config credentials
+Dec-17 08:50:34.064 [main] INFO  nextflow.script.BaseScript - After calling run_joint_barcode_cell_plotting
+Dec-17 08:50:34.067 [main] INFO  nextflow.script.BaseScript - Before calling run_joint_cell_plotting_density
+Dec-17 08:50:34.071 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:joint_barcode_metadata_r` matches labels `joint_barcode_metadata_r` for process with name run_joint_cell_plotting_density
+Dec-17 08:50:34.074 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Dec-17 08:50:34.074 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Dec-17 08:50:34.080 [main] INFO  nextflow.script.BaseScript - After calling run_joint_cell_plotting_density
+Dec-17 08:50:34.080 [main] INFO  nextflow.script.BaseScript - Before run_joint_metrics_html_report
+Dec-17 08:50:34.085 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:joint_metrics_html_report` matches labels `joint_metrics_html_report` for process with name run_joint_metrics_html_report
+Dec-17 08:50:34.087 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Dec-17 08:50:34.087 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Dec-17 08:50:34.095 [main] INFO  nextflow.script.BaseScript - AFter run_joint_metrics_html_report
+Dec-17 08:50:34.096 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: run_joint_metrics_html_report, run_joint_cell_plotting_density, run_joint_barcode_cell_plotting
+Dec-17 08:50:34.676 [main] INFO  io.seqera.tower.plugin.TowerClient - Monitor the execution with Nextflow Tower using this URL: https://tower.nf/orgs/ort_eila_org/workspaces/ort_eila_wrkspc/watch/8kj9jA1k9TQYE
+Dec-17 08:50:34.677 [main] DEBUG nextflow.Session - Igniting dataflow network (3)
+Dec-17 08:50:34.678 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > run_joint_barcode_cell_plotting
+Dec-17 08:50:34.680 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > run_joint_cell_plotting_density
+Dec-17 08:50:34.681 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > run_joint_metrics_html_report
+Dec-17 08:50:34.682 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_c238942ee97b03b9: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_joint/./../../nf_processes/nf_prcs_joint_metrics_html_report.nf
+  Script_ab5790b26911b06c: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_joint/./../../nf_processes/nf_prcs_joint_barcode_cell_plotting.nf
+  Script_b9b93fb4efabde58: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_joint/./../../nf_processes/nf_prcs_joint_barcode_cell_plotting_density.nf
+  Script_0a11310dbfb239d2: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_joint/nf_wf_fg_singlecell_joint.nf
+Dec-17 08:50:34.682 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Dec-17 08:50:34.682 [main] DEBUG nextflow.Session - Session await
+Dec-17 08:50:35.603 [FileTransfer-1] DEBUG nextflow.file.FilePorter - Local cache found for foreign file /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/na2.na at gs://eila-nextflow-bucket/work/ATAC/stage-c851f257-8461-446b-a040-9554df8550cb/f7/25a2769658634004bac1cf68fd37f1/na2.na
+Dec-17 08:50:36.449 [FileTransfer-4] DEBUG nextflow.file.FilePorter - Local cache found for foreign file /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/na3.na at gs://eila-nextflow-bucket/work/ATAC/stage-c851f257-8461-446b-a040-9554df8550cb/db/6a94b01c025a9c8de6d3af879023b7/na3.na
+Dec-17 08:50:36.560 [FileTransfer-3] DEBUG nextflow.file.FilePorter - Local cache found for foreign file /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/na1.na at gs://eila-nextflow-bucket/work/ATAC/stage-c851f257-8461-446b-a040-9554df8550cb/b6/61b72cc4dcb9c0647c89f4e37e6a9f/na1.na
+Dec-17 08:50:36.571 [FileTransfer-2] DEBUG nextflow.file.FilePorter - Local cache found for foreign file /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/na.na at gs://eila-nextflow-bucket/work/ATAC/stage-c851f257-8461-446b-a040-9554df8550cb/a3/44bb653c2d13cd5013efbdb357eaf3/na.na
+Dec-17 08:50:37.133 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [44/e29097] Cached process > run_joint_cell_plotting_density
+Dec-17 08:50:37.630 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [9d/103233] Cached process > run_joint_barcode_cell_plotting
+Dec-17 08:50:39.778 [Task submitter] DEBUG n.c.g.batch.GoogleBatchTaskHandler - [GOOGLE BATCH] Process `run_joint_metrics_html_report` submitted > job=nf-8c95e377-1702803037294; uid=nf-8c95e377-170280-ac03841a-fca6-49130; work-dir=gs://eila-nextflow-bucket/work/ATAC/8c/95e37700ad85009360fab8896530cb
+Dec-17 08:50:39.779 [Task submitter] INFO  nextflow.Session - [8c/95e377] Submitted process > run_joint_metrics_html_report
+Dec-17 08:53:10.298 [Task monitor] DEBUG n.c.g.batch.GoogleBatchTaskHandler - [GOOGLE BATCH] Process `run_joint_metrics_html_report` - terminated job=nf-8c95e377-1702803037294; state=SUCCEEDED
+Dec-17 08:53:10.641 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: run_joint_metrics_html_report; status: COMPLETED; exit: 0; error: -; workDir: gs://eila-nextflow-bucket/work/ATAC/8c/95e37700ad85009360fab8896530cb]
+Dec-17 08:53:11.127 [main] DEBUG nextflow.Session - Session await > all processes finished
+Dec-17 08:53:11.370 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: google-batch) - terminating tasks monitor poll loop
+Dec-17 08:53:11.370 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Dec-17 08:53:11.381 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=1; failedCount=0; ignoredCount=0; cachedCount=2; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=173ms; failedDuration=0ms; cachedDuration=2.5s;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=1; peakMemory=0; ]
+Dec-17 08:53:11.864 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Dec-17 08:53:11.865 [main] INFO  org.pf4j.AbstractPluginManager - Stop plugin 'nf-tower@1.6.3'
+Dec-17 08:53:11.865 [main] DEBUG nextflow.plugin.BasePlugin - Plugin stopped nf-tower
+Dec-17 08:53:11.865 [main] INFO  org.pf4j.AbstractPluginManager - Stop plugin 'nf-google@1.8.3'
+Dec-17 08:53:11.865 [main] DEBUG nextflow.plugin.BasePlugin - Plugin stopped nf-google
+Dec-17 08:53:11.887 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Dec-17 08:53:11.887 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

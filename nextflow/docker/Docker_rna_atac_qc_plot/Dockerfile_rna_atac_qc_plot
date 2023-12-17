@@ -1,0 +1,18 @@
+# Use an official Miniconda3 as a parent image
+FROM continuumio/miniconda3
+
+RUN conda create -n rna_atac_plot_qc_env -y python=3.8 && \
+    conda install -y -n rna_atac_plot_qc_env -c conda-forge anndata r-base xorg-libxt r-cairodevice scanpy && \
+    echo "source activate rna_atac_plot_qc_env" > ~/.bashrc
+
+# Set default command to start /bin/bash
+ENV PATH /usr/local/bin:/opt/conda/envs/rna_atac_plot_qc_env/bin:$PATH
+ENV CONDA_DEFAULT_ENV rna_atac_plot_qc_env
+
+
+  
+# 1. docker build -t eilalan/rna_atac_plot_qc_env:latest -f Dockerfile_rna_atac_qc_plot .
+# 2. docker run -it eilalan/rna_atac_plot_qc_env:latest
+# 3. docker push eilalan/rna_atac_plot_qc_env:latest
+
+

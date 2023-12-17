@@ -74,6 +74,10 @@ docs/_build/
 # PyBuilder
 target/
 
+#Nextflow - GCP json and FASTQ files
+hai-gcp-genomic-beb9207a40b8.json
+*.fastq.gz
+
 # Jupyter Notebook
 .ipynb_checkpoints
 

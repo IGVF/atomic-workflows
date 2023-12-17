@@ -1,0 +1,39 @@
+# Use a Debian-based image
+FROM debian:stable-slim
+
+# To prevent time zone prompt
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    tabix \
+    gcc \
+    pigz \
+    git \
+    tar \
+    build-essential \
+    wget \
+    procps \
+    zlib1g-dev \
+    nano && \
+    rm -rf /var/lib/apt/lists/*
+
+# Clone Chromap from GitHub
+RUN git clone https://github.com/haowenz/chromap.git
+
+# Navigate to the directory containing the Makefile
+WORKDIR /chromap
+
+
+# Build Chromap
+RUN make
+
+ENV PATH="$PATH:/chromap"
+
+# # Define an entry point or command to run Chromap
+# CMD [ "/chromap/chromap" ]
+# sudo docker build -t eilalan/chromap_env:latest -f Dockerfile_chromap .
+# sudo docker run -it eilalan/chromap_env:latest bash
+# sudo docker push eilalan/chromap_env:latest
+
+# wget http://ftp.ensembl.org/pub/release-109/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+# chromap -i -r Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz -o ref.index

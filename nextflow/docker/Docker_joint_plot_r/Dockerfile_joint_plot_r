@@ -1,0 +1,19 @@
+# Use an official Miniconda3 as a parent image
+FROM continuumio/miniconda3
+
+RUN conda create -n joint_plot_r_env -y python=3.8 && \
+    conda install -y -n joint_plot_r_env -c conda-forge r-base xorg-libxt r-cairodevice rpy2 r-ggplot2 r-ggpointdensity && \
+    conda install -y -n joint_plot_r_env -c anaconda numpy pandas plotnine && \
+    echo "source activate joint_plot_r_env" > ~/.bashrc
+
+# Set default command to start /bin/bash
+ENV PATH /usr/local/bin:/opt/conda/envs/joint_plot_r_env/bin:$PATH
+ENV CONDA_DEFAULT_ENV joint_plot_r_env
+
+
+  
+# 1. docker build -t eilalan/joint_plot_r_env:latest -f Dockerfile_joint_plot_r .
+# 2. docker run -it eilalan/joint_plot_r_env:latest
+# 3. docker push eilalan/joint_plot_r_env:latest
+
+

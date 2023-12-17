@@ -1,0 +1,197 @@
+Nov-17 01:47:07.554 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nf_wf_fg_singlecell_rna.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
+Nov-17 01:47:07.997 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 23.10.0
+Nov-17 01:47:08.044 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/eila/.nextflow/plugins; core-plugins: nf-amazon@2.1.4,nf-azure@1.3.2,nf-cloudcache@0.3.0,nf-codecommit@0.1.5,nf-console@1.0.6,nf-ga4gh@1.1.0,nf-google@1.8.3,nf-tower@1.6.3,nf-wave@1.0.0
+Nov-17 01:47:08.064 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Nov-17 01:47:08.066 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Nov-17 01:47:08.073 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Nov-17 01:47:08.093 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Nov-17 01:47:08.128 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/nextflow_vm.config
+Nov-17 01:47:08.129 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/nextflow_vm.config
+Nov-17 01:47:08.173 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `google_batch_profile`
+Nov-17 01:47:11.370 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [docker_local, google_batch_profile, conda_profile]
+Nov-17 01:47:11.443 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Nov-17 01:47:11.468 [main] INFO  nextflow.cli.CmdRun - Launching `nf_wf_fg_singlecell_rna.nf` [jolly_hopper] DSL2 - revision: fe1c2abe14
+Nov-17 01:47:11.470 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[nf-google@1.8.3]
+Nov-17 01:47:11.472 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[nf-google@1.8.3, nf-tower@1.6.3, nf-wave@1.0.0]
+Nov-17 01:47:11.472 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-google version: 1.8.3
+Nov-17 01:47:11.498 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-google@1.8.3' resolved
+Nov-17 01:47:11.498 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-google@1.8.3'
+Nov-17 01:47:11.569 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-google@1.8.3
+Nov-17 01:47:11.569 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-tower version: 1.6.3
+Nov-17 01:47:11.571 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-tower@1.6.3' resolved
+Nov-17 01:47:11.572 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-tower@1.6.3'
+Nov-17 01:47:11.586 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-tower@1.6.3
+Nov-17 01:47:11.586 [main] DEBUG nextflow.plugin.PluginUpdater - Installing plugin nf-wave version: 1.0.0
+Nov-17 01:47:11.591 [main] INFO  org.pf4j.AbstractPluginManager - Plugin 'nf-wave@1.0.0' resolved
+Nov-17 01:47:11.592 [main] INFO  org.pf4j.AbstractPluginManager - Start plugin 'nf-wave@1.0.0'
+Nov-17 01:47:11.603 [main] DEBUG nextflow.plugin.BasePlugin - Plugin started nf-wave@1.0.0
+Nov-17 01:47:11.626 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/eila/.nextflow/secrets/store.json
+Nov-17 01:47:11.631 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@7f9e8421] - activable => nextflow.secret.LocalSecretsProvider@7f9e8421
+Nov-17 01:47:11.733 [main] DEBUG nextflow.Session - Session UUID: becedc50-945f-4f26-ab13-4ebd072d2c05
+Nov-17 01:47:11.733 [main] DEBUG nextflow.Session - Run name: jolly_hopper
+Nov-17 01:47:11.734 [main] DEBUG nextflow.Session - Executor pool size: 4
+Nov-17 01:47:12.124 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Nov-17 01:47:12.132 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=12; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Nov-17 01:47:12.139 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/nextflow_vm.config
+Nov-17 01:47:12.140 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/nextflow_vm.config
+Nov-17 01:47:12.141 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `google_batch_profile`
+Nov-17 01:47:14.293 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [docker_local, google_batch_profile, conda_profile]
+Nov-17 01:47:14.342 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 23.10.0 build 5889
+  Created: 15-10-2023 15:07 UTC 
+  System: Linux 5.10.0-26-cloud-amd64
+  Runtime: Groovy 3.0.19 on OpenJDK 64-Bit Server VM 11.0.13+7-b1751.21
+  Encoding: UTF-8 (UTF-8)
+  Process: 441483@eila-vm [10.128.0.63]
+  CPUs: 4 - Mem: 14.6 GB (408.1 MB) - Swap: 0 (0)
+Nov-17 01:47:14.425 [main] DEBUG nextflow.file.FileHelper - Can't check if specified path is NFS (1): gs://eila-nextflow-bucket/work/RNA
+
+Nov-17 01:47:14.425 [main] DEBUG nextflow.Session - Work-dir: gs://eila-nextflow-bucket/work/RNA [null]
+Nov-17 01:47:14.473 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[GoogleLifeSciencesExecutor, GoogleBatchExecutor]
+Nov-17 01:47:14.501 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Nov-17 01:47:14.506 [main] DEBUG nextflow.Session - Observer factory: WaveFactory
+Nov-17 01:47:14.506 [main] DEBUG io.seqera.wave.plugin.WaveFactory - Detected Fusion enabled -- Enabling bundle project resources -- Disabling upload of remote bin directory
+Nov-17 01:47:14.542 [main] DEBUG i.s.wave.plugin.config.WaveConfig - Wave strategy not specified - using default: [container, dockerfile, conda, spack]
+Nov-17 01:47:14.558 [main] DEBUG io.seqera.wave.plugin.WaveClient - Wave config: WaveConfig(enabled:true, endpoint:https://wave.seqera.io, containerConfigUrl:[], tokensCacheMaxDuration:30m, condaOpts:CondaOpts(mambaImage=mambaorg/micromamba:1.5.1; basePackages=conda-forge::procps-ng, commands=null), spackOpts:SpackOpts(basePackages=null, commands=null), strategy:[container, dockerfile, conda, spack], bundleProjectResources:true, buildRepository:null, cacheRepository:null, retryOpts:RetryOpts(delay:450ms, maxDelay:1m 30s, maxAttempts:10, jitter:0.25), httpClientOpts:HttpOpts(), freezeMode:null, dryRunMode:false)
+Nov-17 01:47:14.740 [main] DEBUG nextflow.Session - Observer factory: TowerFactory
+Nov-17 01:47:14.833 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Nov-17 01:47:14.852 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 5; maxThreads: 1000
+Nov-17 01:47:15.013 [main] DEBUG nextflow.Session - Session start
+Nov-17 01:47:15.031 [main] DEBUG io.seqera.tower.plugin.TowerClient - Creating Tower observer -- endpoint=https://api.tower.nf; requestInterval=1s; aliveInterval=1m; maxRetries=5; backOffBase=3; backOffDelay=250
+Nov-17 01:47:16.267 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Nov-17 01:47:17.194 [main] INFO  nextflow.script.BaseScript - null
+Nov-17 01:47:17.195 [main] INFO  nextflow.script.BaseScript - /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/rna_fastqs_files_vm-dogma-dig.csv
+Nov-17 01:47:17.409 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:seqspec_local` matches labels `seqspec_local` for process with name run_seqspec_modify_rna
+Nov-17 01:47:17.416 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Nov-17 01:47:17.416 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Nov-17 01:47:17.420 [main] DEBUG nextflow.executor.Executor - [warm up] executor > google-batch (fusion enabled)
+Nov-17 01:47:17.426 [main] DEBUG n.processor.TaskPollingMonitor - Creating task monitor for executor 'google-batch' > capacity: 1000; pollInterval: 10s; dumpInterval: 5m 
+Nov-17 01:47:17.429 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: google-batch)
+Nov-17 01:47:17.435 [main] DEBUG nextflow.cloud.google.GoogleOpts - Google auth via application DEFAULT
+Nov-17 01:47:17.440 [main] DEBUG n.c.google.batch.GoogleBatchExecutor - [GOOGLE BATCH] Executor config=BatchConfig[googleOpts=GoogleOpts(projectId:hai-gcp-genomic, credsFile:null, location:us-central1, enableRequesterPaysBuckets:false, httpConnectTimeout:1m, httpReadTimeout:1m, credentials:UserCredentials{requestMetadata=null, temporaryAccess=null, clientId=764086051850-6qr4p6gpi6hn506pt8ejuq83di341hur.apps.googleusercontent.com, refreshToken=1//04-ZrKvCfXPa5CgYIARAAGAQSNwF-L9IrkFtcwyfUDAhTeAquw0t0utu5nMRfG-U9l5uflp_XJI0EMWlO9aPKmi0CxdbKiKRekQc, tokenServerUri=https://oauth2.googleapis.com/token, transportFactoryClassName=com.google.auth.oauth2.OAuth2Utils$DefaultHttpTransportFactory, quotaProjectId=hai-gcp-genomic})
+Nov-17 01:47:17.462 [main] DEBUG n.c.google.batch.client.BatchClient - [GOOGLE BATCH] Creating service client with config credentials
+Nov-17 01:47:18.154 [main] INFO  nextflow.script.BaseScript - after run_seqspec_modify_rna
+Nov-17 01:47:18.159 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:seqspec_local` matches labels `seqspec_local` for process with name run_seqspec_print
+Nov-17 01:47:18.161 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Nov-17 01:47:18.161 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Nov-17 01:47:18.166 [main] INFO  nextflow.script.BaseScript - after run_seqspec_print
+Nov-17 01:47:18.169 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:seqspec_local` matches labels `seqspec_local` for process with name run_seqspec_index_rna_kb
+Nov-17 01:47:18.171 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Nov-17 01:47:18.171 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Nov-17 01:47:18.175 [main] INFO  nextflow.script.BaseScript - after run_seqspec_index_rna_kb
+Nov-17 01:47:18.176 [main] INFO  nextflow.script.BaseScript - technology is $technology
+Nov-17 01:47:18.192 [main] INFO  nextflow.script.BaseScript - after genome_fasta_ch
+Nov-17 01:47:18.193 [main] INFO  nextflow.script.BaseScript - after genome_gtf_ch
+Nov-17 01:47:18.196 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:kb_ref` matches labels `kb_ref` for process with name run_kb_ref
+Nov-17 01:47:18.197 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Nov-17 01:47:18.197 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Nov-17 01:47:18.202 [main] INFO  nextflow.script.BaseScript - after run_kb_ref
+Nov-17 01:47:18.203 [main] INFO  nextflow.script.BaseScript - after get organism
+Nov-17 01:47:18.207 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:kb_count` matches labels `kb_count` for process with name run_kb_count
+Nov-17 01:47:18.209 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Nov-17 01:47:18.209 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Nov-17 01:47:18.215 [main] INFO  nextflow.script.BaseScript - after run_kb_count
+Nov-17 01:47:18.220 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:scrna_qc_calculate` matches labels `scrna_qc_calculate` for process with name scrna_calculate_qc_metrics
+Nov-17 01:47:18.222 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Nov-17 01:47:18.222 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Nov-17 01:47:18.228 [main] INFO  nextflow.script.BaseScript - scrna_qc_metrics_tsv is: DataflowBroadcast around DataflowStream[?]
+Nov-17 01:47:18.229 [main] INFO  nextflow.script.BaseScript - scrna_qc_metrics_tsv is: DataflowBroadcast around DataflowStream[?]
+Nov-17 01:47:18.230 [main] INFO  nextflow.script.BaseScript - sc_rna_qc_plot_script is: scrna_plot_qc_metrics.R
+Nov-17 01:47:18.231 [main] INFO  nextflow.script.BaseScript - sc_rna_qc_plot_helper_script is: barcode_rank_functions.R
+Nov-17 01:47:18.236 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:scrna_qc_plot` matches labels `scrna_qc_plot` for process with name scrna_plot_qc_metrics_prcs
+Nov-17 01:47:18.240 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: google-batch
+Nov-17 01:47:18.240 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'google-batch'
+Nov-17 01:47:18.252 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: run_kb_count, run_seqspec_modify_rna, run_seqspec_print, run_kb_ref, run_synpase_upload, run_download_kb_idx, scrna_plot_qc_metrics_prcs, run_seqspec_check, run_synpase_download, run_seqspec_index_rna_kb, run_seqspec_test, scrna_calculate_qc_metrics, run_seqspec_modify_atac, run_downloadFiles
+Nov-17 01:47:18.509 [main] INFO  io.seqera.tower.plugin.TowerClient - Monitor the execution with Nextflow Tower using this URL: https://tower.nf/orgs/ort_eila_org/workspaces/ort_eila_wrkspc/watch/AFnwNuAoOlZcG
+Nov-17 01:47:18.510 [main] DEBUG nextflow.Session - Igniting dataflow network (12)
+Nov-17 01:47:18.522 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > run_seqspec_modify_rna
+Nov-17 01:47:18.524 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > run_seqspec_print
+Nov-17 01:47:18.526 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > run_seqspec_index_rna_kb
+Nov-17 01:47:18.526 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > run_kb_ref
+Nov-17 01:47:18.527 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > run_kb_count
+Nov-17 01:47:18.531 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > scrna_calculate_qc_metrics
+Nov-17 01:47:18.540 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > scrna_plot_qc_metrics_prcs
+Nov-17 01:47:18.548 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_8c658adfb468bfd1: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/./../../nf_processes/nf_prcs_seqspec_utils.nf
+  Script_6f4853daaf022cb7: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/./../../nf_processes/nf_prcs_synapse_utils.nf
+  Script_b097b54f100d695d: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/nf_wf_fg_singlecell_rna.nf
+  Script_e6cddbc2c25317da: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/./../../nf_processes/nf_prcs_rna_qc.nf
+  Script_9d4639c8cd883c70: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/./../../nf_processes/nf_prcs_download_url_files.nf
+  Script_88de0ef9af95954d: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/./../../nf_processes/nf_prcs_kallisto_bustools.nf
+  Script_905602450a702dad: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/./../../nf_processes/nf_prcs_rna_qc_plots.nf
+Nov-17 01:47:18.548 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Nov-17 01:47:18.548 [main] DEBUG nextflow.Session - Session await
+Nov-17 01:47:21.454 [FileTransfer-1] DEBUG nextflow.file.FilePorter - Local cache found for foreign file http://ftp.ensembl.org/pub/release-109/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz at gs://eila-nextflow-bucket/work/RNA/stage-becedc50-945f-4f26-ab13-4ebd072d2c05/70/4e80d977dc0161ca71234c7b24bd5a/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+Nov-17 01:47:21.516 [FileTransfer-2] DEBUG nextflow.file.FilePorter - Local cache found for foreign file http://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz at gs://eila-nextflow-bucket/work/RNA/stage-becedc50-945f-4f26-ab13-4ebd072d2c05/db/6a8dad39a29382bb0b306219fec0c4/Homo_sapiens.GRCh38.109.gtf.gz
+Nov-17 01:47:21.536 [Actor Thread 7] DEBUG i.s.wave.plugin.config.WaveConfig - Wave strategy not specified - using default: [container, dockerfile, conda, spack]
+Nov-17 01:47:21.537 [Actor Thread 7] DEBUG io.seqera.wave.plugin.WaveClient - Wave config: WaveConfig(enabled:true, endpoint:https://wave.seqera.io, containerConfigUrl:[], tokensCacheMaxDuration:30m, condaOpts:CondaOpts(mambaImage=mambaorg/micromamba:1.5.1; basePackages=conda-forge::procps-ng, commands=null), spackOpts:SpackOpts(basePackages=null, commands=null), strategy:[container, dockerfile, conda, spack], bundleProjectResources:true, buildRepository:null, cacheRepository:null, retryOpts:RetryOpts(delay:450ms, maxDelay:1m 30s, maxAttempts:10, jitter:0.25), httpClientOpts:HttpOpts(), freezeMode:null, dryRunMode:false)
+Nov-17 01:47:21.549 [Actor Thread 7] DEBUG io.seqera.wave.plugin.WaveClient - Wave assets bundle bin resources: /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_workflow/workflow_fg_single_cell_rna/bin
+Nov-17 01:47:21.806 [FileTransfer-6] DEBUG nextflow.file.FilePorter - Local cache found for foreign file /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/specs/dogmaseq-dig/nf_spec_dogmaseq_dig.yaml at gs://eila-nextflow-bucket/work/RNA/stage-becedc50-945f-4f26-ab13-4ebd072d2c05/ec/da44e36f187b61af8a7154ad890c50/nf_spec_dogmaseq_dig.yaml
+Nov-17 01:47:21.816 [FileTransfer-7] DEBUG nextflow.file.FilePorter - Local cache found for foreign file /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/specs/dogmaseq-dig/RNA-737K-arc-v1.txt at gs://eila-nextflow-bucket/work/RNA/stage-becedc50-945f-4f26-ab13-4ebd072d2c05/48/9fb1bf6459e32b854a354795cc23ed/RNA-737K-arc-v1.txt
+Nov-17 01:47:21.882 [Actor Thread 7] DEBUG io.seqera.wave.plugin.WaveClient - Wave request container config: https://fusionfs.seqera.io/releases/v2.2-amd64.json
+Nov-17 01:47:21.894 [FileTransfer-3] DEBUG nextflow.file.FilePorter - Local cache found for foreign file /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/specs/dogmaseq-dig/fastqs/RNA/SRR18677638_1.fastq.gz at gs://eila-nextflow-bucket/work/RNA/stage-becedc50-945f-4f26-ab13-4ebd072d2c05/4a/e36d3c2995bc744385c7debd26cf14/SRR18677638_1.fastq.gz
+Nov-17 01:47:21.998 [FileTransfer-4] DEBUG nextflow.file.FilePorter - Local cache found for foreign file /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/specs/dogmaseq-dig/fastqs/RNA/SRR18677638_2.fastq.gz at gs://eila-nextflow-bucket/work/RNA/stage-becedc50-945f-4f26-ab13-4ebd072d2c05/1d/89d2ca2e8fa5a306fea12ad7f0110d/SRR18677638_2.fastq.gz
+Nov-17 01:47:22.016 [FileTransfer-5] DEBUG nextflow.file.FilePorter - Local cache found for foreign file /home/eila/git_igvf/cellatlas-scrna-seq-pipeline/nextflow/nf_data/nf_wf_fg_singlecell/na.na at gs://eila-nextflow-bucket/work/RNA/stage-becedc50-945f-4f26-ab13-4ebd072d2c05/54/2e3383df0222e80089b790eabd0ced/na.na
+Nov-17 01:47:22.098 [Actor Thread 7] DEBUG io.seqera.wave.plugin.WaveClient - Wave container config response: [200] {
+  "entrypoint": [ "/usr/bin/fusion" ],
+  "layers": [
+    {
+      "location": "https://fusionfs.seqera.io/releases/pkg/2/2/9/fusion-amd64.tar.gz",
+      "gzipDigest": "sha256:deedfe8b52c6230681074c3f97f3a87e5af4983ccded1174e8a556de5496d0e3",
+      "gzipSize": 30266040,
+      "tarDigest": "sha256:cfaf78238ffcdd1b4e050750af1c219dbcb7a59f8e0a1e88a2ff932b648fa252",
+      "skipHashing": true
+    }
+  ]
+}
+
+Nov-17 01:47:22.205 [Actor Thread 7] DEBUG io.seqera.wave.plugin.WaveClient - Wave request: https://wave.seqera.io/container-token; attempt=1 - request: SubmitContainerTokenRequest(towerAccessToken:eyJ0aWQiOiA4Mjk3fS5jNDNmYzA4NTg2MjAxNDQzOTAwYmUzNWEzZTY0MGMyZTc0OWE3M2Mz, towerRefreshToken:null, towerWorkspaceId:247507587970818, towerEndpoint:https://api.tower.nf, workflowId:null, containerImage:eilalan/atomic_update:latest, containerFile:null, containerConfig:ContainerConfig(entrypoint:[/usr/bin/fusion], cmd:null, env:null, workingDir:null, layers:[ContainerLayer[location=data:H4sIAAAAAAAA/+1de3fb...; tarDigest=sha256:d16186cd9484b7018d884e2981502445eff14e549ae832b24cefc5677c787dfc; gzipDigest=sha256:940f846b17e7b2b18a7c5563ec941cdee33ed5aecb7a6d1eabcff5a788fafd7b; gzipSize=8198], ContainerLayer[location=https://fusionfs.seqera.io/releases/pkg/2/2/9/fusion-amd64.tar.gz; tarDigest=sha256:cfaf78238ffcdd1b4e050750af1c219dbcb7a59f8e0a1e88a2ff932b648fa252; gzipDigest=sha256:deedfe8b52c6230681074c3f97f3a87e5af4983ccded1174e8a556de5496d0e3; gzipSize=30266040]]), condaFile:null, spackFile:null, containerPlatform:linux/amd64, buildRepository:null, cacheRepository:null, timestamp:2023-11-17T01:47:22.202833Z, fingerprint:3c349660dfed38d477c7f11f996a4746, freeze:false, format:null, dryRun:false)
+Nov-17 01:47:22.205 [Actor Thread 6] DEBUG io.seqera.wave.plugin.WaveClient - Wave request: https://wave.seqera.io/container-token; attempt=1 - request: SubmitContainerTokenRequest(towerAccessToken:eyJ0aWQiOiA4Mjk3fS5jNDNmYzA4NTg2MjAxNDQzOTAwYmUzNWEzZTY0MGMyZTc0OWE3M2Mz, towerRefreshToken:null, towerWorkspaceId:247507587970818, towerEndpoint:https://api.tower.nf, workflowId:null, containerImage:eilalan/seqspec_env:latest, containerFile:null, containerConfig:ContainerConfig(entrypoint:[/usr/bin/fusion], cmd:null, env:null, workingDir:null, layers:[ContainerLayer[location=data:H4sIAAAAAAAA/+1de3fb...; tarDigest=sha256:d16186cd9484b7018d884e2981502445eff14e549ae832b24cefc5677c787dfc; gzipDigest=sha256:940f846b17e7b2b18a7c5563ec941cdee33ed5aecb7a6d1eabcff5a788fafd7b; gzipSize=8198], ContainerLayer[location=https://fusionfs.seqera.io/releases/pkg/2/2/9/fusion-amd64.tar.gz; tarDigest=sha256:cfaf78238ffcdd1b4e050750af1c219dbcb7a59f8e0a1e88a2ff932b648fa252; gzipDigest=sha256:deedfe8b52c6230681074c3f97f3a87e5af4983ccded1174e8a556de5496d0e3; gzipSize=30266040]]), condaFile:null, spackFile:null, containerPlatform:linux/amd64, buildRepository:null, cacheRepository:null, timestamp:2023-11-17T01:47:22.202833Z, fingerprint:abe7fe2e8e6a282e21a3b2ab91c81ec7, freeze:false, format:null, dryRun:false)
+Nov-17 01:47:22.817 [Actor Thread 7] DEBUG io.seqera.wave.plugin.WaveClient - Wave response: statusCode=200; body={"containerToken":"a7ff7cb9e685","targetImage":"wave.seqera.io/wt/a7ff7cb9e685/eilalan/atomic_update:latest","expiration":"2023-11-18T13:47:22.763002966Z","containerImage":"docker.io/eilalan/atomic_update:latest"}
+Nov-17 01:47:22.817 [Actor Thread 6] DEBUG io.seqera.wave.plugin.WaveClient - Wave response: statusCode=200; body={"containerToken":"763cfa8b4cee","targetImage":"wave.seqera.io/wt/763cfa8b4cee/eilalan/seqspec_env:latest","expiration":"2023-11-18T13:47:22.762824279Z","containerImage":"docker.io/eilalan/seqspec_env:latest"}
+Nov-17 01:47:23.960 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [04/b164fb] Cached process > run_kb_ref
+Nov-17 01:47:24.045 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [39/e50e47] Cached process > run_seqspec_modify_rna (1)
+Nov-17 01:47:24.862 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [77/6b6ef6] Cached process > run_seqspec_print (1)
+Nov-17 01:47:25.268 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [b2/06d00c] Cached process > run_seqspec_index_rna_kb (1)
+Nov-17 01:47:27.012 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [41/090813] Cached process > run_kb_count (1)
+Nov-17 01:47:27.031 [Actor Thread 9] DEBUG io.seqera.wave.plugin.WaveClient - Wave request: https://wave.seqera.io/container-token; attempt=1 - request: SubmitContainerTokenRequest(towerAccessToken:eyJ0aWQiOiA4Mjk3fS5jNDNmYzA4NTg2MjAxNDQzOTAwYmUzNWEzZTY0MGMyZTc0OWE3M2Mz, towerRefreshToken:null, towerWorkspaceId:247507587970818, towerEndpoint:https://api.tower.nf, workflowId:null, containerImage:eilalan/rna_qc_env:latest, containerFile:null, containerConfig:ContainerConfig(entrypoint:[/usr/bin/fusion], cmd:null, env:null, workingDir:null, layers:[ContainerLayer[location=data:H4sIAAAAAAAA/+1de3fb...; tarDigest=sha256:d16186cd9484b7018d884e2981502445eff14e549ae832b24cefc5677c787dfc; gzipDigest=sha256:940f846b17e7b2b18a7c5563ec941cdee33ed5aecb7a6d1eabcff5a788fafd7b; gzipSize=8198], ContainerLayer[location=https://fusionfs.seqera.io/releases/pkg/2/2/9/fusion-amd64.tar.gz; tarDigest=sha256:cfaf78238ffcdd1b4e050750af1c219dbcb7a59f8e0a1e88a2ff932b648fa252; gzipDigest=sha256:deedfe8b52c6230681074c3f97f3a87e5af4983ccded1174e8a556de5496d0e3; gzipSize=30266040]]), condaFile:null, spackFile:null, containerPlatform:linux/amd64, buildRepository:null, cacheRepository:null, timestamp:2023-11-17T01:47:27.030485Z, fingerprint:54edf2a6b09f4124d278f280ba5c2c3c, freeze:false, format:null, dryRun:false)
+Nov-17 01:47:27.152 [Actor Thread 9] DEBUG io.seqera.wave.plugin.WaveClient - Wave response: statusCode=200; body={"containerToken":"53da0e095dd7","targetImage":"wave.seqera.io/wt/53da0e095dd7/eilalan/rna_qc_env:latest","expiration":"2023-11-18T13:47:27.099314967Z","containerImage":"docker.io/eilalan/rna_qc_env:latest"}
+Nov-17 01:47:28.642 [Task submitter] DEBUG n.c.g.batch.GoogleBatchTaskHandler - [GOOGLE BATCH] Process `scrna_calculate_qc_metrics (1)` - adding local volume as fusion scratch: DiskResource(request:375 GB, type:local-ssd)
+Nov-17 01:47:30.334 [Task submitter] DEBUG n.c.g.batch.GoogleBatchTaskHandler - [GOOGLE BATCH] Process `scrna_calculate_qc_metrics (1)` submitted > job=nf-418fd5ce-1700185647903; uid=nf-418fd5ce-170018-768e72de-09ed-49350; work-dir=gs://eila-nextflow-bucket/work/RNA/41/8fd5ce3b282820cda26d036fa83f7d
+Nov-17 01:47:30.334 [Task submitter] INFO  nextflow.Session - [41/8fd5ce] Submitted process > scrna_calculate_qc_metrics (1)
+Nov-17 01:50:57.473 [Task monitor] DEBUG n.c.g.batch.GoogleBatchTaskHandler - [GOOGLE BATCH] Process `scrna_calculate_qc_metrics (1)` - terminated job=nf-418fd5ce-1700185647903; state=SUCCEEDED
+Nov-17 01:50:57.802 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: scrna_calculate_qc_metrics (1); status: COMPLETED; exit: 0; error: -; workDir: gs://eila-nextflow-bucket/work/RNA/41/8fd5ce3b282820cda26d036fa83f7d]
+Nov-17 01:50:58.040 [Actor Thread 1] DEBUG io.seqera.wave.plugin.WaveClient - Wave request container config: https://fusionfs.seqera.io/releases/v2.2-amd64.json
+Nov-17 01:50:58.098 [Actor Thread 1] DEBUG io.seqera.wave.plugin.WaveClient - Wave container config response: [200] {
+  "entrypoint": [ "/usr/bin/fusion" ],
+  "layers": [
+    {
+      "location": "https://fusionfs.seqera.io/releases/pkg/2/2/9/fusion-amd64.tar.gz",
+      "gzipDigest": "sha256:deedfe8b52c6230681074c3f97f3a87e5af4983ccded1174e8a556de5496d0e3",
+      "gzipSize": 30266040,
+      "tarDigest": "sha256:cfaf78238ffcdd1b4e050750af1c219dbcb7a59f8e0a1e88a2ff932b648fa252",
+      "skipHashing": true
+    }
+  ]
+}
+
+Nov-17 01:50:59.106 [Task submitter] DEBUG n.c.g.batch.GoogleBatchTaskHandler - [GOOGLE BATCH] Process `scrna_plot_qc_metrics_prcs (1)` - adding local volume as fusion scratch: DiskResource(request:375 GB, type:local-ssd)
+Nov-17 01:50:59.411 [Task submitter] DEBUG n.c.g.batch.GoogleBatchTaskHandler - [GOOGLE BATCH] Process `scrna_plot_qc_metrics_prcs (1)` submitted > job=nf-2a1154df-1700185858639; uid=nf-2a1154df-170018-f0ac3599-6131-4e030; work-dir=gs://eila-nextflow-bucket/work/RNA/2a/1154df225ae96d7d4b8c2c6c6ddad0
+Nov-17 01:50:59.411 [Task submitter] INFO  nextflow.Session - [2a/1154df] Submitted process > scrna_plot_qc_metrics_prcs (1)
+Nov-17 01:52:27.445 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor google-batch > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: scrna_plot_qc_metrics_prcs (1); status: SUBMITTED; exit: -; error: -; workDir: gs://eila-nextflow-bucket/work/RNA/2a/1154df225ae96d7d4b8c2c6c6ddad0]
+Nov-17 01:54:07.535 [Task monitor] DEBUG n.c.g.batch.GoogleBatchTaskHandler - [GOOGLE BATCH] Process `scrna_plot_qc_metrics_prcs (1)` - terminated job=nf-2a1154df-1700185858639; state=SUCCEEDED
+Nov-17 01:54:07.886 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: scrna_plot_qc_metrics_prcs (1); status: COMPLETED; exit: 0; error: -; workDir: gs://eila-nextflow-bucket/work/RNA/2a/1154df225ae96d7d4b8c2c6c6ddad0]
+Nov-17 01:54:08.523 [main] DEBUG nextflow.Session - Session await > all processes finished
+Nov-17 01:54:08.776 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: google-batch) - terminating tasks monitor poll loop
+Nov-17 01:54:08.776 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Nov-17 01:54:08.784 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=2; failedCount=0; ignoredCount=0; cachedCount=5; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=4m 23s; failedDuration=0ms; cachedDuration=5h 26m 40s;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=4; peakMemory=0; ]
+Nov-17 01:54:09.473 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Nov-17 01:54:09.474 [main] INFO  org.pf4j.AbstractPluginManager - Stop plugin 'nf-wave@1.0.0'
+Nov-17 01:54:09.474 [main] DEBUG nextflow.plugin.BasePlugin - Plugin stopped nf-wave
+Nov-17 01:54:09.474 [main] INFO  org.pf4j.AbstractPluginManager - Stop plugin 'nf-tower@1.6.3'
+Nov-17 01:54:09.474 [main] DEBUG nextflow.plugin.BasePlugin - Plugin stopped nf-tower
+Nov-17 01:54:09.474 [main] INFO  org.pf4j.AbstractPluginManager - Stop plugin 'nf-google@1.8.3'
+Nov-17 01:54:09.474 [main] DEBUG nextflow.plugin.BasePlugin - Plugin stopped nf-google
+Nov-17 01:54:09.508 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Nov-17 01:54:09.509 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
