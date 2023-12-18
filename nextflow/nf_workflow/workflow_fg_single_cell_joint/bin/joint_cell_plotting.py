@@ -1,11 +1,10 @@
-#joint_cell_plotting.py
-
 #!/usr/bin/env python3
 
 """
 This script QCs barcodes via ATAC frags & TSS and RNA UMIs & genes,
 and plots all barcodes colored by joint QC status. It also generates the
 same plot with transparency added to show density.
+This code is based on https://github.com/IGVF/atomic-workflows/blob/dev/src/python/joint_cell_plotting.py with adaptation for the execution with nextflow
 """
 
 import argparse
@@ -27,17 +26,10 @@ def parse_arguments():
     parser.add_argument("--min_frags", type=int, help="Cutoff for minimum number of ATAC fragments")
     parser.add_argument("--plot_file", type=str, help="Filename for plot png file")
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    print("Parsed arguments:", args)
+    return args
 
-#   We might need to change the split_line to this
-# def get_split_lines(file_name, delimiter, skip_header):
-#   with open(file_name, "r") as f:
-#       if skip_header:
-#           next(f, None)  # Skip header without raising StopIteration
-#       for line in f:
-#           yield line.rstrip().split(sep=delimiter)
-
-            
 def get_split_lines(file_name, delimiter, skip_header):
     with open(file_name, "r") as f:
         if skip_header:
@@ -142,15 +134,12 @@ def plot_cells(df, pkr, min_umis, min_genes, min_tss, min_frags, plot_file):
     plot.save(filename=plot_file, dpi=1000)
 
 def main():
-    # create log file
-    # TODO: check if this log is part of the html
-    print("TODO:heck if this log is part of the html")
+    print("TODO: Check if this log is part of the html")
     logging.basicConfig(filename="joint_cell_plotting.log", level=logging.INFO)
 
-    # Parse command-line arguments
     args = parse_arguments()
+    print("Parsed arguments:", args)
 
-    # Access the parsed arguments
     pkr = args.pkr
     rna_metrics_file = args.rna_metrics_file
     atac_metrics_file = args.atac_metrics_file
@@ -179,7 +168,6 @@ def main():
     logging.info("Saving dataframe as csv\n")
     # metrics_df.to_csv(barcode_metadata_file)
     logging.info("All done!")
-
 
 if __name__ == "__main__":
     main()

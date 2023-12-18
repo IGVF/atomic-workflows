@@ -77,8 +77,7 @@ target/
 #Nextflow - GCP json and FASTQ files
 hai-gcp-genomic-beb9207a40b8.json
 *.fastq.gz
-*.nextflow.log*
-*.nextflow.log.1
+.nextflow.log.*
 
 # Jupyter Notebook
 .ipynb_checkpoints

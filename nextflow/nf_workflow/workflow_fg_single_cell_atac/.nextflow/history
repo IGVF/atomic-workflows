@@ -488,3 +488,4 @@
 2023-12-18 02:22:07	-	awesome_brown	-	c741f560461d49f65c94cb2b8841082b	f7e37c4b-c1ab-4ccb-a8cb-153d209e8602	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
 2023-12-18 02:23:05	-	elegant_spence	-	c741f560461d49f65c94cb2b8841082b	f7e37c4b-c1ab-4ccb-a8cb-153d209e8602	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
 2023-12-18 02:33:48	17m 56s	jolly_newton	OK	c741f560461d49f65c94cb2b8841082b	f7e37c4b-c1ab-4ccb-a8cb-153d209e8602	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
+2023-12-18 03:33:15	25.7s	distraught_turing	OK	c741f560461d49f65c94cb2b8841082b	f7e37c4b-c1ab-4ccb-a8cb-153d209e8602	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume

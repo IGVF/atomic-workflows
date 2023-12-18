@@ -45,7 +45,7 @@ process scrna_plot_qc_metrics_prcs {
     echo "Script path: \$script_path"
   
     echo "Executing main script..."
-    conda run -n rna_atac_plot_qc_env Rscript \$script_path $r_qc_plot_helper_script $rna_qc_metrics_tsv $umi_cutoff $gene_cutoff $umi_rank_plot_all_output $umi_rank_plot_top_output $gene_umi_plot_file_output
+    Rscript \$script_path $r_qc_plot_helper_script $rna_qc_metrics_tsv $umi_cutoff $gene_cutoff $umi_rank_plot_all_output $umi_rank_plot_top_output $gene_umi_plot_file_output
     # Print finish of scrna_plot_qc_metrics_prcs
     echo "Finished scrna_plot_qc_metrics_prcs."
   """

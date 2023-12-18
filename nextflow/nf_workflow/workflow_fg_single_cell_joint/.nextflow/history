@@ -55,3 +55,6 @@
 2023-12-18 02:41:40	-	nasty_blackwell	-	d926c7e73f28c566edbd3ccab44a57d4	c851f257-8461-446b-a040-9554df8550cb	nextflow run nf_wf_fg_singlecell_joint.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
 2023-12-18 02:43:35	2m 55s	dreamy_nobel	ERR	d926c7e73f28c566edbd3ccab44a57d4	c851f257-8461-446b-a040-9554df8550cb	nextflow run nf_wf_fg_singlecell_joint.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
 2023-12-18 02:53:14	2m 45s	lonely_mahavira	ERR	d926c7e73f28c566edbd3ccab44a57d4	c851f257-8461-446b-a040-9554df8550cb	nextflow run nf_wf_fg_singlecell_joint.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
+2023-12-18 03:10:38	2m 56s	cranky_brattain	ERR	d926c7e73f28c566edbd3ccab44a57d4	c851f257-8461-446b-a040-9554df8550cb	nextflow run nf_wf_fg_singlecell_joint.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
+2023-12-18 03:28:46	2m 57s	nauseous_picasso	ERR	d926c7e73f28c566edbd3ccab44a57d4	c851f257-8461-446b-a040-9554df8550cb	nextflow run nf_wf_fg_singlecell_joint.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
+2023-12-18 03:36:56	3m 24s	pensive_leavitt	OK	d926c7e73f28c566edbd3ccab44a57d4	c851f257-8461-446b-a040-9554df8550cb	nextflow run nf_wf_fg_singlecell_joint.nf -c nextflow_vm.config -profile google_batch_profile -with-tower -resume
