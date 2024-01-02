@@ -65,6 +65,7 @@ task cellatlas_rna {
         # touch $(cat ~{seqspec} | grep "fastq.gz" | cut -f2 -d ':' | sort | uniq )
 
         # cellatlas build
+        cp ~{sep=" " barcode_whitelists} .
     
         echo '------ cell atlas build ------' 1>&2
            
