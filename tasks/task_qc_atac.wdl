@@ -27,7 +27,7 @@ task qc_atac {
         String? subpool="none"
 
         # Runtime
-        Int? cpus = 8
+        Int? cpus = 60
         Float? disk_factor = 10.0
         Float? memory_factor = 0.3
         String docker_image = "docker.io/polumechanos/qc_atac:igvf"
