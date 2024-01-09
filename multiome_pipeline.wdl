@@ -137,6 +137,7 @@ workflow multiome_pipeline {
                     chemistry = chemistry,
                     reference_fasta = genome_fasta,
                     subpool = subpool,
+                    gtf = gtf,
                     whitelist = select_first([whitelist_atac, whitelist_atac_, whitelist, whitelist_]),
                     trim_fastqs = trim_fastqs,
                     chrom_sizes = chrom_sizes_,

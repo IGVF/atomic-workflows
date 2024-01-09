@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     rm -rf /var/lib/apt/lists/*
 
 # Install packages for python3 scripts (pysam, SAMstats)
-RUN python3 -m pip install --break-system-packages --no-cache-dir --ignore-installed numpy matplotlib pandas plotnine pysam xopen
+RUN python3 -m pip install --break-system-packages --no-cache-dir --ignore-installed numpy matplotlib pandas plotnine pysam xopen snapatac2
 
 # Add folder with software to the path
 ENV PATH="/software:${PATH}"
@@ -36,5 +36,6 @@ COPY --chown=$USER:$USER src/python/compute_tss_enrichment.py /usr/local/bin
 COPY --chown=$USER:$USER src/python/plot_insert_size_hist.py /usr/local/bin
 COPY --chown=$USER:$USER src/R/barcode_rank_functions.R /usr/local/bin
 COPY --chown=$USER:$USER src/R/atac_qc_plots.R /usr/local/bin
+COPY --chown=$USER:$USER src/python/snapatac2-tss-enrichment.py /usr/local/bin
 
 USER ${USER}

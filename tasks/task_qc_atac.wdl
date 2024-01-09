@@ -22,6 +22,7 @@ task qc_atac {
         File? barcode_conversion_dict
 
         Int? fragment_cutoff = 10
+        File? gtf
         String? genome_name
         String? prefix
         String? subpool="none"
@@ -30,7 +31,7 @@ task qc_atac {
         Int? cpus = 60
         Float? disk_factor = 10.0
         Float? memory_factor = 0.3
-        String docker_image = "docker.io/polumechanos/qc_atac:igvf"
+        String docker_image = "docker.io/polumechanos/qc-atac-atomic:igvf"
     }
 
     # Determine the size of the input
@@ -92,14 +93,14 @@ task qc_atac {
 
         # TSS enrichment stats
         echo '------ START: Compute TSS enrichment ------' 1>&2
-        time python3 $(which compute_tss_enrichment.py) \
-            -e 2000 \
-            -p ~{cpus} \
-            --regions ~{tss} \
-            --prefix "~{prefix}.atac.qc.~{genome_name}" \
-            no-singleton.bed.gz
+        #time python3 $(which compute_tss_enrichment.py) \
+        #    -e 2000 \
+        #    -p ~{cpus} \
+        #    --regions ~{tss} \
+        #    --prefix "~{prefix}.atac.qc.~{genome_name}" \
+        #    no-singleton.bed.gz
 
-         
+        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz ~{gtf} "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv"
 
         # Insert size plot bulk
         echo '------ START: Generate Insert size plot ------' 1>&2

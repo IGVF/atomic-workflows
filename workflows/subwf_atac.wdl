@@ -27,6 +27,7 @@ workflow wf_atac {
         String? prefix = "sample"
         String? subpool = "none"
         String genome_name
+        File? gtf
         Int? cutoff
         String pipeline_modality = "full"
         Boolean trim_fastqs = true
@@ -183,6 +184,7 @@ workflow wf_atac {
                 fragments_index = align.atac_fragments_index,
                 barcode_summary = align.atac_align_barcode_statistics,
                 tss = tss_bed,
+                gtf = gtf,
                 subpool = subpool,
                 barcode_conversion_dict = barcode_conversion_dict,
                 fragment_cutoff = qc_fragment_cutoff,
