@@ -38,7 +38,7 @@ task cellatlas_rna {
     }
     
     # TODO: Determine the size of the input
-    Float input_file_size_gb = 1.0
+    Float input_file_size_gb = size(fastqs, "G")
 
     # TODO: Determining memory size base on the size of the input files.
     Float mem_gb = 24.0 + memory_factor * input_file_size_gb
