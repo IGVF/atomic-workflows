@@ -64,6 +64,7 @@ task qc_atac {
         # I am not writing to a file anymore because Google keeps track of it automatically.
         bash $(which monitor_script.sh) 1>&2 &
 
+        gzip -c ~{gtf} > gtf.gz
         ln -s ~{fragments} in.fragments.tsv.gz
         ln -s ~{fragments_index} in.fragments.tsv.gz.tbi
 
@@ -100,7 +101,7 @@ task qc_atac {
         #    --prefix "~{prefix}.atac.qc.~{genome_name}" \
         #    no-singleton.bed.gz
 
-        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz ~{gtf} "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv"
+        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv"
 
         # Insert size plot bulk
         echo '------ START: Generate Insert size plot ------' 1>&2
