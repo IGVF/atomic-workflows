@@ -102,7 +102,7 @@ task qc_atac {
             no-singleton.bed.gz
 
         echo '------ START: Compute TSS enrichment snapatac2 ------' 1>&2
-        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv" ~{fragment_cutoff}
+        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv" ~{fragment_cutoff} ~{tss}
 
         # Insert size plot bulk
         echo '------ START: Generate Insert size plot ------' 1>&2
@@ -142,10 +142,10 @@ task qc_atac {
         File atac_qc_tss_enrichment_plot = "${prefix}.atac.qc.${genome_name}.tss_enrichment_bulk.png"
         File atac_qc_tss_enrichment_score_bulk = "${prefix}.atac.qc.${genome_name}.tss_score_bulk.txt"
 
-        File atac_qc_raw_barcode_metadata = tmp-barcode-stats
+        File atac_qc_raw_barcode_metadata = "tmp-barcode-stats"
         File atac_qc_barcode_metadata = "${prefix}.atac.qc.${genome_name}.tss_enrichment_barcode_stats.tsv"
 
-        File? atac_qc_barcode_rank_plot = fragment_barcode_rank_plot
+        File? atac_qc_barcode_rank_plot = "fragment_barcode_rank_plot"
     }
 
     runtime {
