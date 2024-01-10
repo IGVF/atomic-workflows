@@ -91,9 +91,6 @@ def compute_tss_score(idx: int,
 #                fragment_id = "-".join(fragment_fields)
 #                fragment_length = fragment_end - fragment_start
 
-                # Fragments in promoter counter increased for
-                # the barcode.
-                barcode_stats_helper[2] += 1
 
                 # Update the array with the counts around the promoter.
                 # I need 'start' and 'end' to create a unique id for the reads and I can count
@@ -103,16 +100,14 @@ def compute_tss_score(idx: int,
                                         fragment_start,
                                         promoter_start,
                                         promoter_end,
-                                        promoter_strand,
-                                        barcode)
+                                        promoter_strand)
 
                 _add_read_to_dictionary(bulk_signal_counter,
                                         barcode_signal_counter,
                                         fragment_end,
                                         promoter_start,
                                         promoter_end,
-                                        promoter_strand,
-                                        barcode)
+                                        promoter_strand)
         except ValueError:
             print(f"No reads found for {tss[0]}:{max(1,promoter_start)}-{promoter_end}.")
 
@@ -124,9 +119,7 @@ def _add_read_to_dictionary(bulk_signal_counter,
                             fragment_position,
                             promoter_start,
                             promoter_end,
-                            promoter_strand,
-                            barcode,
-                            stats_counter):
+                            promoter_strand):
     if fragment_position < promoter_start or fragment_position > promoter_end - 1:
         # This position does not cover the promoter.
         return
@@ -151,7 +144,6 @@ def _add_read_to_dictionary(bulk_signal_counter,
         # Find the center of the region with max_window/2+50
         index_reduced = int(index - (tss_pos - 50)) + 100
         weight = 1
-        stats_counter[0] += 1
 
     # If the TSS is in the negative strand we need to add from the end.
     if promoter_strand == "-":
@@ -161,7 +153,6 @@ def _add_read_to_dictionary(bulk_signal_counter,
 
     # Finally update the dictionary
     bulk_signal_counter[index] += 1  # Bulk TSS enrichment
-    stats_counter[1] += 1  # Reads in TSS
 
     return
 

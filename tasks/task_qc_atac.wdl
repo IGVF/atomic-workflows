@@ -102,7 +102,7 @@ task qc_atac {
             no-singleton.bed.gz
 
         echo '------ START: Compute TSS enrichment snapatac2 ------' 1>&2
-        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv"
+        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv" ~{fragment_cutoff}
 
         # Insert size plot bulk
         echo '------ START: Generate Insert size plot ------' 1>&2
@@ -113,20 +113,21 @@ task qc_atac {
 
         echo '------ START: Generate metadata ------' 1>&2
 
-        awk -v FS=',' -v OFS=" " 'NR==1{$1=$1;print $0,"unique","pct_dup","pct_unmapped";next}{$1=$1;if ($2-$3-$4-$5>0){print $0,($2-$3-$4-$5),$3/($2-$4-$5),($5+$4)/$2} else { print $0,0,0,0}}' temp_summary > tmp-barcode-stats
+        awk -v FS=',' -v OFS=" " 'NR==1{$1=$1;print $0,"unique","pct_dup","pct_unmapped";next}{$1=$1;if ($2-$3-$4-$5>0){print $0,($2-$3-$4-$5),$3/($2-$4-$5),($5+$4)/$2} else { print $0,0,0,0}}' temp_summary  | sed 's/ /\t/g' > tmp-barcode-stats
 
         cut -f 1 ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv > barcodes_passing_threshold
 
-        time join -j 1  <(cat ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv | (sed -u 1q;sort -k1,1)) <(grep -wFf barcodes_passing_threshold tmp-barcode-stats | (sed -u 1q;sort -k1,1)) | \
-        (sed -u 1q;sort -k1,1) | \
-        awk -v FS=" " -v OFS=" " 'NR==1{print $0,"pct_reads_promoter"}NR>1{print $0,$4*100/$7}' | sed 's/ /\t/g' > ~{final_barcode_metadata}
+        #time join -j 1  <(cat ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv | (sed -u 1q;sort -k1,1)) <(grep -wFf barcodes_passing_threshold tmp-barcode-stats | (sed -u 1q;sort -k1,1)) | 
+        #awk -v FS=" " -v OFS=" " 'NR==1{print $0,"pct_reads_promoter"}NR>1{print $0,$4*100/$7}' | sed 's/ /\t/g' > ~{final_barcode_metadata}
+
+        cat ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv | sed 's/ /\t/g' > ~{final_barcode_metadata}
 
         head ~{final_barcode_metadata}
         head ~{final_barcode_metadata} | awk '{print NF}'
 
         # Barcode rank plot
         echo '------ START: Generate barcod rank plot ------' 1>&2
-        time Rscript $(which atac_qc_plots.R) ~{final_barcode_metadata} ~{fragment_cutoff} ~{fragment_barcode_rank_plot}
+        time Rscript /usr/local/bin/atac_qc_plots.R tmp-barcode-stats ~{fragment_cutoff} ~{fragment_barcode_rank_plot}
     >>>
 
     output {
@@ -141,7 +142,8 @@ task qc_atac {
         File atac_qc_tss_enrichment_plot = "${prefix}.atac.qc.${genome_name}.tss_enrichment_bulk.png"
         File atac_qc_tss_enrichment_score_bulk = "${prefix}.atac.qc.${genome_name}.tss_score_bulk.txt"
 
-        File atac_qc_barcode_metadata = final_barcode_metadata
+        File atac_qc_raw_barcode_metadata = tmp-barcode-stats
+        File atac_qc_barcode_metadata = "${prefix}.atac.qc.${genome_name}.tss_enrichment_barcode_stats.tsv"
 
         File? atac_qc_barcode_rank_plot = fragment_barcode_rank_plot
     }
