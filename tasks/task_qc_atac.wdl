@@ -102,8 +102,7 @@ task qc_atac {
             no-singleton.bed.gz
 
         echo '------ START: Compute TSS enrichment snapatac2 ------' 1>&2
-        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv" ~{fragment_cutoff} ~{tss}
-
+        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv" ~{fragment_cutoff}
         # Insert size plot bulk
         echo '------ START: Generate Insert size plot ------' 1>&2
 
