@@ -93,14 +93,15 @@ task qc_atac {
         tabix --zero-based --preset bed no-singleton.bed.gz
 
         # TSS enrichment stats
-        echo '------ START: Compute TSS enrichment ------' 1>&2
-        #time python3 $(which compute_tss_enrichment.py) \
-        #    -e 2000 \
-        #    -p ~{cpus} \
-        #    --regions ~{tss} \
-        #    --prefix "~{prefix}.atac.qc.~{genome_name}" \
-        #    no-singleton.bed.gz
+        echo '------ START: Compute TSS enrichment bulk ------' 1>&2
+        time python3 $(which compute_tss_enrichment_bulk.py) \
+            -e 2000 \
+            -p ~{cpus} \
+            --regions ~{tss} \
+            --prefix "~{prefix}.atac.qc.~{genome_name}" \
+            no-singleton.bed.gz
 
+        echo '------ START: Compute TSS enrichment snapatac2 ------' 1>&2
         time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv"
 
         # Insert size plot bulk
