@@ -24,6 +24,12 @@ workflow wf_rna {
         File genome_gtf
         String chemistry
         
+        # RNA Cell Atlas runtime parameters
+        Int? cellatlas_cpus
+        Float? cellatlas_disk_factor
+        Float? cellatlas_memory_factor
+        String? cellatlas_docker_image
+        
         # Correct-specific inputs
         Boolean correct_barcodes = true
         # Runtime parameters
@@ -71,7 +77,11 @@ workflow wf_rna {
             subpool = subpool,
             genome_name = genome_name,
             prefix = prefix,
-            chemistry = chemistry
+            chemistry = chemistry,
+            cpus = cellatlas_cpus,
+            disk_factor = cellatlas_disk_factor,
+            memory_factor = cellatlas_memory_factor,
+            docker_image = cellatlas_docker_image
     }
     
     call task_qc_rna.qc_rna as qc_rna {
