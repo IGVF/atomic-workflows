@@ -94,7 +94,7 @@ task qc_atac {
 
         # TSS enrichment stats
         echo '------ START: Compute TSS enrichment bulk ------' 1>&2
-        time python3 $(which compute_tss_enrichment_bulk.py) \
+        time python3 /usr/local/bin/compute_tss_enrichment_bulk.py \
             -e 2000 \
             -p ~{cpus} \
             --regions ~{tss} \
