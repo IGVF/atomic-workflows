@@ -44,8 +44,6 @@ task cellatlas_rna {
         
     }
     
-    # Create an array that interleaves the files from read1_fastqs and read2_fastqs
-    Array[File] interleavedFiles = []
     
     # Determine the size of the input
     Float input_file_size_gb = size(read1_fastqs, "G") + size(read2_fastqs, "G")
@@ -73,6 +71,14 @@ task cellatlas_rna {
          
         # cellatlas build
         # cp ~{sep=" " barcode_whitelists} .
+        
+        result=()
+        
+        for ((i=0; i<${dollar}{#array1[@]}; i++)); 
+            do result+=("${dollar}{read1_fastqs[i]}" "${dollar}{read2_fastqs[i]}"); 
+            done
+        
+        echo "${dollar}{result[@]}"
     
         echo '------ cell atlas build ------' 1>&2
            
@@ -87,21 +93,15 @@ task cellatlas_rna {
         echo '------ RNA bash commands ------' 1>&2
         
         jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
-                
-        # Populate the interleavedFiles array
-        scatter (index in range(length(read1_fastqs))) {
-            interleavedFiles[index * 2] = read1_fastqs[index]
-            interleavedFiles[index * 2 + 1] = read2_fastqs[index]
-        }
-        
+                 
         kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
         #if shareseq, use fixed x_string since already corrected
         if [[ ~{chemistry} == "shareseq" ]]; then
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 ~{sep=" " interleavedFiles}
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 ${result}
         
         else
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ~{sep=" " interleavedFiles}
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ${result}
         
         fi
         
