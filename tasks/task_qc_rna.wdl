@@ -22,7 +22,7 @@ task qc_rna {
         #Will these be used? Need to run tests to optimize
         Int? cpus = 2
         Float? disk_factor = 1.0
-        Float? memory_factor = 0.5
+        Float? memory_factor = 1.0
           
         String? docker_image = "polumechanos/qc_rna:igvf"
     }
