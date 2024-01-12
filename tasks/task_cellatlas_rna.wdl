@@ -72,13 +72,9 @@ task cellatlas_rna {
         # cellatlas build
         # cp ~{sep=" " barcode_whitelists} .
         
-        result=()
+        interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
         
-        for ((i=0; i<${dollar}{#array1[@]}; i++)); 
-            do result+=("${dollar}{read1_fastqs[i]}" "${dollar}{read2_fastqs[i]}"); 
-            done
-        
-        echo "${dollar}{result[@]}"
+        echo $interleaved_files_string
     
         echo '------ cell atlas build ------' 1>&2
            
@@ -98,10 +94,10 @@ task cellatlas_rna {
         
         #if shareseq, use fixed x_string since already corrected
         if [[ ~{chemistry} == "shareseq" ]]; then
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 ${result}
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 $interleaved_files_string
         
         else
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ${result}
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 $interleaved_files_string
         
         fi
         
