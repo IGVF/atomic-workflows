@@ -15,9 +15,16 @@ task cellatlas_rna {
     input {
          # This task takes in input the raw RNA fastqs and their associated seqspec, processes the barcodes accordingly and aligns them to the genome.
         
-        Array[File] fastqs #These filenames must EXACTLY match the ones specified in seqspec
+        #Array[File] fastqs #These filenames must EXACTLY match the ones specified in seqspec
+        
+        Array[File] read1_fastqs #These filenames must EXACTLY match the ones specified in seqspec
+        Array[File] read2_fastqs #These filenames must EXACTLY match the ones specified in seqspec
+        
         String modality = "rna"
-        File seqspec
+        #File seqspec
+        
+        Array[File] seqspecs
+        
         File genome_fasta
         File genome_gtf
         Array[File] barcode_whitelists #These filenames must EXACTLY match the ones specified in seqspec
@@ -37,14 +44,17 @@ task cellatlas_rna {
         
     }
     
-    # TODO: Determine the size of the input
-    Float input_file_size_gb = size(fastqs, "G")
+    # Create an array that interleaves the files from read1_fastqs and read2_fastqs
+    Array[File] interleavedFiles = []
+    
+    # Determine the size of the input
+    Float input_file_size_gb = size(read1_fastqs, "G") + size(read2_fastqs, "G")
 
-    # TODO: Determining memory size base on the size of the input files.
+    # Determining memory size base on the size of the input files.
     Float mem_gb = 24.0 + memory_factor * input_file_size_gb
 
     # Determining disk size base on the size of the input files.
-    Int disk_gb = round(400.0 + disk_factor * input_file_size_gb)
+    Int disk_gb = round(40.0 + disk_factor * input_file_size_gb)
 
     # Determining disk type base on the size of disk.
     String disk_type = if disk_gb > 375 then "SSD" else "LOCAL"
@@ -59,36 +69,39 @@ task cellatlas_rna {
     
         set -e
 
-         bash $(which monitor_script.sh) 1>&2 &
+        bash $(which monitor_script.sh) 1>&2 &
          
-        # create empty fastq files - this won't work because atac will be present in seqspec
-        # touch $(cat ~{seqspec} | grep "fastq.gz" | cut -f2 -d ':' | sort | uniq )
-
         # cellatlas build
-        cp ~{sep=" " barcode_whitelists} .
+        # cp ~{sep=" " barcode_whitelists} .
     
         echo '------ cell atlas build ------' 1>&2
            
         cellatlas build \
         -o ~{directory} \
         -m ~{modality} \
-        -s ~{seqspec} \
+        -s ~{seqspecs[0]} \
         -fa ~{genome_fasta} \
         -g ~{genome_gtf} \
-        ~{sep=" " fastqs}
+        ~{read1_fastqs[0]} ~{read2_fastqs[0]}
         
         echo '------ RNA bash commands ------' 1>&2
         
         jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
+                
+        # Populate the interleavedFiles array
+        scatter (index in range(length(read1_fastqs))) {
+            interleavedFiles[index * 2] = read1_fastqs[index]
+            interleavedFiles[index * 2 + 1] = read2_fastqs[index]
+        }
         
         kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
         #if shareseq, use fixed x_string since already corrected
         if [[ ~{chemistry} == "shareseq" ]]; then
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 ~{sep=" " interleavedFiles}
         
         else
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ~{sep=" " fastqs}
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 ~{sep=" " interleavedFiles}
         
         fi
         
@@ -129,10 +142,16 @@ task cellatlas_rna {
     
     parameter_meta {
     
-        fastqs: {
-            description: 'List of input fastqs.',
-            help: 'List of raw fastqs that will be corrected and processed using cellatlas',
-            example: ['r1.fq.gz', 'r2.fq.gz']
+        read1_fastqs: {
+            description: 'List of input read1 fastqs.',
+            help: 'List of raw read1 fastqs that will be corrected and processed using cellatlas',
+            example: ['l0.r1.fq.gz', 'l1.r1.fq.gz']
+        }
+        
+        read2_fastqs: {
+            description: 'List of input read2 fastqs.',
+            help: 'List of raw read2 fastqs that will be corrected and processed using cellatlas',
+            example: ['l0.r2.fq.gz', 'l1.r2.fq.gz']
         }
         
         modality: {
@@ -141,10 +160,10 @@ task cellatlas_rna {
             example: 'rna'
         }
         
-        seqspec: {
-            description: 'seqspec',
+        seqspecs: {
+            description: 'List of seqspecs',
             help: 'seqspec to process barcodes',
-            example: 'spec.yaml'
+            example: ['spec.yaml']
         } 
         
         genome_fasta: {

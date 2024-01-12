@@ -30,7 +30,8 @@ workflow multiome_pipeline {
         File? whitelist_atac
         File? whitelist_rna
         
-        File seqspec
+        #File seqspec
+        Array[File] seqspecs
 
         # ATAC-specific inputs
         Array[File] read1_atac
@@ -116,7 +117,7 @@ workflow multiome_pipeline {
                 input:
                     read1 = read1_rna,
                     read2 = read2_rna,
-                    seqspec = seqspec,
+                    seqspecs = seqspecs,
                     chemistry = chemistry,
                     genome_fasta = genome_fasta,
                     genome_gtf = gtf_,
