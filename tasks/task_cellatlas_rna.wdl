@@ -47,12 +47,6 @@ task cellatlas_rna {
     # Create an array that interleaves the files from read1_fastqs and read2_fastqs
     Array[File] interleavedFiles = []
     
-    # Populate the interleavedFiles array
-    scatter (index in range(length(read1_fastqs))) {
-        interleavedFiles[index * 2] = read1_fastqs[index]
-        interleavedFiles[index * 2 + 1] = read2_fastqs[index]
-    }
-    
     # Determine the size of the input
     Float input_file_size_gb = size(read1_fastqs, "G") + size(read2_fastqs, "G")
 
@@ -94,6 +88,12 @@ task cellatlas_rna {
         
         jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
                 
+        # Populate the interleavedFiles array
+        scatter (index in range(length(read1_fastqs))) {
+            interleavedFiles[index * 2] = read1_fastqs[index]
+            interleavedFiles[index * 2 + 1] = read2_fastqs[index]
+        }
+        
         kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
         #if shareseq, use fixed x_string since already corrected
