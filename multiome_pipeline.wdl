@@ -62,7 +62,6 @@ workflow multiome_pipeline {
         # RNA-specific inputs
         Array[File] read1_rna
         Array[File] read2_rna
-        #Array[File] fastqs_rna
 
         File? gtf
         File? idx_tar_rna

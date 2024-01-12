@@ -14,14 +14,11 @@ task cellatlas_rna {
     
     input {
          # This task takes in input the raw RNA fastqs and their associated seqspec, processes the barcodes accordingly and aligns them to the genome.
-        
-        #Array[File] fastqs #These filenames must EXACTLY match the ones specified in seqspec
-        
+                
         Array[File] read1_fastqs #These filenames must EXACTLY match the ones specified in seqspec
         Array[File] read2_fastqs #These filenames must EXACTLY match the ones specified in seqspec
         
         String modality = "rna"
-        #File seqspec
         
         Array[File] seqspecs
         
@@ -73,9 +70,7 @@ task cellatlas_rna {
         # cp ~{sep=" " barcode_whitelists} .
         
         interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
-        
-        echo $interleaved_files_string
-    
+            
         echo '------ cell atlas build ------' 1>&2
            
         cellatlas build \

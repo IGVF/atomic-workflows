@@ -16,12 +16,9 @@ workflow wf_rna {
     input {
         # RNA Cell Atlas inputs
 
-        #Array[File] fastqs
         Array[File] read1
         Array[File] read2
-        
-        #File seqspec
-        
+                
         Array[File] seqspecs
         
         File genome_fasta
@@ -36,6 +33,7 @@ workflow wf_rna {
         
         # Correct-specific inputs
         Boolean correct_barcodes = true
+        
         # Runtime parameters
         Int? correct_cpus
         Float? correct_disk_factor
@@ -73,7 +71,6 @@ workflow wf_rna {
 
     call task_cellatlas_rna.cellatlas_rna as cellatlas{
         input:
-            #fastqs = flatten([fastqs_R1,fastqs_R2]),
             read1_fastqs = fastqs_R1,
             read2_fastqs = fastqs_R2,
             seqspecs = seqspecs,
