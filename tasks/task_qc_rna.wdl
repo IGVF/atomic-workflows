@@ -31,7 +31,7 @@ task qc_rna {
     Float input_file_size_gb = size(counts_h5ad, "G")
 
     # Determining memory size based on the size of the input files.
-    Float mem_gb = 8.0 + memory_factor * input_file_size_gb
+    Float mem_gb = 32.0 + memory_factor * input_file_size_gb
 
     # Determining disk size based on the size of the input files.
     Int disk_gb = round(40.0 + disk_factor * input_file_size_gb)
