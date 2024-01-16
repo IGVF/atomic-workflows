@@ -25,6 +25,12 @@ workflow wf_rna {
         File genome_gtf
         String chemistry
         
+        Array[File] barcode_whitelists
+        
+        String? subpool = "none"
+        String genome_name # GRCh38, mm10
+        String prefix = "test-sample"
+        
         # RNA Cell Atlas runtime parameters
         Int? cellatlas_cpus
         Float? cellatlas_disk_factor
@@ -34,17 +40,17 @@ workflow wf_rna {
         # Correct-specific inputs
         Boolean correct_barcodes = true
         
-        # Runtime parameters
+        # RNA correct runtime parameters
         Int? correct_cpus
         Float? correct_disk_factor
         Float? correct_memory_factor
         String? correct_docker_image
         
-        Array[File] barcode_whitelists
-        
-        String? subpool = "none"
-        String genome_name # GRCh38, mm10
-        String prefix = "test-sample"
+        # RNA QC runtime parameters
+        Int? qc_rna_cpus
+        Float? qc_rna_disk_factor
+        Float? qc_rna_memory_factor
+        String? qc_rna_docker_image  
     }
 
     
@@ -91,7 +97,11 @@ workflow wf_rna {
         input:
             counts_h5ad = cellatlas.rna_counts_h5ad,
             genome_name = genome_name,
-            prefix = prefix
+            prefix = prefix,
+            cpus = qc_rna_cpus,
+            disk_factor = qc_rna_disk_factor,
+            memory_factor = qc_rna_memory_factor,
+            docker_image = qc_rna_docker_image
     }
     
     #need to add duplicate logs from qc_rna in this task
