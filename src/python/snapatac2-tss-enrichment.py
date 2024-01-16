@@ -5,7 +5,7 @@ import sys
 fragment_file = sys.argv[1]
 compressed_gtf_file = sys.argv[2]
 output_file = sys.argv[3]
-min_frag_cutoff = sys.argv[3]
+min_frag_cutoff = int(sys.argv[4])
 
 
 data = snap.pp.import_data(

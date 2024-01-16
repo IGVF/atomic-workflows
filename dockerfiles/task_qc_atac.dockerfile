@@ -31,12 +31,12 @@ RUN python3 -m pip install --break-system-packages --no-cache-dir --ignore-insta
 ENV PATH="/software:${PATH}"
 
 # Copy the compiled software from the builder
-COPY --chown=$USER:$USER src/bash/monitor_script.sh /usr/local/bin
-COPY --chown=$USER:$USER src/python/compute_tss_enrichment.py /usr/local/bin
-COPY --chown=$USER:$USER src/python/compute_tss_enrichment_bulk.py /usr/local/bin
-COPY --chown=$USER:$USER src/python/plot_insert_size_hist.py /usr/local/bin
-COPY --chown=$USER:$USER src/R/barcode_rank_functions.R /usr/local/bin
-COPY --chown=$USER:$USER src/R/atac_qc_plots.R /usr/local/bin
-COPY --chown=$USER:$USER src/python/snapatac2-tss-enrichment.py /usr/local/bin
+COPY --chown=$USER:$USER --chmod=7509 src/bash/monitor_script.sh /usr/local/bin
+COPY --chown=$USER:$USER --chmod=750 src/python/compute_tss_enrichment.py /usr/local/bin
+COPY --chown=$USER:$USER --chmod=750 src/python/compute_tss_enrichment_bulk.py /usr/local/bin
+COPY --chown=$USER:$USER --chmod=750 src/python/plot_insert_size_hist.py /usr/local/bin
+COPY --chown=$USER:$USER --chmod=750 src/R/barcode_rank_functions.R /usr/local/bin
+COPY --chown=$USER:$USER --chmod=750 src/R/atac_qc_plots.R /usr/local/bin
+COPY --chown=$USER:$USER --chmod=755 src/python/snapatac2-tss-enrichment.py /usr/local/bin
 
 USER ${USER}
