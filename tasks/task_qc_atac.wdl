@@ -74,7 +74,7 @@ task qc_atac {
                 echo '------ There is a subpool ------' 1>&2
                 awk -v subpool=~{subpool} -v OFS="\t" '{print $1"_"subpool,$2"_"subpool}' ~{barcode_conversion_dict} > temp_conversion
             else
-                cp ~{barcode_conversion_dict} > temp_conversion
+                cp ~{barcode_conversion_dict} temp_conversion
             fi
             awk -v FS='[,|\t]' -v OFS=',' 'FNR==NR{map[$2]=$1; next}FNR==1{print $0}FNR>1 && map[$1] {print map[$1],$2,$3,$4,$5}' temp_conversion ~{barcode_summary} > temp_summary
         else
