@@ -40,7 +40,8 @@ task cellatlas_rna {
         String? docker_image = "polumechanos/cellatlas:igvf"
         
     }
-
+    
+    
     # Determine the size of the input
     Float input_file_size_gb = size(read1_fastqs, "G") + size(read2_fastqs, "G")
 
@@ -82,7 +83,7 @@ task cellatlas_rna {
         
         echo '------ RNA bash commands ------' 1>&2
         
-        #jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
+        jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
                  
         kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
