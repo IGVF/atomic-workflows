@@ -67,7 +67,7 @@ task cellatlas_rna {
         bash $(which monitor_script.sh) 1>&2 &
          
         # cellatlas build
-        # cp ~{sep=" " barcode_whitelists} .
+        cp ~{sep=" " barcode_whitelists} .
         
         interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
             
