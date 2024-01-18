@@ -53,7 +53,7 @@ task html_report {
         image_list.txt \
         log_list.txt \
         ~{output_csv_file} \
-        --rna_metrics ~{rna_metrics} \
+        ~{if defined(rna_metrics) then '--rna_metrics ~{rna_metrics}' else ''} \
         ~{if defined(atac_metrics) then '--atac_metrics ~{atac_metrics}' else ''}
         
         echo 'Subpool,~{prefix}' | cat - ~{output_csv_file} > temp && mv temp ~{output_csv_file} 
