@@ -1,15 +1,15 @@
 version 1.0
 
 # TASK
-# rna-cellatlas
+# rna-kb
 
     
-task cellatlas_rna {
+task kb {
 
     meta {
         version: 'v0.1'
         author: 'Siddarth Wekhande (swekhand@broadinstitute.org) at Broad Institute of MIT and Harvard'
-        description: 'align RNA using cellatlas'
+        description: 'align RNA using kb'
     }
     
     input {
@@ -19,12 +19,11 @@ task cellatlas_rna {
         Array[File] read2_fastqs #These filenames must EXACTLY match the ones specified in seqspec
         
         String modality = "rna"
-        
-        Array[File] seqspecs
+        String index_string
         
         File genome_fasta
         File genome_gtf
-        Array[File] barcode_whitelists #These filenames must EXACTLY match the ones specified in seqspec
+        File barcode_whitelist 
         
         String? subpool = "none"
         String genome_name # GRCh38, mm10
@@ -65,37 +64,17 @@ task cellatlas_rna {
         set -e
 
         bash $(which monitor_script.sh) 1>&2 &
-         
-        # cellatlas build
-        # cp ~{sep=" " barcode_whitelists} .
-        
+       
         interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
-            
-        echo '------ cell atlas build ------' 1>&2
-           
-        cellatlas build \
-        -o ~{directory} \
-        -m ~{modality} \
-        -s ~{seqspecs[0]} \
-        -fa ~{genome_fasta} \
-        -g ~{genome_gtf} \
-        ~{read1_fastqs[0]} ~{read2_fastqs[0]}
         
-        echo '------ RNA bash commands ------' 1>&2
-        
-        jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
+        echo '------ kb build ref ------' 1>&2
                  
         kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
-        #if shareseq, use fixed x_string since already corrected
-        if [[ ~{chemistry} == "shareseq" ]]; then
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 2 $interleaved_files_string
+        echo '------ kb count ------' 1>&2
         
-        else
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 2 $interleaved_files_string
-        
-        fi
-        
+        kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x ~{index_string} -w ~{barcode_whitelist} -o ~{directory} --h5ad -t 2 $interleaved_files_string
+             
         #if subpool is defined add subpool suffix
         if [ '~{subpool}' != "none" ]; then
         
@@ -150,12 +129,6 @@ task cellatlas_rna {
             help: 'Fixed to RNA',
             example: 'rna'
         }
-        
-        seqspecs: {
-            description: 'List of seqspecs',
-            help: 'seqspec to process barcodes',
-            example: ['spec.yaml']
-        } 
         
         genome_fasta: {
             description: 'Genome reference',

@@ -26,11 +26,9 @@ workflow multiome_pipeline {
         File genome_fasta
 
         File whitelists_tsv = 'gs://broad-buenrostro-pipeline-genome-annotations/whitelists/whitelists.tsv'
-        File? whitelist
-        File? whitelist_atac
-        File? whitelist_rna
+        Array[File] whitelist_atac
+        Array[File] whitelist_rna
         
-        #File seqspec
         Array[File] seqspecs
 
         # ATAC-specific inputs
@@ -62,11 +60,7 @@ workflow multiome_pipeline {
         # RNA-specific inputs
         Array[File] read1_rna
         Array[File] read2_rna
-
         File? gtf
-        File? idx_tar_rna
-
-        String? gene_naming = "gene_name"
 
         # Joint qc
         Int remove_low_yielding_cells = 10
@@ -80,36 +74,11 @@ workflow multiome_pipeline {
     File idx_tar_atac_ = select_first([atac_genome_index_tar, annotations["bowtie2_idx_tar"]])
     File chrom_sizes_ = select_first([chrom_sizes, annotations["chrsz"]])
     File tss_bed_ = select_first([tss_bed, annotations["tss"]])
-
-    File idx_tar_rna_ = select_first([idx_tar_rna, annotations["star_idx_tar"]])
     File gtf_ = select_first([gtf, annotations["genesgtf"]])
 
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
-
-    Map[String, File] whitelists = read_map(whitelists_tsv)
-    File? whitelist_ = if chemistry=='10x_multiome' then whitelist else select_first([whitelist, whitelists[chemistry]])
-    File? whitelist_rna_ = if chemistry=="10x_multiome" then select_first([whitelist_rna, whitelists["${chemistry}_rna"]]) else whitelist_rna
-    File? whitelist_atac_ = if chemistry=="10x_multiome" then select_first([whitelist_atac, whitelists["${chemistry}_atac"]]) else whitelist_atac
-
-    if ( chemistry != "shareseq" && chemistry != "parse" && process_atac) {
-        call preprocess_tenx.preprocess_tenx as preprocess_tenx{
-                input:
-                    fastq_barcode = fastq_barcode[0],
-                    whitelist = select_first([whitelist_atac, whitelist_atac_]),
-                    chemistry = chemistry,
-                    barcode_offset = atac_barcode_offset,
-                    prefix = prefix
-        }
-        if ( chemistry == "10x_multiome" ){
-            call tenx_barcode_map.mapping_tenx_barcodes as barcode_mapping{
-                input:
-                    whitelist_atac = select_first([whitelist_atac, whitelist_atac_]),
-                    whitelist_rna = select_first([whitelist_rna, whitelist_rna_, whitelist_])
-            }
-        }
-    }
-
+    
     if ( process_rna ) {
         if ( read1_rna[0] != "" ) {
             call subwf_rna.wf_rna as rna{
@@ -118,6 +87,7 @@ workflow multiome_pipeline {
                     read2 = read2_rna,
                     seqspecs = seqspecs,
                     chemistry = chemistry,
+                    barcode_whitelists = whitelist_rna,
                     genome_fasta = genome_fasta,
                     genome_gtf = gtf_,
                     prefix = prefix,
@@ -138,7 +108,7 @@ workflow multiome_pipeline {
                     reference_fasta = genome_fasta,
                     subpool = subpool,
                     gtf = gtf_,
-                    whitelist = select_first([whitelist_atac, whitelist_atac_, whitelist, whitelist_]),
+                    whitelist = whitelist_atac,
                     trim_fastqs = trim_fastqs,
                     chrom_sizes = chrom_sizes_,
                     genome_index_tar = idx_tar_atac_,
