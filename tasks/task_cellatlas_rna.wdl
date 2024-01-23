@@ -26,6 +26,7 @@ task cellatlas_rna {
         File genome_gtf
         Array[File] barcode_whitelists #These filenames must EXACTLY match the ones specified in seqspec
         
+        String? kb_workflow
         String? subpool = "none"
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
@@ -37,7 +38,7 @@ task cellatlas_rna {
         Float? memory_factor = 0.15
         
         #TODO:We need to setup a docker registry.
-        String? docker_image = "polumechanos/cellatlas:igvf"
+        String? docker_image = "swekhande/igvf:task_cellatlas_rna"
         
     }
     
@@ -84,18 +85,30 @@ task cellatlas_rna {
         echo '------ RNA bash commands ------' 1>&2
         
         jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
-                 
-        kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
-        #if shareseq, use fixed x_string since already corrected
-        if [[ '~{chemistry}' == "shareseq" ]]; then
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 4 $interleaved_files_string
+        
+        #build index based on kb_workflow
+        if [[ '~{kb_workflow}' == "standard" ]]; then    
+            #build ref
+            kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
+            
+            #if shareseq, use fixed x_string since already corrected or extract from cell-atlas
+            
+            #kb count 
+            [[ '~{chemistry}' == "shareseq" ]] && kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 4 $interleaved_files_string || kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 4 $interleaved_files_string
+
         
         else
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 4 $interleaved_files_string
+            #build ref
+            kb ref --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt -f1 ~{directory}/cdna.fasta -f2 ~{directory}/nascent.fasta ~{genome_fasta} ~{genome_gtf}
+            
+            #if shareseq, use fixed x_string since already corrected or extract from cell-atlas
+            
+            #kb count   
+            [[ '~{chemistry}' == "shareseq" ]] && kb count --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt --sum=nucleus -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 4 $interleaved_files_string || kb count --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt --sum=nucleus $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 4 $interleaved_files_string
         
         fi
-        
+
         #if subpool is defined add subpool suffix
         if [ '~{subpool}' != "none" ]; then
         
