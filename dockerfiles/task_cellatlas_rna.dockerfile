@@ -37,12 +37,9 @@ RUN git clone https://github.com/cellatlas/cellatlas.git \
     && cd cellatlas \
     && pip install .
     
-# Install kb-python
-RUN pip install kb-python
-
 RUN pip uninstall -y --quiet seqspec        
-RUN pip install --quiet git+https://github.com/IGVF/seqspec.git 
-RUN pip install --quiet gget kb-python 
+RUN pip install --quiet seqspec 
+RUN pip install --quiet kb-python 
 
 # Create and setup new user
 #ENV USER=igvf
