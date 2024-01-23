@@ -88,7 +88,7 @@ task cellatlas_rna {
         kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
         #if shareseq, use fixed x_string since already corrected
-        if [[ ~{chemistry} == "shareseq" ]]; then
+        if [[ '~{chemistry}' == "shareseq" ]]; then
             kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 4 $interleaved_files_string
         
         else
