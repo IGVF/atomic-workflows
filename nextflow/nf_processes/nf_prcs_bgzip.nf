@@ -9,7 +9,7 @@ process run_bgzip {
   input:
     path fragment_file
   output:
-    path "${fragment_file}.gz" , emit: bgzip_fragments_out
+    path "${fragment_file.baseName}.gz" , emit: bgzip_fragments_out
   script:
   """
     echo start run_bgzip_fragment_file
@@ -20,4 +20,3 @@ process run_bgzip {
     echo finished run_bgzip_fragment_file
   """
 }
-

@@ -78,6 +78,7 @@ target/
 hai-gcp-genomic-beb9207a40b8.json
 *.fastq.gz
 .nextflow.log.*
+.nextflow
 
 # Jupyter Notebook
 .ipynb_checkpoints
