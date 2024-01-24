@@ -99,6 +99,7 @@ workflow wf_rna {
         input:
             counts_h5ad = cellatlas.rna_counts_h5ad,
             genome_name = genome_name,
+            kb_workflow = kb_workflow,
             prefix = prefix,
             cpus = qc_rna_cpus,
             disk_factor = qc_rna_disk_factor,
