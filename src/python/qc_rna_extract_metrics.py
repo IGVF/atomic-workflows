@@ -47,7 +47,8 @@ def main():
     else:
         df_m = extract_qc_metrics(adata, 'mature')
         df_a = extract_qc_metrics(adata, 'ambiguous')
-        df = df_m[0][["total_counts", "n_genes_by_counts"]] + df_a[0][["total_counts", "n_genes_by_counts"]]
+        df_n = extract_qc_metrics(adata, 'nascent')
+        df = df_m[0][["total_counts", "n_genes_by_counts"]] + df_a[0][["total_counts", "n_genes_by_counts"]] + df_n[0][["total_counts", "n_genes_by_counts"]]
     
     #  rename columns
     df.rename(columns={"total_counts": "total_counts", "n_genes_by_counts": "genes"}, inplace=True)
