@@ -3,7 +3,7 @@
 //include {run_synpase_download} from './../../nf_processes/nf_prcs_synapse_utils.nf'
 include {run_downloadFiles} from './../../nf_processes/nf_prcs_download_url_files.nf'
 include {run_seqspec_print;run_seqspec_modify_atac} from './../../nf_processes/nf_prcs_seqspec_utils.nf'
-include {run_create_chromap_idx;run_chromap_map_to_idx;run_chromap_test} from './../../nf_processes/nf_prcs_chromap_utils.nf'
+include {run_create_chromap_idx;run_chromap_map_to_idx;run_chromap_test;run_add_pool_prefix} from './../../nf_processes/nf_prcs_chromap_utils.nf'
 include {run_bgzip} from './../../nf_processes/nf_prcs_bgzip.nf'
 include {run_tabix;run_tabix_filtered_fragments} from './../../nf_processes/nf_prcs_tabix.nf'
 include {run_merge_logs} from './../../nf_processes/nf_prcs_merge_logs.nf'
@@ -27,10 +27,11 @@ workflow {
   // run_synpase_download(synIds_ch,params.ENV_SYNAPSE_TOKEN)
     
   // STEP 1: input processing
+  // R1_fastq_gz	R2_fastq_gz	R3_fastq_gz	R4_fastq_gz	barcode1_fastq_gz	barcode2_fastq_gz	spec	whitelist
   files_ch = Channel
     .fromPath( params.FASTQS_SPEC_CH )
-    .splitCsv( header: true, sep: '\t' )
-    .map { row -> tuple( file(row.R1_fastq_gz), file(row.R2_fastq_gz), file(row.R3_fastq_gz), file(row.spec), file(row.whitelist)) }
+    .splitCsv( header: true, sep: '\t')
+    .map { row -> tuple( file(row.R1_fastq_gz), file(row.R2_fastq_gz), file(row.R3_fastq_gz), file(row.R4_fastq_gz),file(row.barcode1_fastq_gz),file(row.barcode2_fastq_gz),file(row.spec), file(row.whitelist),val(subpool)) }
     .set { sample_run_ch }
 
   // STEP 2: modify seqspec with the file names
@@ -41,41 +42,47 @@ workflow {
   // run_seqspec_print(run_seqspec_modify_atac.out.seqspec_modify_atac_out)
   // println ('after run_seqspec_print')
   
-  // STEP 4: run_chromap_test
-  // run_chromap_test()
-  // println ('after run_chromap_test')
-  
   // STEP 4: download the genome FA
   genome_fasta_ch = channel.value(file(params.CHROMAP_GENOME_REFERENCE_FASTA))
   println ('after genome_fasta_ch')
   
-  // STEP 5: download the geonme gtf
-  genome_gtf_ch = channel.value(file(params.GENOME_GZ_GTF))
-  println ('after genome_gtf_ch')
-  
-  // STEP 6a: download chromap index
-  // genome_chromap_idx = channel.value(file(params.CHROMAP_IDX))
-
-  // STEP 6b: calculate the chromap index
   // zcat the reference genome input file that is used for index
-  genome_fasta_zcat_out = run_zcat(genome_fasta_ch)
+  run_zcat(genome_fasta_ch)
+  genome_fasta_zcat_out = run_zcat.out.zcat_file_out
   println ('after run_zcat ')
 
+
+  // STEP 5a: download chromap index - after it was created. useful when you want to skip the index
+  genome_chromap_idx = channel.value(file(params.CHROMAP_IDX))
+
+  // STEP 5b: calculate the chromap index ///////////////////////////////////
+
   // Call chromap index with the output of the zcat
-  genome_chromap_idx = run_create_chromap_idx(genome_fasta_zcat_out)
-  println ('after run_create_chromap_idx')
-
-  // call gunzip for the whitelist
-  barcode_whitelist_inclusion_list = run_whitelist_gunzip(sample_run_ch)
+  // run_create_chromap_idx(genome_fasta_zcat_out)
+  // genome_chromap_idx = run_create_chromap_idx.out.chromap_idx_out
+  // println ('after run_create_chromap_idx')
+  // END STEP 6b
+  
+  // Step 7: call gunzip for the whitelist
+  run_whitelist_gunzip(sample_run_ch)
+  barcode_whitelist_inclusion_list=run_whitelist_gunzip.out.whitelist_inclusion_file_out
   println ('after run_whitelist_gunzip')
-  
-  // run_chromap_map_to_idx
-  // run_chromap_map_to_idx(genome_chromap_idx,genome_fasta_zcat_out,barcode_inclusion_list,params.CHROMAP_READ_LENGTH,params.CHROMAP_BC_ERROR_THRESHOLD,params.CHROMAP_BC_PROBABILITY_THRESHOLD, params.CHROMAP_READ_FORMAT, params.CHROMAP_DROP_REPETITIVE_READS,params.CHROMAP_GENOME_REFERENCE_FASTA,params.CHROMAP_QUALITY_THRESHOLD,files_ch)
-  run_chromap_map_to_idx()
 
-  println ('finished run_chromap_map_to_idx')
+  // STEP 8a:  
+  // run_chromap_map_to_idx(sample_run_ch,genome_fasta_ch,genome_chromap_idx,genome_fasta_zcat_out,barcode_whitelist_inclusion_list, params.CHROMAP_QUALITY_THRESHOLD, params.CHROMAP_DROP_REPETITIVE_READS, params.CHROMAP_READ_FORMAT, params.CHROMAP_BC_PROBABILITY_THRESHOLD, params.CHROMAP_BC_ERROR_THRESHOLD, params.CHROMAP_READ_LENGTH)
+  // chromap_filter_fragments_tsv = run_chromap_map_to_idx.out.chromap_filter_fragments_tsv_out
+  // barcode_summary_csv = run_chromap_map_to_idx.out.barcode_summary_csv_out
+  // println ('finished run_chromap_map_to_idx')
+
+  // STEP 8b:  for debug: load the outputs:  
+  chromap_filter_fragments_tsv = channel.value(file(params.chromap_filter_fragments_tsv))
+  barcode_summary_csv = channel.value(file(params.barcode_summary_csv))
+  println ('after load chrompa mapping debug')
+
   // TODO: ADD SUBPOOL EXECUTION ON THE OUTPUT
-  
+  if (subpool != 'na') {
+    run_add_pool_prefix(chromap_filter_fragments_tsv,barcode_summary_csv)
+  }
   
   // STEP 9: call bgzip run_chromap_map_to_idx.out.chromap_map_bed_path
   // println ('before call bgzip')
