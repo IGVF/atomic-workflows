@@ -12,7 +12,7 @@ process run_scrna_atac_plot_qc_metrics {
     val fragment_rank_plot_file_output
   output:
     path "${fragment_rank_plot_file_output}", emit: fragment_rank_plot_file_output_file
-    
+    path '.command.out', emit: run_scrna_atac_plot_qc_metrics_stdout
   script:
   """
     # Print start of run_scrna_atac_plot_qc_metrics

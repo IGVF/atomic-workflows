@@ -1,6 +1,7 @@
 // Enable DSL2
 nextflow.enable.dsl=2
-
+//  # Use gunzip to handle both compressed and uncompressed files
+//     gunzip -c $whitelist_file > ${whitelist_file.baseName}
 process run_whitelist_gunzip {
 
   // Set debug to true
@@ -11,7 +12,7 @@ process run_whitelist_gunzip {
 
   // Define input paths
   input:
-    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file)
+    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict)
 
   // Define output path
   output:
@@ -42,3 +43,4 @@ process run_whitelist_gunzip {
     echo 'Finished run_whitelist_gunzip'
   """
 }
+

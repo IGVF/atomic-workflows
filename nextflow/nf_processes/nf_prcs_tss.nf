@@ -2,7 +2,7 @@
 nextflow.enable.dsl=2
 
 // Define default values for parameters
-params.tss_bases_flank = 2000
+// params.tss_bases_flank = 2000
 params.tss_col_strand_info = 4
 params.smoothing_window_size = 20
 params.tss_bases_flank = 50

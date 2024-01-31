@@ -1,6 +1,7 @@
 // Enable DSL2
 nextflow.enable.dsl=2
-
+  // #echo 'TODO:comment out when execute with real data'
+  // #/usr/local/bin/create_sample_filtered_fragment_file.sh
 process run_filter_fragments {
   debug true
   label 'filter_fragments'
@@ -13,21 +14,26 @@ process run_filter_fragments {
     val fragments_cutoff
   output:
     path 'filtered_fragment_file.bed', emit: filtered_fragment_file_out
+    path '.command.out', emit: run_filter_fragments_stdout
   script:
   """
   echo 'start run_filter_fragments'
   echo 'barcode_conversion_dict_file is $barcode_conversion_dict_file'
   echo 'atac_and_pool_bash_script is $atac_and_pool_bash_script'
   echo 'call to ls usr local bin'
-  
+  if grep -q "na.na" "$barcode_conversion_dict_file"; then
+    input_barcode_conversion_dict=
+  else
+    input_barcode_conversion_dict="$barcode_conversion_dict_file"
+    fi
+
+  echo "defined({input.barcode_conversion_dict})=${input_barcode_conversion_dict}"
+
   # Determine the script path
   script_path=\$(command -v $atac_and_pool_bash_script)
   echo "Script path: \$script_path"
 
   \$script_path $barcode_conversion_dict_file $subpool_in $barcode_summary $fragments_cutoff $fragments_file $task.cpus filtered_fragment_file.bed
-
-  echo 'TODO:comment out when execute with real data'
-  /usr/local/bin/create_sample_filtered_fragment_file.sh
   
   echo 'ls after the execution of the script'
   ls
