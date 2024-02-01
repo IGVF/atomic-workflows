@@ -22,11 +22,7 @@ process run_bgzip {
   """
     echo 'Start run_bgzip_fragment_file'
     echo "Fragment file is: $fragment_file"
-    ls -lt
-    
-    # Use bgzip to compress the fragment file
-    bgzip $fragment_file
-    
+    bgzip -c $fragment_file > ${fragment_file.baseName}.gz 2>&1
     ls -lt
     echo 'Finished run_bgzip_fragment_file'
   """
