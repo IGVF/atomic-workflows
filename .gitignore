@@ -79,6 +79,7 @@ hai-gcp-genomic-beb9207a40b8.json
 *.fastq.gz
 .nextflow.log.*
 .nextflow
+nextflow/nf_workflow/workflow_fg_single_cell_atac/.nextflow/history
 
 # Jupyter Notebook
 .ipynb_checkpoints

@@ -12,7 +12,7 @@ process run_whitelist_gunzip {
 
   // Define input paths
   input:
-    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict)
+    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix)
 
   // Define output path
   output:

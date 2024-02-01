@@ -57,11 +57,6 @@ def main():
 
   # In plot_insert_size_hist.py
   print("Received arguments:", sys.argv)
- # Parse command-line arguments
- # args = parse_arguments()
-
-  print("Starting histogram plotting script")
-
   # Parse command-line arguments
   args = parse_arguments()
 
@@ -77,10 +72,9 @@ def main():
   print(f'out_file: {out_file}')
 
 
-  #df = get_hist_vals(histogram_file)
+  df = get_hist_vals(histogram_file)
   
-  #print("TODO: uncomment when running with real data")
-  # plot_hist(df, pkr, out_file)
+  plot_hist(df, pkr, out_file)
 
   print("Finished plotting")
 
