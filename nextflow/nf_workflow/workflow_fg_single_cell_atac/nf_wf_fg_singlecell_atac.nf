@@ -9,12 +9,12 @@ include {run_tabix_chromap;run_tabix_filtered_fragments} from './../../nf_proces
 include {run_merge_logs} from './../../nf_processes/nf_prcs_merge_logs.nf'
 include {run_filter_fragments} from './../../nf_processes/nf_prcs_filter_fragments.nf'
 include {run_calculate_tss_enrichment_bulk;run_calculate_tss_enrichment_snapatac2} from './../../nf_processes/nf_prcs_tss.nf'
-include {run_scrna_atac_plot_qc_metrics} from './../../nf_processes/nf_prcs_atac_qc_plots.nf'
+include {run_scrna_atac_plot_qc_metrics} from './../../nf_processes/nf_prcs_atac_generate_metadata_annoation.nf'
 include {run_atac_barcode_metadata} from './../../nf_processes/nf_prcs_generate_barcode_metadata.nf'
 include {run_atac_barcode_rank_plot} from './../../nf_processes/nf_prcs_atac_barcode_rank_plot.nf'
 include {run_zcat} from './../../nf_processes/nf_prcs_zcat.nf'
 include {run_whitelist_gunzip} from './../../nf_processes/nf_prcs_gunzip.nf'
-include {run_generate_insert_size_plot} from './../../nf_processes/nf_prcs_atac_generate_insert_size_plot.nf'
+// include {run_generate_insert_size_plot} from './../../nf_processes/nf_prcs_atac_generate_insert_size_plot.nf'
 
 workflow {
   println params.FASTQS_SPEC_CH
