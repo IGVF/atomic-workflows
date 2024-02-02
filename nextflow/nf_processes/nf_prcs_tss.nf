@@ -26,6 +26,7 @@ process run_calculate_tss_enrichment_bulk {
   debug true
   label 'tss_bulk'
   input:
+    tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix)
     val calculation_script
     path fragments
     path tbi_fragments
@@ -33,7 +34,6 @@ process run_calculate_tss_enrichment_bulk {
     val tss_bases_flank
     val tss_col_strand_info
     val smoothing_window_size
-    val prefix_str
     val CPUS_TO_USE
   output:
     path "${tbi_fragments}_enrichment_bulk.tss", emit: tss_fragments_out
@@ -48,7 +48,7 @@ process run_calculate_tss_enrichment_bulk {
     echo 'smoothing_window_size: $smoothing_window_size'
     echo 'ls /usr/local/bin/'
     ls /usr/local/bin/
-    python3 /usr/local/bin/$calculation_script $tbi_fragments -e $tss_bases_flank -s $tss_col_strand_info -p $CPUS_TO_USE --prefix $prefix_str --regions $regions_file
+    python3 /usr/local/bin/$calculation_script $tbi_fragments -e $tss_bases_flank -s $tss_col_strand_info -p $CPUS_TO_USE --prefix $prefix --regions $regions_file
     echo 'finished run_calculate_tss_enrichment'
   """
 }
@@ -58,13 +58,13 @@ process run_calculate_tss_enrichment_snapatac2 {
   debug true
   label 'tss_snapatac2'
   input:
+    tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix)
     val calculation_script
     path tbi_fragments
     path gtf_file
     val min_frag_cutoff
-    val prefix_str
   output:
-    path "${prefix_str}.tss_enrichment_barcode_stats.tsv", emit: tss_fragments_out
+    path "${prefix}.tss_enrichment_barcode_stats.tsv", emit: tss_fragments_out
   script:
   """
     echo 'start run_calculate_tss_enrichment_snapatac2'

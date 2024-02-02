@@ -11,5 +11,5 @@ ENV PATH /usr/local/bin:/opt/conda/envs/utils_env/bin:$PATH
 ENV CONDA_DEFAULT_ENV utils_env
 
 # 1. docker build -t eilalan/utils_env -f Dockerfile_utils .
-# 2. docker run -it eilalan/utils_env
+# 2. docker run -it eilalan/utils_env:latest
 # 3. docker push eilalan/utils_env

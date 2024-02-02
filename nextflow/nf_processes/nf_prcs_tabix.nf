@@ -13,7 +13,6 @@ process run_tabix_chromap {
   """
     echo 'start run_tabix'
     echo 'input tabix_fragments is $tabix_fragments'
-    ls /usr/local/bin/
     /usr/local/bin/$tabix_script $tabix_fragments
     echo 'finished run_tabix'
   """
@@ -32,8 +31,26 @@ process run_tabix_filtered_fragments {
   """
     echo 'start run_tabix'
     echo 'input tabix_fragments is $tabix_fragments'
-    ls /usr/local/bin/
     /usr/local/bin/$tabix_script $tabix_fragments
+    ls
     echo 'finished run_tabix'
+  """
+}
+
+process run_tabix_no_singleton {
+  debug true
+  label 'tabix_singelston'
+  input:
+    val tabix_script
+    path no_singelton_gz
+  output:
+    path "${no_singelton_gz}.tbi", emit: tbi_no_singleton_bed_gz_out
+  script:
+  """
+    echo 'start run_tabix_no_singleton'
+    echo 'input no_singelton_gz is $no_singelton_gz'
+    /usr/local/bin/$tabix_script $no_singelton_gz
+    ls
+    echo 'finished run_tabix_no_singleton'
   """
 }
