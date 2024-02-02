@@ -15,7 +15,7 @@ task seqspec_extract {
         File seqspec
         Array[File] onlists #Filenames must EXACTLY match in seqspec
         String modality
-        String format
+        String tool_format
         
         #Take input filenames, not actual files since not required. Filenames must EXACTLY match in seqspec
         String fastq_R1 
@@ -51,13 +51,19 @@ task seqspec_extract {
         bash $(which monitor_script.sh) | tee ~{monitor_fnp_log} 1>&2 &
         
         mv ~{sep=" " onlists} .
+        mv ~{seqspec} spec.yaml
         
-        python3 $(which seqspec_extract.py) -s ~{seqspec}  -m ~{modality} -fmt ~{format} -fq ~{sep=" " fastq_files}
+        #deprecated
+        #python3 $(which seqspec_extract.py) -s ~{seqspec}  -m ~{modality} -fmt ~{tool_format} -fq ~{sep=" " fastq_files}
+        
+        seqspec index -t ~{tool_format} -m ~{modality} -r {sep="," fastq_files} spec.yaml > index_string.txt
+        
+        seqspec onlist -o final_whitelist.txt -m ~{modality} -r barcode spec.yaml
         
     >>>
     output {
         String index_string = read_string("index_string.txt")
-        File onlist = read_string("onlist_filename.txt")
+        File onlist = final_whitelist.txt
         File monitor_log = "~{monitor_fnp_log}"
     }
 
@@ -80,7 +86,7 @@ task seqspec_extract {
             description: 'Assay modality',
             help: 'Which assay modality to extract infrormation from'
         }
-        format: {
+        tool_format: {
             description: 'Index string format',
             help: 'Output format of the index string. Check kb for available options.'
         }
