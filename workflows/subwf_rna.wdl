@@ -60,29 +60,6 @@ workflow wf_rna {
         String? qc_rna_docker_image  
     }
 
-    
-    if ( chemistry == "shareseq" && correct_barcodes ) {
-        scatter (read_pair in zip(read1, read2)) {
-            call share_task_correct_fastq.share_correct_fastq as correct {
-                input:
-                    fastq_R1 = read_pair.left,
-                    fastq_R2 = read_pair.right,
-                    whitelist = barcode_whitelists[0],
-                    sample_type = "RNA",
-                    pkr = subpool,
-                    prefix = prefix,
-                    cpus = correct_cpus,
-                    disk_factor = correct_disk_factor,
-                    memory_factor = correct_memory_factor,
-                    docker_image = correct_docker_image
-            }
-        }
-    }
-    
-    Array[File] fastqs_R1 = select_first([correct.corrected_fastq_R1, read1])
-    Array[File] fastqs_R2 = select_first([correct.corrected_fastq_R2, read2])
-    
-
     scatter (read_pair in zip(read1, read2)) {
         call task_seqspec_extract.seqspec_extract as seqspec_extract {
             input:
@@ -103,6 +80,29 @@ workflow wf_rna {
     
     #Assuming this index_string is applicable to all fastqs for kb task
     String index_string_ = if chemistry == "shareseq" then "1,0,24:1,24,34:0,0,50" else seqspec_extract.index_string[0] #fixed index string for shareseq
+    
+    
+    #correct barcode logic for shareseq
+    if ( chemistry == "shareseq" && correct_barcodes ) {
+        scatter (read_pair in zip(read1, read2)) {
+            call share_task_correct_fastq.share_correct_fastq as correct {
+                input:
+                    fastq_R1 = read_pair.left,
+                    fastq_R2 = read_pair.right,
+                    whitelist = barcode_whitelist_,
+                    sample_type = "RNA",
+                    pkr = subpool,
+                    prefix = prefix,
+                    cpus = correct_cpus,
+                    disk_factor = correct_disk_factor,
+                    memory_factor = correct_memory_factor,
+                    docker_image = correct_docker_image
+            }
+        }
+    }
+    
+    Array[File] fastqs_R1 = select_first([correct.corrected_fastq_R1, read1])
+    Array[File] fastqs_R2 = select_first([correct.corrected_fastq_R2, read2])
 
     call task_kb.kb as kb{
         input:
