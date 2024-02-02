@@ -13,18 +13,20 @@ task kb {
     }
     
     input {
-         # This task takes in input the raw RNA fastqs and their associated seqspec, processes the barcodes accordingly and aligns them to the genome.
+         # This task takes in input the raw RNA fastqs and their associated index string and whitelist, processes the barcodes accordingly, aligns them to the genome, and outputs the count matrices.
                 
         Array[File] read1_fastqs #These filenames must EXACTLY match the ones specified in seqspec
         Array[File] read2_fastqs #These filenames must EXACTLY match the ones specified in seqspec
         
         String modality = "rna"
+        
         String index_string
         
         File genome_fasta
         File genome_gtf
         File barcode_whitelist 
         
+        String? kb_workflow
         String? subpool = "none"
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
@@ -36,7 +38,7 @@ task kb {
         Float? memory_factor = 0.15
         
         #TODO:We need to setup a docker registry.
-        String? docker_image = "polumechanos/cellatlas:igvf"
+        String? docker_image = "swekhande/igvf:task_cellatlas_rna"
         
     }
     
@@ -64,19 +66,49 @@ task kb {
         set -e
 
         bash $(which monitor_script.sh) 1>&2 &
-
+         
         # cellatlas build
         cp ~{sep=" " barcode_whitelists} .
         
         interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
+            
+        echo '------ cell atlas build ------' 1>&2
+           
+        cellatlas build \
+        -o ~{directory} \
+        -m ~{modality} \
+        -s ~{seqspecs[0]} \
+        -fa ~{genome_fasta} \
+        -g ~{genome_gtf} \
+        ~{read1_fastqs[0]} ~{read2_fastqs[0]}
         
-        echo '------ kb build ref ------' 1>&2
-                 
-        kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
+        echo '------ RNA bash commands ------' 1>&2
+        
+        jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
         
         
-        kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x ~{index_string} -w ~{barcode_whitelist} -o ~{directory} --h5ad -t 2 $interleaved_files_string
-             
+        #build index based on kb_workflow
+        if [[ '~{kb_workflow}' == "standard" ]]; then    
+            #build ref
+            kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
+            
+            #if shareseq, use fixed x_string since already corrected or extract from cell-atlas
+            
+            #kb count 
+            [[ '~{chemistry}' == "shareseq" ]] && kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 4 $interleaved_files_string || kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 4 $interleaved_files_string
+
+        
+        else
+            #build ref
+            kb ref --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt -f1 ~{directory}/cdna.fasta -f2 ~{directory}/nascent.fasta ~{genome_fasta} ~{genome_gtf}
+            
+            #if shareseq, use fixed x_string since already corrected or extract from cell-atlas
+            
+            #kb count   
+            [[ '~{chemistry}' == "shareseq" ]] && kb count --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt --sum=nucleus -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 4 $interleaved_files_string || kb count --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt --sum=nucleus $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 4 $interleaved_files_string
+        
+        fi
+
         #if subpool is defined add subpool suffix
         if [ '~{subpool}' != "none" ]; then
         
@@ -131,6 +163,12 @@ task kb {
             help: 'Fixed to RNA',
             example: 'rna'
         }
+        
+        seqspecs: {
+            description: 'List of seqspecs',
+            help: 'seqspec to process barcodes',
+            example: ['spec.yaml']
+        } 
         
         genome_fasta: {
             description: 'Genome reference',
