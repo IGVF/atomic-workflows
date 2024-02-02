@@ -27,6 +27,7 @@ workflow wf_rna {
         
         Array[File] barcode_whitelists
         
+        String? kb_workflow = "standard" #standard or nac
         String? subpool = "none"
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
@@ -83,6 +84,7 @@ workflow wf_rna {
             genome_fasta = genome_fasta,
             barcode_whitelists = barcode_whitelists,
             genome_gtf = genome_gtf,
+            kb_workflow = kb_workflow, 
             subpool = subpool,
             genome_name = genome_name,
             prefix = prefix,
@@ -97,6 +99,7 @@ workflow wf_rna {
         input:
             counts_h5ad = cellatlas.rna_counts_h5ad,
             genome_name = genome_name,
+            kb_workflow = kb_workflow,
             prefix = prefix,
             cpus = qc_rna_cpus,
             disk_factor = qc_rna_disk_factor,

@@ -17,6 +17,7 @@ task qc_rna {
         Int? umi_cutoff = 100
         Int? gene_cutoff = 100
         String genome_name
+        String? kb_workflow = "standard"
         String? prefix        
         
         #Will these be used? Need to run tests to optimize
@@ -24,7 +25,7 @@ task qc_rna {
         Float? disk_factor = 1.0
         Float? memory_factor = 1.0
           
-        String? docker_image = "polumechanos/qc_rna:igvf"
+        String? docker_image = "swekhande/igvf:task_qc_rna"
     }
 
     # Determine the size of the input
@@ -54,6 +55,7 @@ task qc_rna {
 
         python3 $(which qc_rna_extract_metrics.py) ~{counts_h5ad} \
                                                  ~{barcode_metadata} \
+                                                 ~{kb_workflow} \
                                                  "none"
 
         # Make QC plots 
