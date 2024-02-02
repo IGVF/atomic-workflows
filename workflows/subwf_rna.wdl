@@ -60,14 +60,16 @@ workflow wf_rna {
         String? qc_rna_docker_image  
     }
 
-    scatter (read_pair in zip(read1, read2)) {
+    #should implement check if length of seqspecs == length of read1 == length of read2
+    scatter ( idx in range(length(seqspecs)) ) {
         call task_seqspec_extract.seqspec_extract as seqspec_extract {
             input:
-                fastq_R1 = basename(read_pair.left),
-                fastq_R2 = basename(read_pair.right),
+                seqspec = seqspecs[idx],
+                fastq_R1 = basename(read1[idx]),
+                fastq_R2 = basename(read2[idx]),
                 onlists = barcode_whitelists,
                 modality = "rna",
-                format = "kb",
+                tool_format = "kb",
                 cpus = seqspec_extract_cpus,
                 disk_factor = seqspec_extract_disk_factor,
                 memory_factor = seqspec_extract_memory_factor,
