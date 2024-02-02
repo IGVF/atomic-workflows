@@ -80,6 +80,30 @@ workflow multiome_pipeline {
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
     
+    
+    #could not coerece Array[File] to File?
+    File? whitelist_rna_ = whitelist_rna[0]
+    File? whitelist_atac_ = whitelist_atac[0]
+
+    #will be updated when changing atac? 
+    if ( chemistry != "shareseq" && chemistry != "parse" && process_atac) {
+        call preprocess_tenx.preprocess_tenx as preprocess_tenx{
+                input:
+                    fastq_barcode = fastq_barcode[0],
+                    whitelist = select_first([whitelist_atac, whitelist_atac_]),
+                    chemistry = chemistry,
+                    barcode_offset = atac_barcode_offset,
+                    prefix = prefix
+        }
+        if ( chemistry == "10x_multiome" ){
+            call tenx_barcode_map.mapping_tenx_barcodes as barcode_mapping{
+                input:
+                    whitelist_atac = select_first([whitelist_atac, whitelist_atac_]),
+                    whitelist_rna = select_first([whitelist_rna, whitelist_rna_])
+            }
+        }
+    }
+    
     if ( process_rna ) {
         if ( read1_rna[0] != "" ) {
             call subwf_rna.wf_rna as rna{
@@ -109,7 +133,7 @@ workflow multiome_pipeline {
                     reference_fasta = genome_fasta,
                     subpool = subpool,
                     gtf = gtf_,
-                    whitelist = whitelist_atac,
+                    whitelist = whitelist_atac[0], #cannot coerce array
                     trim_fastqs = trim_fastqs,
                     chrom_sizes = chrom_sizes_,
                     genome_index_tar = idx_tar_atac_,
