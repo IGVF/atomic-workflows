@@ -145,12 +145,6 @@ task kb {
             example: 'rna'
         }
         
-        seqspecs: {
-            description: 'List of seqspecs',
-            help: 'seqspec to process barcodes',
-            example: ['spec.yaml']
-        } 
-        
         genome_fasta: {
             description: 'Genome reference',
             help: 'Genome reference in .fa.gz file',
