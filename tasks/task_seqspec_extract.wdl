@@ -63,7 +63,7 @@ task seqspec_extract {
     >>>
     output {
         String index_string = read_string("index_string.txt")
-        File onlist = final_whitelist.txt
+        File onlist = "final_whitelist.txt"
         File monitor_log = "~{monitor_fnp_log}"
     }
 
