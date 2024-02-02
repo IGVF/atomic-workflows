@@ -56,56 +56,37 @@ task kb {
     String disk_type = if disk_gb > 375 then "SSD" else "LOCAL"
 
     # Define the output names
-    String directory = "${prefix}.rna.align.cellatlas.${genome_name}"
-    String count_matrix = "${prefix}.rna.align.cellatlas.${genome_name}.tar.gz"
-    String alignment_json = "${prefix}.rna.align.cellatlas.${genome_name}/run_info.json"
-    String barcode_matrics_json = "${prefix}.rna.align.cellatlas.${genome_name}/inspect.json"
+    String directory = "${prefix}.rna.align.kb.${genome_name}"
+    String count_matrix = "${prefix}.rna.align.kb.${genome_name}.tar.gz"
+    String alignment_json = "${prefix}.rna.align.kb.${genome_name}/run_info.json"
+    String barcode_matrics_json = "${prefix}.rna.align.kb.${genome_name}/inspect.json"
 
     command <<<
     
         set -e
 
         bash $(which monitor_script.sh) 1>&2 &
-         
-        # cellatlas build
-        cp ~{sep=" " barcode_whitelists} .
         
+        #set up fastq order as l1r1, l1r2, l2r1, l2r2, etc.
         interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
-            
-        echo '------ cell atlas build ------' 1>&2
            
-        cellatlas build \
-        -o ~{directory} \
-        -m ~{modality} \
-        -s ~{seqspecs[0]} \
-        -fa ~{genome_fasta} \
-        -g ~{genome_gtf} \
-        ~{read1_fastqs[0]} ~{read2_fastqs[0]}
-        
-        echo '------ RNA bash commands ------' 1>&2
-        
-        jq  -r '.commands[] | values[] | join("\n")' ~{directory}/cellatlas_info.json 1>&2
-        
         
         #build index based on kb_workflow
-        if [[ '~{kb_workflow}' == "standard" ]]; then    
-            #build ref
+        if [[ '~{kb_workflow}' == "standard" ]]; then   
+        
+            #build ref standard
             kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
-            
-            #if shareseq, use fixed x_string since already corrected or extract from cell-atlas
-            
-            #kb count 
-            [[ '~{chemistry}' == "shareseq" ]] && kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 4 $interleaved_files_string || kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 4 $interleaved_files_string
-
+                        
+            #kb count standard
+            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x ~{index_string} -w ~{barcode_whitelist} -o ~{directory} --h5ad -t 4 $interleaved_files_string 
         
         else
-            #build ref
+        
+            #build ref nac
             kb ref --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt -f1 ~{directory}/cdna.fasta -f2 ~{directory}/nascent.fasta ~{genome_fasta} ~{genome_gtf}
-            
-            #if shareseq, use fixed x_string since already corrected or extract from cell-atlas
-            
-            #kb count   
-            [[ '~{chemistry}' == "shareseq" ]] && kb count --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt --sum=nucleus -x 1,0,24:1,24,34:0,0,50 -w ~{sep=" " barcode_whitelists} -o ~{directory} --h5ad -t 4 $interleaved_files_string || kb count --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt --sum=nucleus $(grep -oE '\-x [^ ]+' ~{directory}/cellatlas_info.json) $(grep -oE '\-w [^ ]+' ~{directory}/cellatlas_info.json) -o ~{directory} --h5ad -t 4 $interleaved_files_string
+                        
+            #kb count nac    
+            kb count --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt --sum=nucleus -x ~{index_string} -w ~{barcode_whitelist} -o ~{directory} --h5ad -t 4 $interleaved_files_string 
         
         fi
 
@@ -124,7 +105,7 @@ task kb {
         
         tar -czvf ~{count_matrix}  --exclude='*.h5ad' -C ~{directory}/counts_unfiltered/ .
 
-        mv ~{directory}/counts_unfiltered/adata.h5ad ~{prefix}.rna.align.cellatlas.~{genome_name}.count_matrix.h5ad
+        mv ~{directory}/counts_unfiltered/adata.h5ad ~{prefix}.rna.align.kb.~{genome_name}.count_matrix.h5ad
 
     >>>
 
@@ -133,7 +114,7 @@ task kb {
         File rna_alignment_json = alignment_json
         File rna_barcode_matrics_json = barcode_matrics_json
         File rna_mtx_tar = count_matrix
-        File rna_counts_h5ad = "~{prefix}.rna.align.cellatlas.~{genome_name}.count_matrix.h5ad"
+        File rna_counts_h5ad = "~{prefix}.rna.align.kb.~{genome_name}.count_matrix.h5ad"
     }
 
     runtime {
@@ -148,13 +129,13 @@ task kb {
     
         read1_fastqs: {
             description: 'List of input read1 fastqs.',
-            help: 'List of raw read1 fastqs that will be corrected and processed using cellatlas',
+            help: 'List of raw read1 fastqs that will be corrected and processed using kb',
             example: ['l0.r1.fq.gz', 'l1.r1.fq.gz']
         }
         
         read2_fastqs: {
             description: 'List of input read2 fastqs.',
-            help: 'List of raw read2 fastqs that will be corrected and processed using cellatlas',
+            help: 'List of raw read2 fastqs that will be corrected and processed using kb',
             example: ['l0.r2.fq.gz', 'l1.r2.fq.gz']
         }
         
