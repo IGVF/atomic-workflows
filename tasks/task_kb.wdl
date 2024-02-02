@@ -64,14 +64,16 @@ task kb {
         set -e
 
         bash $(which monitor_script.sh) 1>&2 &
-       
+
+        # cellatlas build
+        cp ~{sep=" " barcode_whitelists} .
+        
         interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
         
         echo '------ kb build ref ------' 1>&2
                  
         kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
         
-        echo '------ kb count ------' 1>&2
         
         kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x ~{index_string} -w ~{barcode_whitelist} -o ~{directory} --h5ad -t 2 $interleaved_files_string
              
