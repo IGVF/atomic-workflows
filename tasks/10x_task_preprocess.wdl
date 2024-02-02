@@ -29,7 +29,7 @@ task preprocess_tenx {
     }
 
     # Determine the size of the input
-    Float input_file_size_gb =  size(fastq_barcode, "G")
+    Float input_file_size_gb = size(fastq_barcode, "G")
 
     # Determining memory size base on the size of the input files.
     Float mem_gb = 5.0 + memory_factor * input_file_size_gb
