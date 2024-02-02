@@ -82,26 +82,27 @@ workflow wf_rna {
     Array[File] fastqs_R1 = select_first([correct.corrected_fastq_R1, read1])
     Array[File] fastqs_R2 = select_first([correct.corrected_fastq_R2, read2])
     
-    if ( chemistry != "shareseq" ) {
-        scatter (read_pair in zip(read1, read2)) {
-            call task_seqspec_extract.seqspec_extract as seqspec_extract {
-                input:
-                    fastq_R1 = basename(read_pair.left),
-                    fastq_R2 = basename(read_pair.right),
-                    onlists = barcode_whitelists,
-                    modality = "rna",
-                    format = "kb",
-                    cpus = seqspec_extract_cpus,
-                    disk_factor = seqspec_extract_disk_factor,
-                    memory_factor = seqspec_extract_memory_factor,
-                    docker_image = seqspec_extract_docker_image
-            }
+
+    scatter (read_pair in zip(read1, read2)) {
+        call task_seqspec_extract.seqspec_extract as seqspec_extract {
+            input:
+                fastq_R1 = basename(read_pair.left),
+                fastq_R2 = basename(read_pair.right),
+                onlists = barcode_whitelists,
+                modality = "rna",
+                format = "kb",
+                cpus = seqspec_extract_cpus,
+                disk_factor = seqspec_extract_disk_factor,
+                memory_factor = seqspec_extract_memory_factor,
+                docker_image = seqspec_extract_docker_image
         }
     }
     
-    File barcode_whitelist_ = select_first([seqspec_extract.onlist, barcode_whitelists[0]])
+    #Assuming this whitelist is applicable to all fastqs for kb task
+    File barcode_whitelist_ = seqspec_extract.onlist[0]
     
-    String index_string_ = select_first([seqspec_extract.index_string, "1,0,24:1,24,34:0,0,50"]) #fixed index string for shareseq
+    #Assuming this index_string is applicable to all fastqs for kb task
+    String index_string_ = if chemistry == "shareseq" then "1,0,24:1,24,34:0,0,50" else seqspec_extract.index_string[0] #fixed index string for shareseq
 
     call task_kb.kb as kb{
         input:
