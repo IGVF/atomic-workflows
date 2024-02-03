@@ -50,13 +50,19 @@ task seqspec_extract {
 
         bash $(which monitor_script.sh) | tee ~{monitor_fnp_log} 1>&2 &
         
-        mv ~{sep=" " onlists} .
-        mv ~{seqspec} spec.yaml
+        mv ~{sep=" " onlists} ./
+        mv ~{seqspec} ./spec.yaml
         
         #deprecated
         #python3 $(which seqspec_extract.py) -s ~{seqspec}  -m ~{modality} -fmt ~{tool_format} -fq ~{sep=" " fastq_files}
         
+        ls -lrt
+        
+        echo 'seqspec index -t ~{tool_format} -m ~{modality} -r {sep="," fastq_files} spec.yaml > index_string.txt'
+        
         seqspec index -t ~{tool_format} -m ~{modality} -r {sep="," fastq_files} spec.yaml > index_string.txt
+        
+        echo 'seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt'
         
         seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt
         
