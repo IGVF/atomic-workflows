@@ -34,7 +34,7 @@ task seqspec_extract {
     Float input_file_size_gb = size(seqspec, "G") 
 
     # Determining memory size base on the size of the input files.
-    Float mem_gb = 4.0 + memory_factor * input_file_size_gb
+    Float mem_gb = 2.0 + memory_factor * input_file_size_gb
 
     # Determining disk size base on the size of the input files.
     Int disk_gb = round(10.0 + disk_factor * input_file_size_gb)
@@ -52,12 +52,7 @@ task seqspec_extract {
         
         mv ~{sep=" " onlists} ./
         mv ~{seqspec} ./spec.yaml
-        
-        #deprecated
-        #python3 $(which seqspec_extract.py) -s ~{seqspec}  -m ~{modality} -fmt ~{tool_format} -fq ~{sep=" " fastq_files}
-        
-        ls -lrt
-        
+                
         echo 'seqspec index -t ~{tool_format} -m ~{modality} -r ~{sep="," fastq_files} spec.yaml > index_string.txt'
         
         seqspec index -t ~{tool_format} -m ~{modality} -r ~{sep="," fastq_files} spec.yaml > index_string.txt
