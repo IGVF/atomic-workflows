@@ -37,6 +37,7 @@ workflow wf_rna {
         Float? kb_disk_factor
         Float? kb_memory_factor
         String? kb_docker_image
+        String? kb_workflow = "nac"
         
         # Correct-specific inputs
         Boolean correct_barcodes = true #for shareseq
@@ -111,7 +112,7 @@ workflow wf_rna {
             read1_fastqs = fastqs_R1,
             read2_fastqs = fastqs_R2,
             genome_fasta = genome_fasta,
-            kb_workflow = "nac",
+            kb_workflow = kb_workflow,
             barcode_whitelist = barcode_whitelist_,
             index_string = index_string_,
             genome_gtf = genome_gtf,
@@ -129,6 +130,7 @@ workflow wf_rna {
         input:
             counts_h5ad = kb.rna_counts_h5ad,
             genome_name = genome_name,
+            kb_workflow = kb_workflow,
             prefix = prefix,
             cpus = qc_rna_cpus,
             disk_factor = qc_rna_disk_factor,
