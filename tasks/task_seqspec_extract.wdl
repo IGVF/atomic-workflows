@@ -58,12 +58,12 @@ task seqspec_extract {
         
         seqspec index -t ~{tool_format} -m ~{modality} -r {sep="," fastq_files} spec.yaml > index_string.txt
         
-        seqspec onlist -o final_whitelist.txt -m ~{modality} -r barcode spec.yaml
+        seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt
         
     >>>
     output {
         String index_string = read_string("index_string.txt")
-        File onlist = "final_whitelist.txt"
+        File onlist = read_string("whitelist_path.txt")
         File monitor_log = "~{monitor_fnp_log}"
     }
 
