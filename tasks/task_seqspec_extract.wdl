@@ -102,20 +102,3 @@ task seqspec_extract {
         }        
     }
 }
-
-
-workflow stupidity {
-    input {
-        File seqspec
-        Array[File] onlists #Filenames must EXACTLY match in seqspec
-        String modality = "rna"
-        String tool_format = "kb"
-        
-        #Take input filenames, not actual files since not required. Filenames must EXACTLY match in seqspec
-        String fastq_R1 
-        String fastq_R2
-    }
-
-    call seqspec_extract { input: seqspec=seqspec, onlists=onlists, modality=modality, tool_format=tool_format, fastq_R1=fastq_R1, fastq_R2=fastq_R2 }
-
-}
