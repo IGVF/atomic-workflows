@@ -60,7 +60,7 @@ task seqspec_extract {
         echo 'seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt'
         
         seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt
-        mv ~(cat whitelist_path.txt) final_barcodes.txt
+        mv $(cat whitelist_path.txt) final_barcodes.txt
         
     >>>
     output {
@@ -101,4 +101,21 @@ task seqspec_extract {
             help: 'Filename of fastq R2. Must EXACTLY match the one in seqspec region ID'
         }        
     }
+}
+
+
+workflow stupidity {
+    input {
+        File seqspec
+        Array[File] onlists #Filenames must EXACTLY match in seqspec
+        String modality = "rna"
+        String tool_format = "kb"
+        
+        #Take input filenames, not actual files since not required. Filenames must EXACTLY match in seqspec
+        String fastq_R1 
+        String fastq_R2
+    }
+
+    call seqspec_extract { input: seqspec=seqspec, onlists=onlists, modality=modality, tool_format=tool_format, fastq_R1=fastq_R1, fastq_R2=fastq_R2 }
+
 }
