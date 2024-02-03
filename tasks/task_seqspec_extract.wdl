@@ -58,9 +58,9 @@ task seqspec_extract {
         
         ls -lrt
         
-        echo 'seqspec index -t ~{tool_format} -m ~{modality} -r {sep="," fastq_files} spec.yaml > index_string.txt'
+        echo 'seqspec index -t ~{tool_format} -m ~{modality} -r ~{sep="," fastq_files} spec.yaml > index_string.txt'
         
-        seqspec index -t ~{tool_format} -m ~{modality} -r {sep="," fastq_files} spec.yaml > index_string.txt
+        seqspec index -t ~{tool_format} -m ~{modality} -r ~{sep="," fastq_files} spec.yaml > index_string.txt
         
         echo 'seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt'
         
