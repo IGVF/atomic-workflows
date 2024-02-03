@@ -60,11 +60,12 @@ task seqspec_extract {
         echo 'seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt'
         
         seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt
+        mv ~(cat whitelist_path.txt) final_barcodes.txt
         
     >>>
     output {
         String index_string = read_string("index_string.txt")
-        File onlist = read_string("whitelist_path.txt")
+        File onlist = "final_barcodes.txt"
         File monitor_log = "~{monitor_fnp_log}"
     }
 
