@@ -70,6 +70,7 @@ task kb {
         #set up fastq order as l1r1, l1r2, l2r1, l2r2, etc.
         interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
            
+        mkdir ~{directory}
         
         #build index based on kb_workflow
         if [[ '~{kb_workflow}' == "standard" ]]; then   
