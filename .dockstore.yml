@@ -7,6 +7,5 @@ workflows:
          branches:
              - main
              - dev
-             - sw-seqspec
          tags:
              - /.*/
