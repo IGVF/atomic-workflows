@@ -3,7 +3,7 @@ nextflow.enable.dsl=2
 // # debug 
 //     ##echo 'TODO: remove this from the code when you work with real data'
 //     ##touch ${fragment_rank_plot_file_output}
-process run_scrna_atac_plot_qc_metrics {
+process run_atac_barcode_rank_plot {
   label 'scrna_atac_plot'
   debug true 
   input:
@@ -14,7 +14,6 @@ process run_scrna_atac_plot_qc_metrics {
     val fragment_rank_plot_file_output
   output:
     path "${fragment_rank_plot_file_output}", emit: fragment_rank_plot_file_output_file
-    path '.command.out', emit: run_scrna_atac_plot_qc_metrics_stdout
   script:
   """
     # Print start of run_scrna_atac_plot_qc_metrics
@@ -40,3 +39,29 @@ process run_scrna_atac_plot_qc_metrics {
     echo 'Finished run_scrna_atac_plot_qc_metrics.'
   """
 }
+
+process run_barcode_metadata_stats {
+  input:
+    path temp_dict_conversion
+    path snapatac_tss_fragments_stats_out
+  output:
+    path "tmp_barcode_stats", emit: tmp_barcode_stats_out
+    path "barcodes_passing_threshold", emit: barcodes_passing_threshold
+    path "${snapatac_tss_fragments_stats_out.baseName.replaceAll('tss_enrichment_barcode_stats', 'metadata')}.tsv", emit: snapatac_tss_fragments_barcode_metadata_out
+  script:
+  """
+    echo 'run_barcode_metadata_stats'
+  """
+}
+
+
+//  # Run the AWK and sed commands on temp_summary
+//     # awk -v FS=',' -v OFS=" " 'NR==1{$1=$1;print $0,"unique","pct_dup","pct_unmapped";next}{$1=$1;if ($2-$3-$4-$5>0){print $0,($2-$3-$4-$5),$3/($2-$4-$5),($5+$4)/$2} else { print $0,0,0,0}}' $temp_summary | sed 's/ /\t/g' > tmp_barcode_stats
+
+//     # OUTPUT from snapatac2-tss-enrichment.py (assuming a file named BMMC-single-donor.atac.qc.hg38.tss_enrichment_barcode_stats.tsv is generated)
+//     # cut -f 1 $tss_enrichment_stats > barcodes_passing_threshold
+
+//     # Join and calculate percentage reads
+//     # join -j 1 <(cat $tss_enrichment_stats | (sed -u 1q;sort -k1,1)) <(grep -wFf barcodes_passing_threshold tmp_barcode_stats | (sed -u 1q;sort -k1,1)) | 
+//     # awk -v FS=" " -v OFS=" " 'NR==1{print $0,"pct_reads_promoter"}NR>1{print $0,$4*100/$7}' | sed 's/ /\t/g' > BMMC-single-donor.atac.qc.hg38.metadata.tsv
+

@@ -1,6 +1,8 @@
 // Enable DSL2
 nextflow.enable.dsl=2
 
+// Define a channel to pass the file path between processes
+temp_conversion_ch = file("temp_conversion")
 
 process run_add_subpool_prefix_to_fragment_table {
 
@@ -15,7 +17,7 @@ process run_add_subpool_prefix_to_fragment_table {
     val subpool_script
     path chromap_filter_fragments_tsv
     path barcode_summary_csv
-    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file), val(subpool), path(barcode_conversion_dict_file), val(prefix)
+    tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix)
   
   // Define output paths
   output:
@@ -25,22 +27,27 @@ process run_add_subpool_prefix_to_fragment_table {
   // Script section
   script:
   """
-    echo 'start run_add_pool_prefix_to_fragment_table'
-    echo 'input chromap_filter_fragments_tsv is $chromap_filter_fragments_tsv'
-    echo 'input barcode_summary_csv is $barcode_summary_csv'
-    if $subpool != "none"
+    echo '------ Start run_add_pool_prefix_to_fragment_table ------'
+    echo 'Input chromap_filter_fragments_tsv is $chromap_filter_fragments_tsv'
+    echo 'Input barcode_summary_csv is $barcode_summary_csv'
+    echo 'Input subpool is $subpool'
+    echo 'Input subpool_script is $subpool_script'
+    if [ "$subpool" != "none" ]; then
       /usr/local/bin/$subpool_script $chromap_filter_fragments_tsv $barcode_summary_csv
+    else
+      echo 'No subpool specified. Skipping subpool addition.'
     fi
-    echo 'finished run_add_pool_prefix_to_fragment_table'
+    echo '------ Finished run_add_pool_prefix_to_fragment_table ------'
   """
 }
+
 
 process run_process_conversion_to_barcode {
 
   // Set debug to true
   debug true
   
-  // Label the process as 'pool_prefix'
+  // Label the process as 'pool_dictionary'
   label 'pool_dictionary'
 
   // Define input paths
@@ -50,42 +57,49 @@ process run_process_conversion_to_barcode {
     path barcode_summary_csv
   // Define output paths
   output:
-    path temp_conversion, emit: temp_dict_conversion
+    path "temp_conversion", emit:  temp_dict_conversion
 
   // Script section
   script:
   """
     echo 'start run_process_conversion_to_barcode'
     echo 'input barcode_summary_csv is $barcode_summary_csv'
-    /usr/local/bin/$subpool_script $barcode_conversion_dict_file $subpool $barcode_summary_csv
-    ls
+    /usr/local/bin/$subpool_script $barcode_conversion_dict_file $subpool $barcode_summary_csv "temp_conversion"
+    wc -l temp_conversion
     echo 'finished run_process_conversion_to_barcode'
   """
 }
 
 
-process run_filter_align_fragments {
-  // Set debug to true
+process run_filter_aligned_fragments {
   debug true
-  // Label the process as 'pool_prefix'
   label 'pool_filter'
-  // Input parameters
+
   input:
-    val filter_script
-    path tempConversionOutput
+    path temp_dict_conversion
     path barcodeFragmentsTsv
     val threshold
-  // Output parameters
+    val filter_script_file_name
   output:
-    path "no_singleton_bed.gz", emit:  no_singleton_bed_gz
+    path "no-singleton.bed.gz", emit: no_singleton_bed_gz
 
-  // Script to execute
   script:
   """
-    echo 'start run_filter_align_fragments'
+    echo 'start run_filter_aligned_fragments'
     echo 'input barcodeFragmentsTsv is $barcodeFragmentsTsv'
-    /usr/local/bin/$filter_script $tempConversionOutput $barcodeFragmentsTsv $threshold no_singleton_bed.gz
-    ls
-    echo 'finished run_filter_align_fragments'
+    echo 'input threshold is $threshold'
+    echo 'input temp_dict_conversion is $temp_dict_conversion'
+    echo '------ Number of barcodes BEFORE filtering------'
+    wc -l $temp_dict_conversion
+
+    echo '------ Filtering fragments ------'
+    awk -v threshold=\$threshold -v FS='[,|\t]' 'NR==FNR && (\$2-\$3-\$4-\$5)>threshold {Arr[\$1]++;next} Arr[\$4] {print \$0}' \$temp_dict_conversion <(zcat \$barcodeFragmentsTsv) | bgzip -l 5 -@ 16 -c > no-singleton.bed.gz
+
+
+
+    echo '------ Number of barcodes AFTER filtering------'
+    cat \$temp_dict_conversion | grep -v barcode | awk -v FS="," -v threshold=\$threshold '(\$2-\$3-\$4-\$5)>threshold' | wc -l
+
+    echo 'finished run_filter_aligned_fragments'
   """
 }

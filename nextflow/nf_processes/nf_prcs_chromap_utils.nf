@@ -35,6 +35,7 @@ process run_chromap_map_to_idx {
     path "${prefix}.atac.filter.fragments.tsv", emit: chromap_filter_fragments_tsv_out
     path "${prefix}.atac.align.barcode.summary.csv", emit: barcode_summary_csv_out
     path "${prefix}.atac.align.k4.hg38.log.txt", emit: chromap_alignment_log_out
+    path "ls_input.txt"
   script:
   """
   echo run_chromap_map_to_idx
@@ -59,40 +60,10 @@ process run_chromap_map_to_idx {
   echo 'csv is ${prefix}.atac.align.barcode.summary.csv'
   echo 'log out is ${prefix}.atac.align.k4.hg38.log.txt'
   
+  ls > ls_input.txt
   echo 'start chromap execution'
   chromap -x $genome_chromap_idx --trim-adapters --remove-pcr-duplicates --remove-pcr-duplicates-at-cell-level --Tn5-shift --low-mem --BED -l $CHROMAP_READ_LENGTH --bc-error-threshold $CHROMAP_BC_ERROR_THRESHOLD --bc-probability-threshold $CHROMAP_BC_PROBABILITY_THRESHOLD --read-format $CHROMAP_READ_FORMAT --drop-repetitive-reads $CHROMAP_DROP_REPETITIVE_READS -r $genome_fasta -q $CHROMAP_QUALITY_THRESHOLD -t $CPUS_TO_USE -1 $fastq1,$fastq2 -2 $fastq3,$fastq4 -b $barcode1_fastq,$barcode2_fastq --barcode-whitelist $whitelist_file -o ${prefix}.atac.filter.fragments.tsv --summary ${prefix}.atac.align.barcode.summary.csv > ${prefix}.atac.align.k4.hg38.log.txt 2>&1
   echo 'finished run_chromap_map_to_idx'
-  """
-}
-
-process run_add_subpool_prefix_to_fragment_table {
-
-  // Set debug to true
-  debug true
-  
-  // Label the process as 'pool_prefix'
-  label 'pool_prefix'
-
-  // Define input paths
-  input:
-    val subpool_script
-    val chromap_filter_fragments_tsv
-    val barcode_summary_csv
-  
-  // Define output paths
-  output:
-    path "${chromap_filter_fragments_tsv}", emit: chromap_filter_fragments_tsv_pool_out
-    path "${barcode_summary_csv}", emit: barcode_summary_csv_out_pool_out
-
-  // Script section
-  script:
-  """
-    echo 'start run_add_pool_prefix_to_fragment_table'
-    echo 'input chromap_filter_fragments_tsv is $chromap_filter_fragments_tsv'
-    echo 'input barcode_summary_csv is $barcode_summary_csv'
-    /usr/local/bin/$subpool_script $chromap_filter_fragments_tsv $barcode_summary_csv
-    ls
-    echo 'finished run_add_pool_prefix_to_fragment_table'
   """
 }
 
@@ -110,7 +81,6 @@ process run_process_conversion_to_barcode {
     path barcode_conversion_file
     val subpool_str
     val barcode_summary_csv
-    
   
   // Define output paths
   output:

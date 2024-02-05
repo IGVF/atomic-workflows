@@ -36,7 +36,7 @@ process run_calculate_tss_enrichment_bulk {
     val smoothing_window_size
     val CPUS_TO_USE
   output:
-    path "${tbi_fragments}_enrichment_bulk.tss", emit: tss_fragments_out
+    path "${tbi_fragments}_enrichment_bulk.tss", emit: tss_bulk_out
   script:
   """
     echo 'start run_calculate_tss_enrichment'
@@ -61,19 +61,19 @@ process run_calculate_tss_enrichment_snapatac2 {
     tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix)
     val calculation_script
     path tbi_fragments
-    path gtf_file
+    path genes_gtf_gzip_file_out
     val min_frag_cutoff
   output:
-    path "${prefix}.tss_enrichment_barcode_stats.tsv", emit: tss_fragments_out
+    path "${prefix}.tss_enrichment_barcode_stats.tsv", emit: snapatac_tss_fragments_stats_out
   script:
   """
     echo 'start run_calculate_tss_enrichment_snapatac2'
     echo 'calculation_script is $calculation_script. check that it is: compute_tss_script.py'
     echo 'tbi_fragments: $tbi_fragments'
-    echo 'gtf_file: $gtf_file'
+    echo 'genes_gtf_gzip_file_out: $genes_gtf_gzip_file_out'
     echo 'min_frag_cutoff: $min_frag_cutoff'
     ls /usr/local/bin/
-    python3 /usr/local/bin/$calculation_script $tbi_fragments $gtf_file $min_frag_cutoff
+    python3 /usr/local/bin/$calculation_script $tbi_fragments $genes_gtf_gzip_file_out $min_frag_cutoff
     echo 'finished run_calculate_tss_enrichment_snapatac2'
   """
 }

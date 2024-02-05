@@ -1,6 +1,7 @@
 // Enable DSL2
 nextflow.enable.dsl=2
 
+
 process run_zcat {
 
   // Set debug to true

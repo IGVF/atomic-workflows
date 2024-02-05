@@ -1,7 +1,7 @@
 // Enable DSL2
 nextflow.enable.dsl=2
 
-process run_bgzip {
+process run_bgzip_on_chromap_fragments_output {
 
   // Set debug to true
   debug true
@@ -15,15 +15,15 @@ process run_bgzip {
 
   // Define output path
   output:
-    path "${fragment_file.baseName}.gz", emit: bgzip_fragments_out
+    path "${fragment_file.baseName}.gz", emit: bgzip_chromap_fragments_out
 
   // Script section
   script:
   """
-    echo 'Start run_bgzip_fragment_file'
+    echo 'Start run_bgzip_on_chromap_fragments_output'
     echo "Fragment file is: $fragment_file"
     bgzip -c $fragment_file > ${fragment_file.baseName}.gz 2>&1
     ls -lt
-    echo 'Finished run_bgzip_fragment_file'
+    echo 'Finished run_bgzip_on_chromap_fragments_output'
   """
 }

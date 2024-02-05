@@ -3,40 +3,85 @@ nextflow.enable.dsl=2
 
 // Define the process
 // TODO: copy from merge_log docker where the conda envirnment is initiated when the container is executed
+
+// python3 \$script_path \$histogram_file_arg  \$pkr_arg \$out_file_arg
 process run_generate_insert_size_plot {
-  label 'insert_size' // copy from tss_bulk
+  label 'plot_script'
   debug true
   input:
-    path calculation_script
-    val qc_python_script
+    path plot_script
     path histogram_file
-    val pkr_id //BMMC-single-donor
-    path filtered_file
-    path filtered_file_index
-    path filtered_fragmented_file_tsv_gz // BMMC-single-donor.atac.filter.fragments.hg38.tsv.gz
-    path filtered_fragmented_file_gz_tsv_index // BMMC-single-donor.atac.filter.fragments.hg38.tsv.gz.tbi
+    val pkr_id
   output:
-    path '${histogram_file.base_name}.png', emit: histogram_png_insert_size_out
-    path '${histogram_file.base_name}.log.txt', emit:insert_size_log_txt
-    path '${filtered_fragmented_file_gz.base_name}.log.txt', emit insert_log_txt
+    path "${histogram_file.base_name}.png", emit: histogram_png_insert_size_out
   script:
   """
     echo 'start run_generate_insert_size_plot'
-    echo 'calculation_script is $calculation_script. check that it is: compute_tss_script.py'
-    echo 'qc_python_script: $qc_python_script'
+    echo 'plot_script is $plot_script'
     echo 'histogram_file: $histogram_file'
     echo 'pkr_id: $pkr_id'
 
-    insert_log_txt_file_name='${filtered_fragmented_file_gz.base_name}.log.txt'
-    insert_log_png_file_name = '${histogram_file.base_name}.png'
-    echo "insert_size" > $insert_log_txt_file_name
-    awk '{print $3-$2}' <(zcat $filtered_fragmented_file_tsv_gz ) | sort --parallel 4 -n | uniq -c | awk -v OFS="\t" '{print $2,$1}' >> $insert_log_txt_file_name
-    python3 /usr/local/bin/$calculation_script $insert_log_txt_file_name $pkr_id $insert_log_png_file_name
-
-    sed 's/ /\t/g' > BMMC-single-donor.atac.qc.hg38.metadata.tsv
-
-    head BMMC-single-donor.atac.qc.hg38.metadata.tsv
-    head BMMC-single-donor.atac.qc.hg38.metadata.tsv | awk '{print NF}'
+    python3 /usr/local/bin/$plot_script $histogram_file $pkr_id "${histogram_file.base_name}.png"
     echo 'finished run_generate_insert_size_plot'
   """
 }
+
+
+process run_generate_insert_size_histogram_data {
+  label 'zcat_insert'
+  debug true
+  input:
+    path script_name
+    path in_chromap_bzip_fragments_tsv
+  output:
+    path "${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt", emit: histogram_data_file_out
+  script:
+  """
+    echo 'start run_generate_insert_size_histogram_data'
+    echo 'script_name is $script_name'
+    echo 'in_chromap_bzip_fragments_tsv is $in_chromap_bzip_fragments_tsv'
+    /usr/local/bin/$script_name $in_chromap_bzip_fragments_tsv "${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt"
+    echo 'finished run_generate_insert_size_histogram_data'
+  """
+}
+
+// process run_atac_barcode_rank_plot {
+//   label 'atac_barcode_rank_plot'
+//   debug true 
+//   input:
+//     val py_barcode_rank_plot_script
+//     path filtered_fragment_file
+//     val pkr 
+//   output:
+//     path "${filtered_fragment_file}.hist_log.png", emit: hist_log_png
+
+//   script:
+//   """
+//     # Print start of run_atac_barcode_rank_plot
+//     echo "Starting run_atac_barcode_rank_plot..."
+    
+//     # Determine the script path using backticks
+//     script_path=\$(command -v $py_barcode_rank_plot_script)
+//     echo "Script path: \$script_path"
+
+//     # Execute the Python script
+//     echo "Filtered fragment file path: $filtered_fragment_file"
+//     histogram_file_arg="--histogram_file $filtered_fragment_file"
+//     echo "histogram_file_arg val is: \$histogram_file_arg"
+    
+//     pkr_arg="--pkr $pkr"
+//     echo "pkr_arg val is: \$pkr_arg"
+    
+//     out_file_arg="--out_file ${filtered_fragment_file}_hist_log.png"
+//     echo "out_file_arg val is: \$out_file_arg"
+    
+//     # Execute the Python script and capture the result file path
+//     python3 \$script_path \$histogram_file_arg  \$pkr_arg \$out_file_arg
+
+//     echo 'TODO: remove the next line when running with real data'
+//     touch ${filtered_fragment_file}.hist_log.png
+    
+//     # Print finish of run_atac_barcode_rank_plot
+//     echo "Finished run_atac_barcode_rank_plot."
+//   """
+// }
