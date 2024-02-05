@@ -28,7 +28,6 @@ workflow wf_rna {
         
         Array[File] barcode_whitelists
         
-        String? kb_workflow = "standard" #standard or nac
         String? subpool = "none"
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
