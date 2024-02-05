@@ -17,29 +17,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install softwares from apt repo
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    git \
-    liblz4-dev \
-    liblzma-dev \
-    libncurses5-dev \
-    libbz2-dev \
-    wget \
-    tar \
-    zlib1g-dev && \
+    build-essential && \
     rm -rf /var/lib/apt/lists/*
-
-RUN wget --quiet https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 \
-    && chmod +x jq-linux64 \
-    && mv jq-linux64 /usr/local/bin/jq
     
-# Install cellatlas
-RUN git clone https://github.com/cellatlas/cellatlas.git \
-    && cd cellatlas \
-    && pip install .
-    
-RUN pip uninstall -y --quiet seqspec        
+# Install kb-python
 RUN pip install --quiet seqspec 
-RUN pip install --quiet kb-python 
+RUN pip install --quiet kb-python==0.28.2
 
 # Create and setup new user
 #ENV USER=igvf
