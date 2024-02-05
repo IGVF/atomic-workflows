@@ -17,15 +17,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install softwares from apt repo
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    git \
-    liblz4-dev \
-    liblzma-dev \
-    libncurses5-dev \
-    libbz2-dev \
-    wget \
-    tar \
-    zlib1g-dev && \
+    build-essential && \
     rm -rf /var/lib/apt/lists/*
       
 RUN pip install seqspec 
