@@ -70,36 +70,34 @@ process run_process_conversion_to_barcode {
   """
 }
 
-
 process run_filter_aligned_fragments {
   debug true
   label 'pool_filter'
 
   input:
     path temp_dict_conversion
+    val filter_script
     path barcodeFragmentsTsv
     val threshold
-    val filter_script_file_name
+
   output:
     path "no-singleton.bed.gz", emit: no_singleton_bed_gz
-
+    path tmp_file
   script:
   """
-    echo 'start run_filter_aligned_fragments'
-    echo 'input barcodeFragmentsTsv is $barcodeFragmentsTsv'
-    echo 'input threshold is $threshold'
-    echo 'input temp_dict_conversion is $temp_dict_conversion'
-    echo '------ Number of barcodes BEFORE filtering------'
-    wc -l $temp_dict_conversion
+  echo 'start run_filter_aligned_fragments'
+  echo 'input barcodeFragmentsTsv is $barcodeFragmentsTsv'
+  echo 'input threshold is $threshold'
+  echo 'input temp_dict_conversion is $temp_dict_conversion'
 
-    echo '------ Filtering fragments ------'
-    awk -v threshold=\$threshold -v FS='[,|\t]' 'NR==FNR && (\$2-\$3-\$4-\$5)>threshold {Arr[\$1]++;next} Arr[\$4] {print \$0}' \$temp_dict_conversion <(zcat \$barcodeFragmentsTsv) | bgzip -l 5 -@ 16 -c > no-singleton.bed.gz
+  echo '------ Number of barcodes BEFORE filtering------'
+  wc -l $temp_dict_conversion
 
+  echo '------ Filtering fragments ------'
+  /usr/local/bin/$filter_script $threshold $temp_dict_conversion no-singleton.bed.gz $barcodeFragmentsTsv
 
-
-    echo '------ Number of barcodes AFTER filtering------'
-    cat \$temp_dict_conversion | grep -v barcode | awk -v FS="," -v threshold=\$threshold '(\$2-\$3-\$4-\$5)>threshold' | wc -l
-
-    echo 'finished run_filter_aligned_fragments'
+  echo 'finished run_filter_aligned_fragments'
   """
+
 }
+

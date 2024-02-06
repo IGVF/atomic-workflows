@@ -117,7 +117,7 @@ workflow {
   println ('after run_add_subpool_prefix_to_summary_file')
 
   // STEP 14: enforce the dictionary based on the previous step dictionary udpate with fragments threashold
-  run_filter_aligned_fragments(temp_dict_conversion,chromap_filter_fragments_tsv,params.ATAC_FRAGMENTS_MIN_FRAG_CUTOFF,params.FILTER_FRAGMENTS)
+  run_filter_aligned_fragments(temp_dict_conversion,params.FILTER_FRAGMENTS_SCRIPT ,chromap_filter_fragments_tsv,params.ATAC_FRAGMENTS_MIN_FRAG_CUTOFF)
   no_singleton_bed_gz=run_filter_aligned_fragments.out.no_singleton_bed_gz
   
   // STEP 15: run_tabix_no_singleton
