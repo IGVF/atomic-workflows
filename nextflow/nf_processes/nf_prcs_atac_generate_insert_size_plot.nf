@@ -40,11 +40,12 @@ process run_generate_insert_size_histogram_data {
     echo 'start run_generate_insert_size_histogram_data'
     echo 'script_name is $script_name'
     echo 'in_chromap_bzip_fragments_tsv is $in_chromap_bzip_fragments_tsv'
-    /usr/local/bin/$script_name $in_chromap_bzip_fragments_tsv "${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt"
     echo 'finished run_generate_insert_size_histogram_data'
   """
 }
 
+// /usr/local/bin/$script_name $in_chromap_bzip_fragments_tsv "${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt"
+    
 // process run_atac_barcode_rank_plot {
 //   label 'atac_barcode_rank_plot'
 //   debug true 
