@@ -14,6 +14,7 @@ process run_generate_insert_size_plot {
     val pkr_id
   output:
     path "${histogram_file.base_name}.png", emit: histogram_png_insert_size_out
+    path "${histogram_file.base_name}.metadata.tsv", emit: histogram_metadata_tsv_insert_size_out
   script:
   """
     echo 'start run_generate_insert_size_plot'
@@ -22,27 +23,48 @@ process run_generate_insert_size_plot {
     echo 'pkr_id: $pkr_id'
 
     python3 /usr/local/bin/$plot_script $histogram_file $pkr_id "${histogram_file.base_name}.png"
+
+    # Command 4
+    echo "Formatting metadata..."
+    sed 's/ /\t/g' > "${histogram_file.base_name}.metadata.tsv"
+
+    # Command 5
+    echo "Displaying the head of the metadata file..."
+    head "${histogram_file.base_name}.metadata.tsv"
+
+    # Command 6
+    echo "Counting the fields in the metadata..."
+    head "${histogram_file.base_name}.metadata.tsv" | awk '{print NF}'
+
     echo 'finished run_generate_insert_size_plot'
   """
 }
 
-
+// output
+// path "${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt", emit: histogram_data_file_out
+// paras: BMMC-single-donor.atac.qc.hist.hg38.log.txt in.fragments.tsv.gz
 process run_generate_insert_size_histogram_data {
   label 'zcat_insert'
   debug true
   input:
-    path script_name
+    val script_name
     path in_chromap_bzip_fragments_tsv
   output:
     path "${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt", emit: histogram_data_file_out
+    path "ls_files.txt"
   script:
   """
     echo 'start run_generate_insert_size_histogram_data'
     echo 'script_name is $script_name'
     echo 'in_chromap_bzip_fragments_tsv is $in_chromap_bzip_fragments_tsv'
+    ls > ls_files.txt
+    /usr/local/bin/$script_name $in_chromap_bzip_fragments_tsv ${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt
+    touch ${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt
     echo 'finished run_generate_insert_size_histogram_data'
   """
 }
+// /usr/local/bin/$script_name $in_chromap_bzip_fragments_tsv ${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt
+    
 
 // /usr/local/bin/$script_name $in_chromap_bzip_fragments_tsv "${in_chromap_bzip_fragments_tsv.baseName}.hist.hg38.log.txt"
     

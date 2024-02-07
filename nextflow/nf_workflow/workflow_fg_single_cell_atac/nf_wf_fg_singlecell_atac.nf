@@ -128,7 +128,7 @@ workflow {
   println ('before call run_calculate_tss_enrichment_bulk')
   regions_ch = channel.value(file(params.ATAC_TSS_REGION_BED_FILE)) 
   CPUS_TO_USE_TSS=16
-  run_calculate_tss_enrichment_bulk(sample_run_ch,params.ATAC_TSS_BULK_CALCULATION_SCRIPT,no_singleton_bed_gz,tbi_no_singleton_bed_gz_out,regions_ch,params.ATAC_TSS_BASES_FLANK,params.ATAC_TSS_COL_WITH_STRANDS_INFO,params.ATAC_TSS_SMOOTHING_WINDOW_SIZE,CPUS_TO_USE_TSS)
+  run_calculate_tss_enrichment_bulk(sample_run_ch,params.ATAC_TSS_BULK_CALCULATION_SCRIPT,tbi_no_singleton_bed_gz_out,regions_ch,params.ATAC_TSS_BASES_FLANK,params.ATAC_TSS_COL_WITH_STRANDS_INFO,params.ATAC_TSS_SMOOTHING_WINDOW_SIZE,CPUS_TO_USE_TSS)
   tss_bulk_out = run_calculate_tss_enrichment_bulk.out.tss_bulk_out
   println ('after call run_calculate_tss_enrichment_bulk')
 
@@ -138,11 +138,12 @@ workflow {
   genes_gtf_gzip_file_out = run_gzip_on_genes_gtf.out.genes_gtf_gzip_file_out
   println ('after run_gzip_on_genes_gtf')
 
-  // STEP 18: run tss snapatac2
+  // STEP 18: preperation to run tss snapatac2
   genes_gtf = channel.fromPath(params.ATAC_TSS_SNAPATAC2_GENES_GTF)
+  // STEP 18 - run tss snapatac2
   println ('before call run_calculate_tss_enrichment_snapatac2')
-  run_calculate_tss_enrichment_snapatac2(sample_run_ch,params.ATAC_TSS_SNAPATAC2_CALCULATION_SCRIPT,tbi_no_singleton_bed_gz_out,genes_gtf_gzip_file_out,params.ATAC_TSS_SNAPATAC2_MIN_FRAG_CUTOFF)
-  snapatac_tss_fragments_stats_out = run_calculate_tss_enrichment_snapatac2.out.snapatac_tss_fragments_stats_out
+  // run_calculate_tss_enrichment_snapatac2(sample_run_ch,params.ATAC_TSS_SNAPATAC2_CALCULATION_SCRIPT,no_singleton_bed_gz,genes_gtf_gzip_file_out,params.ATAC_TSS_SNAPATAC2_MIN_FRAG_CUTOFF)
+  // snapatac_tss_fragments_stats_out = run_calculate_tss_enrichment_snapatac2.out.snapatac_tss_fragments_stats_out
   println ('after call run_calculate_tss_enrichment_snapatac2')
 
   // bgzip_chromap_fragments_out
@@ -162,19 +163,15 @@ workflow {
   // METADATA.
   // STEP 21
   println ('before run_barcode_metadata_stats')
-  run_barcode_metadata_stats(temp_dict_conversion,snapatac_tss_fragments_stats_out)
-  snapatac_tss_fragments_barcode_metadata_out=run_barcode_metadata_stats.out.snapatac_tss_fragments_barcode_metadata_out
+  // run_barcode_metadata_stats(temp_dict_conversion,snapatac_tss_fragments_stats_out,params.ATAC_SNAP_METADATA_STATS_SCRIPT)
+  // tmp_barcode_stats_out=run_barcode_metadata_stats.out.tmp_barcode_stats_out
   println ('after run_barcode_metadata_stats')
 
   // STEP 22: Generate barcode rank plot
-  //  val r_qc_plot_script
-  //   val r_qc_plot_helper_script
-  //   path barcode_metadata_file 
-  //   val fragment_cutoff
-  //   val fragment_rank_plot_file_output
-  println ('before call run_generate_barcode_rank_plot')
-  // run_atac_barcode_rank_plot(params.SC_ATAC_GENERATE_BARCODE_RANK_PLOT_SCRIPT,no_singleton_bed_out,params.SC_ATAC_GENERATE_BARCODE_RANK_PLOT_PKR)
-  
+  // snapatac_tss_fragments_stats_out this is being used as a template of the output name. will be added png at the code
+  println ('before call run_atac_barcode_rank_plot')
+  // run_atac_barcode_rank_plot(params.ATAC_PLOT_METADATA_SCRIPT,params.ATAC_PLOT_METADATA_HELPER_SCRIPT,tmp_barcode_stats_out,params.ATAC_QC_FRAGMENT_CUTOFF,snapatac_tss_fragments_stats_out)
+  println ('after run_atac_barcode_rank_plot')
   // END 05_CALL_QC_ATAC
   
   // ===============
@@ -224,8 +221,8 @@ workflow {
 
   // // STEP 16 - old: run_scrna_atac_plot_qc_metrics
   // println ('before call run_scrna_atac_plot_qc_metrics')
-  // // barcode_metadata_file = channel.value(file(params.SC_ATAC_QC_BARCODE_METADATA_FILE))
-  // //run_scrna_atac_plot_qc_metrics(params.SC_ATAC_QC_PLOT_SCRIPT,params.SC_ATAC_QC_PLOT_HELPER_SCRIPT,barcode_metadata_file,params.SC_ATAC_QC_FRAGMENT_CUTOFF,params.SC_ATAC_QC_BARCODE_OUTPUT_FILE)
+  // barcode_metadata_file = channel.value(file(params.SC_ATAC_QC_BARCODE_METADATA_FILE))
+  //run_scrna_atac_plot_qc_metrics(params.SC_ATAC_QC_PLOT_SCRIPT,params.SC_ATAC_QC_PLOT_HELPER_SCRIPT,barcode_metadata_file,params.SC_ATAC_QC_FRAGMENT_CUTOFF,params.SC_ATAC_QC_BARCODE_OUTPUT_FILE)
   // println ('after call run_scrna_atac_plot_qc_metrics')
   
   // // STEP 17: Generate barcode metadata

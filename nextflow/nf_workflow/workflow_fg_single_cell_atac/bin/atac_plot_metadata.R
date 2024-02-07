@@ -1,4 +1,4 @@
-# scrna_plot_atac_qc_metrics.R
+# atac_plot_metadata.R
 #!/usr/bin/Rscript
 
 # Define source_file_in_path function
@@ -30,41 +30,41 @@ main <- function() {
   args <- commandArgs()
 
   r_qc_plot_helper_script <- commandArgs(trailingOnly = TRUE)[1]
-  print(paste("scrna_plot_atac_qc_metrics: r_qc_plot_helper_script is:", r_qc_plot_helper_script))
+  print(paste("atac_plot_metadata: r_qc_plot_helper_script is:", r_qc_plot_helper_script))
 
   barcode_metadata_file <- commandArgs(trailingOnly = TRUE)[2]
-  print(paste("scrna_plot_atac_qc_metrics: barcode_metadata_file is:", barcode_metadata_file))
+  print(paste("atac_plot_metadata: barcode_metadata_file is:", barcode_metadata_file))
 
   fragment_cutoff <- as.integer(commandArgs(trailingOnly = TRUE)[3])
-  print(paste("scrna_plot_atac_qc_metrics: fragment_cutoff is:", fragment_cutoff))
+  print(paste("atac_plot_metadata: fragment_cutoff is:", fragment_cutoff))
 
   fragment_rank_plot_file <- commandArgs(trailingOnly = TRUE)[4]
-  print(paste("scrna_plot_atac_qc_metrics: fragment_rank_plot_file is:", fragment_rank_plot_file))
+  print(paste("atac_plot_metadata: fragment_rank_plot_file is:", fragment_rank_plot_file))
 
   # Call source_file_in_path with r_qc_plot_helper_script
   source_file_in_path(r_qc_plot_helper_script)
 
   # Add print statements for reading barcode metadata
-  print("scrna_plot_atac_qc_metrics: Reading barcode metadata...")
+  print("atac_plot_metadata: Reading barcode metadata...")
   barcode_metadata <- read.table(barcode_metadata_file, header=T)
-  print("scrna_plot_atac_qc_metrics: Barcode metadata read successfully.")
+  print("atac_plot_metadata: Barcode metadata read successfully.")
 
   ## Print the head of the barcode_metadata data frame
-  print("scrna_plot_atac_qc_metrics: Head of barcode_metadata data:")
+  print("atac_plot_metadata: Head of barcode_metadata data:")
   print(head(barcode_metadata))
   
   # Impose fragment cutoff, sort in decreasing order, assign rank
-  print("scrna_plot_atac_qc_metrics: Processing fragment data...")
+  print("atac_plot_metadata: Processing fragment data...")
   fragment <- barcode_metadata$unique
   fragment_filtered <- fragment[fragment >= fragment_cutoff]
   fragment_filtered_sort <- sort(fragment_filtered, decreasing = TRUE)
   fragment_rank <- 1:length(fragment_filtered_sort)
-  print("scrna_plot_atac_qc_metrics: Fragment data processed successfully.")
+  print("atac_plot_metadata: Fragment data processed successfully.")
   
   # Find elbow/knee of fragment barcode rank plot and top-ranked fragment barcode rank plot
-  print("scrna_plot_atac_qc_metrics: Finding elbow/knee points...")
+  print("atac_plot_metadata: Finding elbow/knee points...")
   fragment_points <- get_elbow_knee_points(x = fragment_rank, y = log10(fragment_filtered_sort))
-  print("scrna_plot_atac_qc_metrics: Elbow/knee points found successfully.")
+  print("atac_plot_metadata: Elbow/knee points found successfully.")
   
   # Logic to set flags based on elbow and knee points
   if (length(fragment_points) > 0) {
@@ -86,7 +86,7 @@ main <- function() {
   options(scipen = 999)
 
   # Make fragment barcode rank plots
-  print("scrna_plot_atac_qc_metrics: Generating fragment barcode rank plots...")
+  print("atac_plot_metadata: Generating fragment barcode rank plots...")
   png(fragment_rank_plot_file, width = 8, height = 8, units = 'in', res = 300)
   par(mfrow = c(2, 1))
 
@@ -125,8 +125,8 @@ main <- function() {
   # Close the PNG device
   dev.off()
 
-  print("scrna_plot_atac_qc_metrics: Plots generated successfully.")
-  }
+  print("atac_plot_metadata: Plots generated successfully.")
+}
 
 # Call the main function
 main()
