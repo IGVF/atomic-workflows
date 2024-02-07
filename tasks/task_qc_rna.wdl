@@ -17,7 +17,7 @@ task qc_rna {
         Int? umi_cutoff = 100
         Int? gene_cutoff = 100
         String genome_name
-        String? kb_workflow = "standard"
+        String? kb_workflow
         String? prefix        
         
         #Will these be used? Need to run tests to optimize

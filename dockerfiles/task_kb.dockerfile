@@ -10,7 +10,7 @@ LABEL software = "IGVF single-cell pipeline"
 LABEL software.version="0.0.1"
 LABEL software.organization="IGVF"
 LABEL software.version.is-production="No"
-LABEL software.task="cellatlas_rna"
+LABEL software.task="kb_rna"
 
 # To prevent time zone prompt
 ENV DEBIAN_FRONTEND=noninteractive
@@ -21,7 +21,6 @@ RUN apt-get update && apt-get install -y \
     rm -rf /var/lib/apt/lists/*
     
 # Install kb-python
-RUN pip install --quiet seqspec 
 RUN pip install --quiet kb-python==0.28.2
 
 # Create and setup new user
