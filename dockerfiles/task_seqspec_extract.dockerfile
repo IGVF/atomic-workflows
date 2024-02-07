@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     build-essential && \
     rm -rf /var/lib/apt/lists/*
       
-RUN pip install seqspec 
+RUN pip install seqspec==0.1.1 
 
 # Create and setup new user
 #ENV USER=igvf
@@ -32,6 +32,5 @@ RUN pip install seqspec
 
 #COPY --chown=$USER:$USER src/bash/monitor_script.sh /usr/local/bin
 COPY src/bash/monitor_script.sh /usr/local/bin
-COPY src/python/seqspec_extract.py /usr/local/bin
 
 USER $USER
