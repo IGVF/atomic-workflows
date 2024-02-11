@@ -6,7 +6,7 @@ nextflow.enable.dsl=2
 
 // python3 \$script_path \$histogram_file_arg  \$pkr_arg \$out_file_arg
 process run_generate_insert_size_plot {
-  label 'plot_script'
+  label 'joint_barcode_metadata_py'
   debug true
   input:
     path plot_script

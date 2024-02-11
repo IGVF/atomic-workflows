@@ -67,35 +67,35 @@ process run_chromap_map_to_idx {
   """
 }
 
-process run_process_conversion_to_barcode {
+// process run_process_conversion_to_barcode {
 
   // Set debug to true
-  debug true
+//   debug true
   
   // Label the process as 'pool_prefix'
-  label 'pool_prefix'
+//   label 'pool_prefix'
 
   // Define input paths
-  input:
-    val subpool_script
-    path barcode_conversion_file
-    val subpool_str
-    val barcode_summary_csv
+//   input:
+//     val subpool_script
+//     path barcode_conversion_file
+//     val subpool_str
+//     val barcode_summary_csv
   
   // Define output paths
-  output:
-    path "${barcode_summary_csv}", emit: barcode_summary_csv_out_pool_out
+//   output:
+//     path "${barcode_summary_csv}", emit: barcode_summary_csv_out_pool_out
 
   // Script section
-  script:
-  """
-    echo 'start run_add_subpool_prefix_to_summary_file'
-    echo 'input barcode_summary_csv is $barcode_summary_csv'
-    /usr/local/bin/$subpool_script $barcode_conversion_file $subpool_str $barcode_summary_csv
-    ls
-    echo 'finished run_add_subpool_prefix_to_summary_file'
-  """
-}
+//   script:
+//   """
+//     echo 'start run_add_subpool_prefix_to_summary_file'
+//     echo 'input barcode_summary_csv is $barcode_summary_csv'
+//     /usr/local/bin/$subpool_script $barcode_conversion_file $subpool_str $barcode_summary_csv
+ //    ls
+//     echo 'finished run_add_subpool_prefix_to_summary_file'
+//   """
+// }
 
 process run_create_chromap_idx {
   label 'chromap_map_idx'

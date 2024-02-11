@@ -6,8 +6,8 @@ process run_bgzip_on_chromap_fragments_output {
   // Set debug to true
   debug true
   
-  // Label the process as 'bgzip'
-  label 'bgzip'
+  // Label the process as 'bgzip_chromap'
+  label 'bgzip_chromap'
 
   // Define input path
   input:
@@ -15,14 +15,14 @@ process run_bgzip_on_chromap_fragments_output {
 
   // Define output path
   output:
-    path "${fragment_file.baseName}.gz", emit: bgzip_chromap_fragments_out
+    path "${fragment_file}.gz", emit: bgzip_chromap_fragments_tsv_out
 
   // Script section
   script:
   """
     echo 'Start run_bgzip_on_chromap_fragments_output'
     echo "Fragment file is: $fragment_file"
-    bgzip -c $fragment_file > ${fragment_file.baseName}.gz 2>&1
+    bgzip -c $fragment_file > "${fragment_file}.gz"
     ls -lt
     echo 'Finished run_bgzip_on_chromap_fragments_output'
   """

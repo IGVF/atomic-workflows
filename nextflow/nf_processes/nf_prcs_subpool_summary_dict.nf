@@ -1,10 +1,7 @@
 // Enable DSL2
 nextflow.enable.dsl=2
 
-// Define a channel to pass the file path between processes
-temp_conversion_ch = file("temp_conversion")
-
-process run_add_subpool_prefix_to_fragment_table {
+process run_add_subpool_to_chromap_output {
 
   // Set debug to true
   debug true
@@ -15,40 +12,41 @@ process run_add_subpool_prefix_to_fragment_table {
   // Define input paths
   input:
     val subpool_script
-    path chromap_filter_fragments_tsv
+    path chromap_fragments_tsv
     path barcode_summary_csv
     tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix)
   
   // Define output paths
+  // TODO: change the output name of the files with / without subpool - even if it is identical
   output:
-    path "${chromap_filter_fragments_tsv}", emit: chromap_filter_fragments_tsv_pool_out
+    path "${chromap_fragments_tsv}", emit: chromap_fragments_tsv_pool_out
     path "${barcode_summary_csv}", emit: barcode_summary_csv_out_pool_out
 
   // Script section
   script:
   """
-    echo '------ Start run_add_pool_prefix_to_fragment_table ------'
-    echo 'Input chromap_filter_fragments_tsv is $chromap_filter_fragments_tsv'
+    echo '------ Start run_add_subpool_to_chrompap_output ------'
+    echo 'Input chromap_fragments_tsv is $chromap_fragments_tsv'
     echo 'Input barcode_summary_csv is $barcode_summary_csv'
     echo 'Input subpool is $subpool'
     echo 'Input subpool_script is $subpool_script'
     if [ "$subpool" != "none" ]; then
-      /usr/local/bin/$subpool_script $chromap_filter_fragments_tsv $barcode_summary_csv
+      /usr/local/bin/$subpool_script $chromap_fragments_tsv $barcode_summary_csv
     else
       echo 'No subpool specified. Skipping subpool addition.'
     fi
-    echo '------ Finished run_add_pool_prefix_to_fragment_table ------'
+    echo '------ Finished run_add_subpool_to_chrompap_output ------'
   """
 }
 
 
-process run_process_conversion_to_barcode {
+process run_process_create_temp_summary_dict {
 
   // Set debug to true
   debug true
   
   // Label the process as 'pool_dictionary'
-  label 'pool_dictionary'
+  label 'create_temp_summary_dict'
 
   // Define input paths
   input:
@@ -57,16 +55,16 @@ process run_process_conversion_to_barcode {
     path barcode_summary_csv
   // Define output paths
   output:
-    path "temp_conversion", emit:  temp_dict_conversion
+    path "temp_summary", emit:  temp_summary_dict
 
   // Script section
   script:
   """
-    echo 'start run_process_conversion_to_barcode'
+    echo 'start run_process_create_temp_summary_dict'
     echo 'input barcode_summary_csv is $barcode_summary_csv'
-    /usr/local/bin/$subpool_script $barcode_conversion_dict_file $subpool $barcode_summary_csv "temp_conversion"
-    wc -l temp_conversion
-    echo 'finished run_process_conversion_to_barcode'
+    /usr/local/bin/$subpool_script $barcode_conversion_dict_file $subpool $barcode_summary_csv "temp_summary"
+    wc -l temp_summary
+    echo 'finished run_process_create_temp_summary_dict'
   """
 }
 
