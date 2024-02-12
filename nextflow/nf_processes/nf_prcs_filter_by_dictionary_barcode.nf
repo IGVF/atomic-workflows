@@ -1,9 +1,9 @@
 // Enable DSL2
 nextflow.enable.dsl=2
 
-process run_filter_aligned_fragments {
+process run_filter_aligned_fragments_sort_gz {
   debug true
-  label 'pool_filter'
+  label 'filter_dictionary_sort'
 
   input:
     path temp_summary_dict
@@ -12,10 +12,10 @@ process run_filter_aligned_fragments {
     val threshold
 
   output:
-    path "no-singleton.bed.gz", emit: no_singleton_bed_gz
+    path "no-singleton.bed.sort.gz", emit: no_singleton_bed_sort_gz
   script:
   """
-  echo 'start run_filter_aligned_fragments'
+  echo 'start run_filter_aligned_fragments_sort_gz'
   echo 'input barcodeFragmentsTsvGz is $barcodeFragmentsTsvGz'
   echo 'input threshold is $threshold'
   echo 'input temp_summary_dict is $temp_summary_dict'
@@ -24,9 +24,9 @@ process run_filter_aligned_fragments {
   wc -l $temp_summary_dict
 
   echo '------ Filtering fragments ------'
-  /usr/local/bin/$filter_script $threshold $temp_summary_dict no-singleton.bed.gz $barcodeFragmentsTsvGz
+  /usr/local/bin/$filter_script $threshold $temp_summary_dict no-singleton.bed.sort.gz $barcodeFragmentsTsvGz
 
-  echo 'finished run_filter_aligned_fragments'
+  echo 'finished run_filter_aligned_fragments_sort_gz'
   """
 
 }
