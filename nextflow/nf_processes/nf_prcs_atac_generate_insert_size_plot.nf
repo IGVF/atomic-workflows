@@ -6,12 +6,12 @@ process run_generate_insert_size_plot {
   label 'atac_insert_plot'
   debug true
   input:
-    path plot_script
+    val plot_script
     path histogram_file
     val pkr_id
   output:
-    path "${histogram_file.base_name}.png", emit: histogram_png_insert_size_out
-    path "${histogram_file.base_name}.metadata.tsv", emit: histogram_metadata_tsv_insert_size_out
+    path "${histogram_file.baseName}.png", emit: histogram_png_insert_size_out
+    path "${histogram_file.baseName}.metadata.tsv", emit: histogram_metadata_tsv_insert_size_out
   script:
   """
     echo 'start run_generate_insert_size_plot'
@@ -21,24 +21,28 @@ process run_generate_insert_size_plot {
     
     ls > ls.txt
     ls /usr/local/bin/ > ls_bin.txt
-    python /usr/local/bin/$plot_script --histogram_file $histogram_file --out_file "${histogram_file.base_name}.png" --pkr $pkr_id
+    
+    if [ ! -e "/usr/local/bin/$plot_script" ]; then
+      echo "Error: Script not found at /usr/local/bin/$plot_script"
+      exit 1
+    fi
+    python /usr/local/bin/$plot_script --histogram_file $histogram_file --out_file "${histogram_file.baseName}.png" --pkr $pkr_id
     
     # Command 4
     echo "Formatting metadata..."
-    sed 's/ /\t/g' > "${histogram_file.base_name}.metadata.tsv"
+    sed 's/ /\t/g' > "${histogram_file.baseName}.metadata.tsv"
 
     # Command 5
     echo "Displaying the head of the metadata file..."
-    head "${histogram_file.base_name}.metadata.tsv"
+    head "${histogram_file.baseName}.metadata.tsv"
 
     # Command 6
     echo "Counting the fields in the metadata..."
-    head "${histogram_file.base_name}.metadata.tsv" | awk '{print NF}'
+    head "${histogram_file.baseName}.metadata.tsv" | awk '{print NF}'
     
     echo 'finished run_generate_insert_size_plot'
   """
 }
-
 
 process run_generate_insert_size_histogram_data {
   label 'zcat_insert'

@@ -26,5 +26,5 @@ awk '{print $3-$2}' <(zcat $input_file ) | sort --parallel 4 -n | uniq -c | awk 
 
 
 # Print the contents of the output log file
-echo "Contents of $output_log_file:"
-cat "$output_log_file"
+#echo "Contents of $output_log_file:"
+#cat "$output_log_file"
