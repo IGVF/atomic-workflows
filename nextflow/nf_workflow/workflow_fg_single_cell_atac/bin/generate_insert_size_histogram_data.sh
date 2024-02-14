@@ -7,22 +7,24 @@ if [ "$#" -ne 2 ]; then
 fi
 
 # Extract parameters
-log_file="$1"
-input_file="$2"
+input_file="$1"
+output_log_file="$2"
+
 
 # Print parameters for debugging
-echo "log_file: $log_file"
+echo "output_log_file: $output_log_file"
 echo "input_file: $input_file"
 
-# Command 1
-echo "Inserting size into log file..."
-echo "insert_size" > "$log_file"
-echo "Header 'insert_size' added to $log_file"
+# Print the first few lines of the input file
+echo "Head of input_file:"
+zcat "$input_file" | head
 
-# Command 2
-echo "Printing head of zcat output:"
-head <(zcat "$input_file")
 
-echo "Calculating insert size and updating log file..."
-awk '{print $3-$2}' <(zcat "$input_file") | sort --parallel 4 -n | uniq -c | awk -v OFS="\t" '{print $2,$1}' >> "$log_file"
-echo "Insert size calculated and appended to $log_file"
+touch "$output_log_file"
+echo "insert_size" > $output_log_file
+awk '{print $3-$2}' <(zcat $input_file ) | sort --parallel 4 -n | uniq -c | awk -v OFS="\t" '{print $2,$1}' >> $output_log_file
+
+
+# Print the contents of the output log file
+echo "Contents of $output_log_file:"
+cat "$output_log_file"

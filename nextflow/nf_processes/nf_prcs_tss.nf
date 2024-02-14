@@ -70,7 +70,7 @@ process run_calculate_tss_enrichment_snapatac2 {
     echo 'prefix: $prefix'
     echo 'output file: ${prefix}.tss_enrichment_barcode_stats.tsv'
 
-    python3 /usr/local/bin/$calculation_script $no_singleton_bed_gz $genes_gtf_gzip_file_out "${prefix}.tss_enrichment_barcode_stats.tsv" $min_frag_cutoff
+    python3 /usr/local/bin/$calculation_script --fragment-file $no_singleton_bed_gz --compressed-gtf-file $genes_gtf_gzip_file_out --output-file "${prefix}.tss_enrichment_barcode_stats.tsv" --min-frag-cutoff $min_frag_cutoff
     echo 'finished run_calculate_tss_enrichment_snapatac2'
   """
 }

@@ -35,20 +35,20 @@ process run_tabix_filtered_fragments_no_singleton {
   """
 }
 
-process run_tabix_filtered_fragments {
-  debug true
-  label 'tabix_after_fragments'
-  input:
-    val tabix_script
-    path tabix_fragments
-  output:
-    path "${tabix_fragments}.tbi", emit: tbi_fragments_out
-  script:
-  """
-    echo 'Start run_tabix_filtered_fragments'
-    echo 'Input tabix_fragments is $tabix_fragments'
-    /usr/local/bin/$tabix_script $tabix_fragments
-    ls
-    echo 'Finished run_tabix_filtered_fragments'
-  """
-}
+//process run_tabix_filtered_fragments {
+//  debug true
+//  label 'tabix_after_fragments'
+//  input:
+//    val tabix_script
+//    path tabix_fragments
+//  output:
+//    path "${tabix_fragments}.tbi", emit: tbi_fragments_out
+//  script:
+//  """
+//    echo 'Start run_tabix_filtered_fragments'
+//    echo 'Input tabix_fragments is $tabix_fragments'
+//    /usr/local/bin/$tabix_script $tabix_fragments
+//    ls
+//    echo 'Finished run_tabix_filtered_fragments'
+//  """
+//}

@@ -1,12 +1,16 @@
 # Use an official Miniconda3 as a parent image
 FROM continuumio/miniconda3
 
-RUN conda create -n tss_env -y python=3.8 && \
+# Create and activate the Conda environment
+RUN apt-get update && \
+    apt-get install -y build-essential
+
+
+RUN conda create -n tss_env -y python=3.9 && \
     conda install -y -n tss_env -c conda-forge matplotlib multiprocess && \
     conda install -y -n tss_env -c bioconda pysam && \
     conda install -y -n tss_env -c anaconda numpy && \
-    conda install -y -n tss_env -c bioconda macs2 && \
-    conda run -n tss_env pip install snapatac2 && \
+    conda run -n tss_env pip install snapatac2=='2.5.0' && \
     echo "source activate tss_env" > ~/.bashrc
 
 # Set default command to start /bin/bash

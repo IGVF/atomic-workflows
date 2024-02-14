@@ -31,6 +31,9 @@ main <- function() {
 
   r_qc_plot_helper_script <- commandArgs(trailingOnly = TRUE)[1]
   print(paste("atac_plot_metadata: r_qc_plot_helper_script is:", r_qc_plot_helper_script))
+  
+  # Source the r_qc_plot_helper_script using the source_file_in_path function
+  source_file_in_path(r_qc_plot_helper_script)
 
   barcode_metadata_file <- commandArgs(trailingOnly = TRUE)[2]
   print(paste("atac_plot_metadata: barcode_metadata_file is:", barcode_metadata_file))
@@ -40,13 +43,13 @@ main <- function() {
 
   fragment_rank_plot_file <- commandArgs(trailingOnly = TRUE)[4]
   print(paste("atac_plot_metadata: fragment_rank_plot_file is:", fragment_rank_plot_file))
-
-  # Call source_file_in_path with r_qc_plot_helper_script
-  source_file_in_path(r_qc_plot_helper_script)
+  
+  # Add this line before the read.table call
+  print(paste("atac_plot_metadata: Reading barcode metadata from file:", barcode_metadata_file))
 
   # Add print statements for reading barcode metadata
   print("atac_plot_metadata: Reading barcode metadata...")
-  barcode_metadata <- read.table(barcode_metadata_file, header=T)
+  barcode_metadata <- read.table(barcode_metadata_file, header = TRUE, sep = "\t")
   print("atac_plot_metadata: Barcode metadata read successfully.")
 
   ## Print the head of the barcode_metadata data frame
