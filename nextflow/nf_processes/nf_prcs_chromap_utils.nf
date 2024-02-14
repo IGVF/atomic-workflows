@@ -32,7 +32,7 @@ process run_chromap_map_to_idx {
     val CHROMAP_READ_LENGTH
     val CPUS_TO_USE
   output:
-    path "${prefix}.atac.filter.fragments.tsv", emit: chromap_filter_fragments_tsv_out
+    path "${prefix}.atac.filter.fragments.tsv", emit: chromap_fragments_tsv_out
     path "${prefix}.atac.align.barcode.summary.csv", emit: barcode_summary_csv_out
     path "${prefix}.atac.align.k4.hg38.log.txt", emit: chromap_alignment_log_out
     path "ls_input.txt"

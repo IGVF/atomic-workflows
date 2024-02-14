@@ -63,9 +63,9 @@ workflow {
   // STEP 4b: calculate the chromap index ///////////////////////////////////
 
   // Call chromap index with the output of the zcat
-  // run_create_chromap_idx(genome_fasta_zcat_out)
-  // genome_chromap_idx = run_create_chromap_idx.out.chromap_idx_out
-  // println ('after run_create_chromap_idx')
+  run_create_chromap_idx(genome_fasta_zcat_out)
+  genome_chromap_idx = run_create_chromap_idx.out.chromap_idx_out
+  println ('after run_create_chromap_idx')
   
   //---------------- END OF CHROMAP INDEX ----------------
   
@@ -74,19 +74,18 @@ workflow {
   // STEP 6a:
   // TODO: replace this with task.cpus in the process. one the task.cpus works correctly with/without cache
   // TODO: check how more parameters options are passed
-  // run_chromap_map_to_idx(sample_run_ch,genome_fasta_ch,genome_chromap_idx, params.CHROMAP_QUALITY_THRESHOLD, params.CHROMAP_DROP_REPETITIVE_READS, params.CHROMAP_READ_FORMAT, params.CHROMAP_BC_PROBABILITY_THRESHOLD, params.CHROMAP_BC_ERROR_THRESHOLD,params.CHROMAP_READ_LENGTH,params.CPUS_TO_USE_CHROMAP_IDX)
-  // chromap_fragments_tsv = run_chromap_map_to_idx.out.chromap_fragments_tsv_out
-  // chromap_barcode_summary_csv = run_chromap_map_to_idx.out.barcode_summary_csv_out
-  // chromap_alignment_log_out = run_chromap_map_to_idx.out.chromap_alignment_log_out
-  // println ('finished run_chromap_map_to_idx')
+  run_chromap_map_to_idx(sample_run_ch,genome_fasta_ch,genome_chromap_idx, params.CHROMAP_QUALITY_THRESHOLD, params.CHROMAP_DROP_REPETITIVE_READS, params.CHROMAP_READ_FORMAT, params.CHROMAP_BC_PROBABILITY_THRESHOLD, params.CHROMAP_BC_ERROR_THRESHOLD,params.CHROMAP_READ_LENGTH,params.CPUS_TO_USE_CHROMAP_IDX)
+  chromap_fragments_tsv = run_chromap_map_to_idx.out.chromap_fragments_tsv_out
+  chromap_barcode_summary_csv = run_chromap_map_to_idx.out.barcode_summary_csv_out
+  chromap_alignment_log_out = run_chromap_map_to_idx.out.chromap_alignment_log_out
+  println ('finished run_chromap_map_to_idx')
 
   // STEP 6b:  for debug: load the outputs:  
-  chromap_fragments_tsv = channel.value(file(params.chromap_fragments_tsv))
-  chromap_barcode_summary_csv = channel.value(file(params.barcode_summary_csv))
-  chromap_alignment_log_out = channel.value(file(params.chromap_alignment_log_out))
-  println ('after load chrompa mapping debug')
+  // chromap_fragments_tsv = channel.value(file(params.chromap_fragments_tsv))
+  // chromap_barcode_summary_csv = channel.value(file(params.barcode_summary_csv))
+  // chromap_alignment_log_out = channel.value(file(params.chromap_alignment_log_out))
+  // println ('after load chrompa mapping debug')
   //---------------- END OF CHROMAP MAPPING ----------------
-  
   
 
   //---------------- START OF SUBPOOL ----------------

@@ -1,0 +1,19 @@
+FROM continuumio/miniconda3
+
+RUN conda create -n kb_count_env -y python=3.8 && \
+    conda run -n kb_count_env pip install kb-python && \
+    echo "source activate kb_count_env" > ~/.bashrc
+    
+    
+# if needed gget: pip install gget
+    
+
+# Set default command to start /bin/bash
+ENV PATH /usr/local/bin:/opt/conda/envs/kb_count_env/bin:$PATH
+ENV CONDA_DEFAULT_ENV kb_count_env
+
+
+# docker build -t eilalan/kb_count_env:latest -f Dockerfile_kb_count .
+# docker run -it eilalan/kb_count_env:latest
+# docker push eilalan/kb_count_env:latest
+
