@@ -1,6 +1,7 @@
 version 1.0
 
 # Import the sub-workflow for preprocessing the fastqs.
+import "tasks/task_check_inputs.wdl" as check_inputs
 import "workflows/subwf_atac.wdl" as subwf_atac
 import "workflows/subwf_rna.wdl" as subwf_rna
 import "tasks/10x_task_preprocess.wdl" as preprocess_tenx
@@ -27,15 +28,15 @@ workflow multiome_pipeline {
 
         File whitelists_tsv = 'gs://broad-buenrostro-pipeline-genome-annotations/whitelists/whitelists.tsv'
         
-        Array[File] whitelist_atac
-        Array[File] whitelist_rna
+        Array[String] whitelist_atac
+        Array[String] whitelist_rna
         
-        Array[File] seqspecs
+        Array[String] seqspecs
 
         # ATAC-specific inputs
-        Array[File] read1_atac
-        Array[File] read2_atac
-        Array[File] fastq_barcode
+        Array[String] read1_atac
+        Array[String] read2_atac
+        Array[String] fastq_barcode
         Boolean count_only = false
         File? chrom_sizes
         File? atac_genome_index_tar
@@ -59,8 +60,8 @@ workflow multiome_pipeline {
         #Int? atac_filter_shift_minus = -4
 
         # RNA-specific inputs
-        Array[File] read1_rna
-        Array[File] read2_rna
+        Array[String] read1_rna
+        Array[String] read2_rna
         File? gtf
 
         # Joint qc
@@ -71,7 +72,7 @@ workflow multiome_pipeline {
     }
 
     Map[String, File] annotations = read_map(genome_tsv)
-    String genome_name_ =  select_first([genome_name, annotations["genome_name"]])
+    String genome_name_ =  select_first([ genome_name, annotations["genome_name"]])
     File idx_tar_atac_ = select_first([atac_genome_index_tar, annotations["bowtie2_idx_tar"]])
     File chrom_sizes_ = select_first([chrom_sizes, annotations["chrsz"]])
     File tss_bed_ = select_first([tss_bed, annotations["tss"]])
@@ -80,11 +81,60 @@ workflow multiome_pipeline {
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
     
+    call check_inputs.check_inputs as check_whitelist_atac{
+        input:
+            paths = whitelist_atac
+    }
     
-    #could not coerece Array[File] to File?
-    File? whitelist_rna_ = whitelist_rna[0]
-    File? whitelist_atac_ = whitelist_atac[0]
+    #could not coerce Array[File] to File?
+    Array[File] whitelists_atac_ = select_first([ check_whitelist_atac.output_files, whitelist_atac ])
+    File? whitelist_atac_ = whitelists_atac_[0]
 
+    call check_inputs.check_inputs as check_whitelist_rna{
+        input:
+            paths = whitelist_rna
+    }
+    
+    #could not coerce Array[File] to File?
+    Array[File] whitelists_rna_ = select_first([ check_whitelist_rna.output_files, whitelist_rna ])
+    File? whitelist_rna_ = whitelists_rna_[0]
+    
+    call check_inputs.check_inputs as check_read1_atac{
+        input:
+            paths = read1_atac
+    }
+    
+    Array[File] read1_atac_ = select_first([ check_read1_atac.output_files, read1_atac ])
+    
+    call check_inputs.check_inputs as check_read2_atac{
+        input:
+            paths = read2_atac
+    }
+    
+    Array[File] read2_atac_ = select_first([ check_read2_atac.output_files, read2_atac ])
+    
+    call check_inputs.check_inputs as check_fastq_barcode{
+        input:
+            paths = fastq_barcode
+    }
+    
+    Array[File] fastq_barcode_ = select_first([ check_fastq_barcode.output_files, fastq_barcode ])
+    
+    call check_inputs.check_inputs as check_read1_rna{
+        input:
+            paths = read1_rna
+    }
+    
+    Array[File] read1_rna_ = select_first([ check_read1_rna.output_files, read1_rna ])
+    
+    call check_inputs.check_inputs as check_read2_rna{
+        input:
+            paths = read2_rna
+    }
+    
+    Array[File] read2_rna_ = select_first([ check_read2_rna.output_files, read2_rna ])
+    
+    
     #will be updated when changing atac? 
     if ( chemistry != "shareseq" && chemistry != "parse" && process_atac) {
         call preprocess_tenx.preprocess_tenx as preprocess_tenx{
@@ -108,11 +158,11 @@ workflow multiome_pipeline {
         if ( read1_rna[0] != "" ) {
             call subwf_rna.wf_rna as rna{
                 input:
-                    read1 = read1_rna,
-                    read2 = read2_rna,
+                    read1 = read1_rna_,
+                    read2 = read2_rna_,
                     seqspecs = seqspecs,
                     chemistry = chemistry,
-                    barcode_whitelists = whitelist_rna,
+                    barcode_whitelists = whitelists_rna_,
                     genome_fasta = genome_fasta,
                     genome_gtf = gtf_,
                     prefix = prefix,
@@ -126,14 +176,14 @@ workflow multiome_pipeline {
         if ( read1_atac[0] != "" ) {
             call subwf_atac.wf_atac as atac{
                 input:
-                    read1 = select_first([read1_atac]),
-                    read2 = select_first([read2_atac]),
-                    fastq_barcode = fastq_barcode,
+                    read1 = select_first([read1_atac_]),
+                    read2 = select_first([read2_atac_]),
+                    fastq_barcode = fastq_barcode_,
                     chemistry = chemistry,
                     reference_fasta = genome_fasta,
                     subpool = subpool,
                     gtf = gtf_,
-                    whitelist = whitelist_atac[0], #cannot coerce array
+                    whitelist = whitelists_atac_[0], #cannot coerce array
                     trim_fastqs = trim_fastqs,
                     chrom_sizes = chrom_sizes_,
                     genome_index_tar = idx_tar_atac_,
