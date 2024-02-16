@@ -7,5 +7,6 @@ workflows:
          branches:
              - main
              - dev
+             - sw-synapse
          tags:
              - /.*/
