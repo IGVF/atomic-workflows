@@ -40,15 +40,15 @@ task check_inputs {
         
         #add conditions to check source here
             
-            echo ${id}
+            echo ~{id}
             
-            filename=$(synapse get ${id} | grep "Downloaded" | cut -d ' ' -f 3)
+            filename=$(synapse get ~{id} | grep "Downloaded" | cut -d ' ' -f 3)
             
-            echo ${filename}
+            echo ~{filename}
             
-            output_paths+=($filename)
+            output_paths+=(~filename)
         done
-        printf "%s\n" "${output_paths[@]}"
+        printf "%s\n" "~{output_paths[@]}"
     >>>
     output {
         Array[File]? output_files = read_lines(stdout())
