@@ -36,7 +36,7 @@ task check_inputs {
         
         output_paths=()
         
-        for id in ${sep=' ' paths} 
+        for id in ~{sep=' ' paths} 
         do
         
         #add conditions to check source here
