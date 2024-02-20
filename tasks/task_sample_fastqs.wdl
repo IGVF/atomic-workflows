@@ -45,7 +45,7 @@ task sample_fastqs {
     >>>
     
     output {
-        File output_file = glob("files/*")
+        File output_file = glob("files/*")[0]
     }
     
     runtime {
