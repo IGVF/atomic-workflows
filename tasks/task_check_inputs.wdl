@@ -12,7 +12,7 @@ task check_inputs {
     }
 
     input {
-        Array[String] paths 
+        String path 
         
         Int? cpus = 1
         Float? disk_factor = 1.0
@@ -33,20 +33,16 @@ task check_inputs {
         set -e
 
         bash $(which monitor_script.sh) | tee ~{monitor_fnp_log} 1>&2 &
-                
-        for id in ~{sep=' ' paths} 
-        do
         
-        #add conditions to check source here
-                        
-            filename=$(synapse get "$id" | grep "Downloaded" | cut -d ' ' -f 3)
-            
-            echo "$filename"
-            
-        done
+        mkdir files
+        cd files
+
+        #add conditions to check source here in future
+        synapse get ~{path}
+  
     >>>
     output {
-        Array[File] output_files = read_lines(stdout())
+       File output_file = glob("files/*")
     }
 
     runtime {
@@ -56,9 +52,9 @@ task check_inputs {
         docker : "~{docker_image}"
     }
     parameter_meta {
-        paths: {
-            description: 'Array of synpase IDs',
-            help: 'List of strings that are prefixed with "syn"'
+        path: {
+            description: 'File path',
+            help: 'File path of input'
         }     
     }
 }

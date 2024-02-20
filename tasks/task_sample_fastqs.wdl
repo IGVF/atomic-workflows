@@ -12,7 +12,7 @@ task sample_fastqs {
     }
 
     input {
-        Array[File]? paths 
+        File path 
         
         Int? cpus = 1
         Float? disk_factor = 1.0
@@ -33,20 +33,19 @@ task sample_fastqs {
         set -e
 
         bash $(which monitor_script.sh) | tee ~{monitor_fnp_log} 1>&2 &
-    
-        for fastq in ~{sep=' ' paths} 
-        do
         
-            zcat "$fastq" | head -4000000 | gzip > $(basename -s .fastq.gz "$fastq").sampled.fastq.gz # fastq files has 4 lines per record so 1 million records = 4 million lines
-            
-            echo $(basename -s .fastq.gz "$fastq").sampled.fastq.gz
-            
-        done
+        mkdir files
+        
+        mv ~{path} files/tmp.fastq.gz
+        
+        cd files
+    
+        zcat tmp.fastq.gz | head -4000000 | gzip > $(basename -s .fastq.gz ~{path}).sampled.fastq.gz # fastq files has 4 lines per record so 1 million records = 4 million lines
         
     >>>
     
     output {
-        Array[File] output_files = read_lines(stdout())
+        File output_file = glob("files/*")
     }
     
     runtime {
@@ -57,9 +56,9 @@ task sample_fastqs {
     }
     
     parameter_meta {
-        paths: {
-            description: 'Array of synpase IDs',
-            help: 'List of strings that are prefixed with "syn"'
+        path: {
+            description: 'File path',
+            help: 'File path of input'
         }     
     }
 }
