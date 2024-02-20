@@ -88,7 +88,7 @@ workflow multiome_pipeline {
     
     #could not coerce Array[File] to File?
     Array[File] whitelists_atac_ = select_first([ check_whitelist_atac.output_files, whitelist_atac ])
-    File? whitelist_atac_ = whitelists_atac_[0]
+    File whitelist_atac_ = whitelists_atac_[0]
 
     call check_inputs.check_inputs as check_whitelist_rna{
         input:
@@ -97,7 +97,7 @@ workflow multiome_pipeline {
     
     #could not coerce Array[File] to File?
     Array[File] whitelists_rna_ = select_first([ check_whitelist_rna.output_files, whitelist_rna ])
-    File? whitelist_rna_ = whitelists_rna_[0]
+    File whitelist_rna_ = whitelists_rna_[0]
     
     call check_inputs.check_inputs as check_read1_atac{
         input:
@@ -148,10 +148,8 @@ workflow multiome_pipeline {
         if ( chemistry == "10x_multiome" ){
             call tenx_barcode_map.mapping_tenx_barcodes as barcode_mapping{
                 input:
-                    #whitelist_atac = select_first([whitelist_atac, whitelist_atac_]),
-                    #whitelist_rna = select_first([whitelist_rna, whitelist_rna_])
-                    whitelist_atac = whitelist_atac_,
-                    whitelist_rna = whitelist_rna_
+                    whitelist_atac = select_first([whitelist_atac, whitelist_atac_]),
+                    whitelist_rna = select_first([whitelist_rna, whitelist_rna_])
             }
         }
     }
