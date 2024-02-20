@@ -46,7 +46,7 @@ task check_inputs {
         done
     >>>
     output {
-        Array[File]? output_files = read_lines(stdout())
+        Array[File] output_files = read_lines(stdout())
     }
 
     runtime {
