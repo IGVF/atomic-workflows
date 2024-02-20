@@ -11,9 +11,9 @@ workflows:
          tags:
              - /.*/
 
-   - name: "IGVF-sample-fastqs"
+   - name: "IGVF-sample_fastqs"
      subclass: WDL
-     primaryDescriptorPath: /workflows/subwf-sample-fastqs.wdl
+     primaryDescriptorPath: /workflows/subwf_sample_fastqs.wdl
      filters:  # Only develop or master branches and localAligner/** tags
          branches:
              - sw-synapse
