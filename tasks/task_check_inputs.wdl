@@ -33,26 +33,20 @@ task check_inputs {
         set -e
 
         bash $(which monitor_script.sh) | tee ~{monitor_fnp_log} 1>&2 &
-        
-        output_paths=()
-        
+                
         for id in ~{sep=' ' paths} 
         do
         
         #add conditions to check source here
-            
-            echo "$id"
-            
+                        
             filename=$(synapse get "$id" | grep "Downloaded" | cut -d ' ' -f 3)
             
             echo "$filename"
             
-            output_paths+=("$filename")
         done
-        printf "%s\n" "$output_paths[@]"
     >>>
     output {
-        Array[File]? output_files = read_lines(stdout())
+        Array[File] output_files = read_lines(stdout())
     }
 
     runtime {
