@@ -81,58 +81,73 @@ workflow multiome_pipeline {
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
     
-    call check_inputs.check_inputs as check_whitelist_atac{
-        input:
-            paths = whitelist_atac
+    scatter(file in whitelist_atac){
+        call check_inputs.check_inputs as check_whitelist_atac{
+            input:
+                path = file
+        }
     }
-    
+      
     #could not coerce Array[File] to File?
-    Array[File] whitelists_atac_ = select_first([ check_whitelist_atac.output_files, whitelist_atac ])
+    Array[File] whitelists_atac_ = select_first([ check_whitelist_atac.output_file, whitelist_atac ])
     File whitelist_atac_ = whitelists_atac_[0]
 
-    call check_inputs.check_inputs as check_whitelist_rna{
-        input:
-            paths = whitelist_rna
+    scatter(file in whitelist_rna){
+        call check_inputs.check_inputs as check_whitelist_rna{
+            input:
+                path = file
+        }
     }
     
     #could not coerce Array[File] to File?
-    Array[File] whitelists_rna_ = select_first([ check_whitelist_rna.output_files, whitelist_rna ])
+    Array[File] whitelists_rna_ = select_first([ check_whitelist_rna.output_file, whitelist_rna ])
     File whitelist_rna_ = whitelists_rna_[0]
     
-    call check_inputs.check_inputs as check_read1_atac{
-        input:
-            paths = read1_atac
+    #ATAC Read1
+    scatter(file in read1_atac){
+        call check_inputs.check_inputs as check_read1_atac{
+            input:
+                path = file
+        }
     }
     
-    Array[File] read1_atac_ = select_first([ check_read1_atac.output_files, read1_atac ])
+    Array[File] read1_atac_ = select_first([ check_read1_atac.output_file, read1_atac ])
     
-    call check_inputs.check_inputs as check_read2_atac{
-        input:
-            paths = read2_atac
+    scatter(file in read2_atac){
+        call check_inputs.check_inputs as check_read2_atac{
+            input:
+                path = file
+        }
     }
     
-    Array[File] read2_atac_ = select_first([ check_read2_atac.output_files, read2_atac ])
+    Array[File] read2_atac_ = select_first([ check_read2_atac.output_file, read2_atac ])
     
-    call check_inputs.check_inputs as check_fastq_barcode{
-        input:
-            paths = fastq_barcode
+     scatter(file in fastq_barcode){
+        call check_inputs.check_inputs as check_fastq_barcode{
+            input:
+                path = file
+        }
     }
     
-    Array[File] fastq_barcode_ = select_first([ check_fastq_barcode.output_files, fastq_barcode ])
+    Array[File] fastq_barcode_ = select_first([ check_fastq_barcode.output_file, fastq_barcode ])
     
-    call check_inputs.check_inputs as check_read1_rna{
-        input:
-            paths = read1_rna
+    scatter(file in read1_rna){
+        call check_inputs.check_inputs as check_read1_rna{
+            input:
+                path = file
+        }
     }
     
-    Array[File] read1_rna_ = select_first([ check_read1_rna.output_files, read1_rna ])
+    Array[File] read1_rna_ = select_first([ check_read1_rna.output_file, read1_rna ])
     
-    call check_inputs.check_inputs as check_read2_rna{
-        input:
-            paths = read2_rna
+    scatter(file in read2_rna){
+        call check_inputs.check_inputs as check_read2_rna{
+            input:
+                path = file
+        }
     }
     
-    Array[File] read2_rna_ = select_first([ check_read2_rna.output_files, read2_rna ])
+    Array[File] read2_rna_ = select_first([ check_read2_rna.output_file, read2_rna ])
     
     
     #will be updated when changing atac? 
