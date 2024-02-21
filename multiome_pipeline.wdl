@@ -28,15 +28,15 @@ workflow multiome_pipeline {
 
         File whitelists_tsv = 'gs://broad-buenrostro-pipeline-genome-annotations/whitelists/whitelists.tsv'
         
-        Array[String] whitelist_atac
-        Array[String] whitelist_rna
+        Array[File] whitelist_atac
+        Array[File] whitelist_rna
         
-        Array[String] seqspecs
+        Array[File] seqspecs
 
         # ATAC-specific inputs
-        Array[String] read1_atac
-        Array[String] read2_atac
-        Array[String] fastq_barcode
+        Array[File] read1_atac
+        Array[File] read2_atac
+        Array[File] fastq_barcode
         Boolean count_only = false
         File? chrom_sizes
         File? atac_genome_index_tar
@@ -60,8 +60,8 @@ workflow multiome_pipeline {
         #Int? atac_filter_shift_minus = -4
 
         # RNA-specific inputs
-        Array[String] read1_rna
-        Array[String] read2_rna
+        Array[File] read1_rna
+        Array[File] read2_rna
         File? gtf
 
         # Joint qc
@@ -81,27 +81,27 @@ workflow multiome_pipeline {
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
     
-    scatter(file in whitelist_atac){
-        call check_inputs.check_inputs as check_whitelist_atac{
-            input:
-                path = file
-        }
-    }
+    #scatter(file in whitelist_atac){
+     #   call check_inputs.check_inputs as check_whitelist_atac{
+      #      input:
+       #         path = file
+        #}
+    #}
       
     #could not coerce Array[File] to File?
-    Array[File] whitelists_atac_ = select_first([ check_whitelist_atac.output_file, whitelist_atac ])
-    File whitelist_atac_ = whitelists_atac_[0]
+    #Array[File] whitelists_atac_ = select_first([ check_whitelist_atac.output_file, whitelist_atac ])
+    File whitelist_atac_ = whitelist_atac[0]
 
-    scatter(file in whitelist_rna){
-        call check_inputs.check_inputs as check_whitelist_rna{
-            input:
-                path = file
-        }
-    }
+    #scatter(file in whitelist_rna){
+     #   call check_inputs.check_inputs as check_whitelist_rna{
+      #      input:
+               # path = file
+       # }
+    #}
     
     #could not coerce Array[File] to File?
-    Array[File] whitelists_rna_ = select_first([ check_whitelist_rna.output_file, whitelist_rna ])
-    File whitelist_rna_ = whitelists_rna_[0]
+    #Array[File] whitelists_rna_ = select_first([ check_whitelist_rna.output_file, whitelist_rna ])
+    File whitelist_rna_ = whitelist_rna[0]
     
     #ATAC Read1
     scatter(file in read1_atac){
@@ -180,7 +180,7 @@ workflow multiome_pipeline {
                     read2 = read2_rna_,
                     seqspecs = seqspecs,
                     chemistry = chemistry,
-                    barcode_whitelists = whitelists_rna_,
+                    barcode_whitelists = whitelist_rna,
                     genome_fasta = genome_fasta,
                     genome_gtf = gtf_,
                     prefix = prefix,
@@ -201,7 +201,7 @@ workflow multiome_pipeline {
                     reference_fasta = genome_fasta,
                     subpool = subpool,
                     gtf = gtf_,
-                    whitelist = whitelists_atac_[0], #cannot coerce array
+                    whitelist = whitelist_atac[0], #cannot coerce array
                     trim_fastqs = trim_fastqs,
                     chrom_sizes = chrom_sizes_,
                     genome_index_tar = idx_tar_atac_,
