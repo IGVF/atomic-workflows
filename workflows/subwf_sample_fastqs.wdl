@@ -28,17 +28,12 @@ workflow wf_retrieve {
             input:
                 path = file
         }
-    }
-    
-    scatter(file in check_read1_atac.output_file){
+        
         call sample_fastqs.sample_fastqs as sample_fastqs_read1_atac{
             input:
-                path = file
+                path = check_read1_atac.output_file
         }
     }
-    
-    
-   
     
     output{
         # sampled fastqs 

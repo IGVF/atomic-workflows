@@ -17,7 +17,7 @@ task sample_fastqs {
         Int? cpus = 1
         Float? disk_factor = 1.0
         Float? memory_factor = 1.0
-        String? docker_image = "bash:devel-alpine3.19"    
+        String? docker_image = "ubuntu"    
     }
     
     Float mem_gb = 4.0
