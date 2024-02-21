@@ -154,7 +154,7 @@ workflow multiome_pipeline {
     if ( chemistry != "shareseq" && chemistry != "parse" && process_atac) {
         call preprocess_tenx.preprocess_tenx as preprocess_tenx{
                 input:
-                    fastq_barcode = fastq_barcode[0],
+                    fastq_barcode = fastq_barcode_[0],
                     #whitelist = select_first([whitelist_atac, whitelist_atac_]),
                     whitelist = whitelist_atac_,
                     chemistry = chemistry,
