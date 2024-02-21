@@ -90,13 +90,13 @@ workflow wf_retrieve {
     
     output{
         # sampled fastqs 
-        Array[File]? atac_read1_sampled = sample_fastqs_read1_atac.output_file
-        Array[File]? atac_read2_sampled = sample_fastqs_read2_atac.output_file
+        Array[File] atac_read1_sampled = sample_fastqs_read1_atac.output_file
+        Array[File] atac_read2_sampled = sample_fastqs_read2_atac.output_file
         
-        Array[File]? atac_barcode_sampled = sample_fastq_barcode.output_file
+        Array[File] atac_barcode_sampled = sample_fastq_barcode.output_file
         
-        Array[File]? rna_read1_sampled = sample_fastqs_read1_rna.output_file
-        Array[File]? rna_read2_sampled = sample_fastqs_read2_rna.output_file
+        Array[File] rna_read1_sampled = sample_fastqs_read1_rna.output_file
+        Array[File] rna_read2_sampled = sample_fastqs_read2_rna.output_file
     }
 }
         

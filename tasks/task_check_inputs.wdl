@@ -37,8 +37,10 @@ task check_inputs {
         mkdir files
         cd files
 
-        #add conditions to check source here in future
-        synapse get ~{path}
+        #add conditions for other sources
+        if [[ "~{path}" == syn* ]]; then
+            synapse get ~{path}
+        fi
   
     >>>
     output {
