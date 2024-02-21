@@ -37,14 +37,12 @@ task check_inputs {
         mkdir files
         cd files
 
-        #add conditions to for other sources
-        if [[ "~{path:0:3}" == "syn" ]]; then
-            synapse get ~{path}
-        fi
+        #add conditions to check source here in future
+        synapse get ~{path}
   
     >>>
     output {
-       File? output_file = glob("files/*")[0]
+       File output_file = glob("files/*")[0]
     }
 
     runtime {
