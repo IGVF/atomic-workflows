@@ -72,7 +72,7 @@ workflow multiome_pipeline {
     }
 
     Map[String, File] annotations = read_map(genome_tsv)
-    String genome_name_ =  select_first([ genome_name, annotations["genome_name"]])
+    String genome_name_ =  select_first([genome_name, annotations["genome_name"]])
     File idx_tar_atac_ = select_first([atac_genome_index_tar, annotations["bowtie2_idx_tar"]])
     File chrom_sizes_ = select_first([chrom_sizes, annotations["chrsz"]])
     File tss_bed_ = select_first([tss_bed, annotations["tss"]])
@@ -80,27 +80,10 @@ workflow multiome_pipeline {
 
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
-    
-    #scatter(file in whitelist_atac){
-     #   call check_inputs.check_inputs as check_whitelist_atac{
-      #      input:
-       #         path = file
-        #}
-    #}
       
     #could not coerce Array[File] to File?
-    #Array[File] whitelists_atac_ = select_first([ check_whitelist_atac.output_file, whitelist_atac ])
+    #onlists must be gs links. 
     File whitelist_atac_ = whitelist_atac[0]
-
-    #scatter(file in whitelist_rna){
-     #   call check_inputs.check_inputs as check_whitelist_rna{
-      #      input:
-               # path = file
-       # }
-    #}
-    
-    #could not coerce Array[File] to File?
-    #Array[File] whitelists_rna_ = select_first([ check_whitelist_rna.output_file, whitelist_rna ])
     File whitelist_rna_ = whitelist_rna[0]
     
     #ATAC Read1
@@ -155,7 +138,6 @@ workflow multiome_pipeline {
         call preprocess_tenx.preprocess_tenx as preprocess_tenx{
                 input:
                     fastq_barcode = fastq_barcode_[0],
-                    #whitelist = select_first([whitelist_atac, whitelist_atac_]),
                     whitelist = whitelist_atac_,
                     chemistry = chemistry,
                     barcode_offset = atac_barcode_offset,
@@ -164,8 +146,6 @@ workflow multiome_pipeline {
         if ( chemistry == "10x_multiome" ){
             call tenx_barcode_map.mapping_tenx_barcodes as barcode_mapping{
                 input:
-                    #whitelist_atac = select_first([whitelist_atac, whitelist_atac_]),
-                    #whitelist_rna = select_first([whitelist_rna, whitelist_rna_])
                     whitelist_atac = whitelist_atac_,
                     whitelist_rna = whitelist_rna_
             }
