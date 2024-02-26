@@ -1,6 +1,7 @@
 version 1.0
 
 # Import the sub-workflow for preprocessing the fastqs.
+import "tasks/task_check_inputs.wdl" as check_inputs
 import "workflows/subwf_atac.wdl" as subwf_atac
 import "workflows/subwf_rna.wdl" as subwf_rna
 import "tasks/10x_task_preprocess.wdl" as preprocess_tenx
@@ -79,18 +80,65 @@ workflow multiome_pipeline {
 
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
+      
+    #could not coerce Array[File] to File?
+    #onlists must be gs links. 
+    File whitelist_atac_ = whitelist_atac[0]
+    File whitelist_rna_ = whitelist_rna[0]
+    
+    #ATAC Read1
+    scatter(file in read1_atac){
+        call check_inputs.check_inputs as check_read1_atac{
+            input:
+                path = file
+        }
+    }
+    
+    Array[File] read1_atac_ = select_first([ check_read1_atac.output_file, read1_atac ])
+    
+    scatter(file in read2_atac){
+        call check_inputs.check_inputs as check_read2_atac{
+            input:
+                path = file
+        }
+    }
+    
+    Array[File] read2_atac_ = select_first([ check_read2_atac.output_file, read2_atac ])
+    
+     scatter(file in fastq_barcode){
+        call check_inputs.check_inputs as check_fastq_barcode{
+            input:
+                path = file
+        }
+    }
+    
+    Array[File] fastq_barcode_ = select_first([ check_fastq_barcode.output_file, fastq_barcode ])
+    
+    scatter(file in read1_rna){
+        call check_inputs.check_inputs as check_read1_rna{
+            input:
+                path = file
+        }
+    }
+    
+    Array[File] read1_rna_ = select_first([ check_read1_rna.output_file, read1_rna ])
+    
+    scatter(file in read2_rna){
+        call check_inputs.check_inputs as check_read2_rna{
+            input:
+                path = file
+        }
+    }
+    
+    Array[File] read2_rna_ = select_first([ check_read2_rna.output_file, read2_rna ])
     
     
-    #could not coerece Array[File] to File?
-    File? whitelist_rna_ = whitelist_rna[0]
-    File? whitelist_atac_ = whitelist_atac[0]
-
     #will be updated when changing atac? 
     if ( chemistry != "shareseq" && chemistry != "parse" && process_atac) {
         call preprocess_tenx.preprocess_tenx as preprocess_tenx{
                 input:
-                    fastq_barcode = fastq_barcode[0],
-                    whitelist = select_first([whitelist_atac, whitelist_atac_]),
+                    fastq_barcode = fastq_barcode_[0],
+                    whitelist = whitelist_atac_,
                     chemistry = chemistry,
                     barcode_offset = atac_barcode_offset,
                     prefix = prefix
@@ -98,8 +146,8 @@ workflow multiome_pipeline {
         if ( chemistry == "10x_multiome" ){
             call tenx_barcode_map.mapping_tenx_barcodes as barcode_mapping{
                 input:
-                    whitelist_atac = select_first([whitelist_atac, whitelist_atac_]),
-                    whitelist_rna = select_first([whitelist_rna, whitelist_rna_])
+                    whitelist_atac = whitelist_atac_,
+                    whitelist_rna = whitelist_rna_
             }
         }
     }
@@ -108,8 +156,8 @@ workflow multiome_pipeline {
         if ( read1_rna[0] != "" ) {
             call subwf_rna.wf_rna as rna{
                 input:
-                    read1 = read1_rna,
-                    read2 = read2_rna,
+                    read1 = read1_rna_,
+                    read2 = read2_rna_,
                     seqspecs = seqspecs,
                     chemistry = chemistry,
                     barcode_whitelists = whitelist_rna,
@@ -126,9 +174,9 @@ workflow multiome_pipeline {
         if ( read1_atac[0] != "" ) {
             call subwf_atac.wf_atac as atac{
                 input:
-                    read1 = select_first([read1_atac]),
-                    read2 = select_first([read2_atac]),
-                    fastq_barcode = fastq_barcode,
+                    read1 = select_first([read1_atac_]),
+                    read2 = select_first([read2_atac_]),
+                    fastq_barcode = fastq_barcode_,
                     chemistry = chemistry,
                     reference_fasta = genome_fasta,
                     subpool = subpool,

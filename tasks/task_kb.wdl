@@ -25,12 +25,17 @@ task kb {
         File genome_fasta
         File genome_gtf
         File barcode_whitelist 
+        File? replacement_list
         
         String? kb_workflow
         String? subpool = "none"
         String genome_name # GRCh38, mm10
         String prefix = "test-sample"
         String chemistry
+        String strand = "unstranded"
+        String matrix_sum = "total"
+        
+        Int threads = 4
         
         #Will these be used? Need to run tests to optimize
         Int? cpus = 4
@@ -76,18 +81,60 @@ task kb {
         if [[ '~{kb_workflow}' == "standard" ]]; then   
         
             #build ref standard
-            kb ref -i ~{directory}/index.idx -g ~{directory}/t2g.txt -f1 ~{directory}/transcriptome.fa ~{genome_fasta} ~{genome_gtf}
+            kb ref \
+                -i ~{directory}/index.idx \
+                -g ~{directory}/t2g.txt \
+                -f1 ~{directory}/transcriptome.fa \
+                ~{genome_fasta} \
+                ~{genome_gtf}
                         
             #kb count standard
-            kb count -i ~{directory}/index.idx -g ~{directory}/t2g.txt -x ~{index_string} -w ~{barcode_whitelist} -o ~{directory} --h5ad -t 4 $interleaved_files_string 
+            kb count \
+                -i ~{directory}/index.idx \
+                -g ~{directory}/t2g.txt \
+                -x ~{index_string} \
+                -w ~{barcode_whitelist} \
+                --strand ~{strand} \
+                ~{if defined(replacement_list) then "-r ~{replacement_list}" else ""} \
+                -o ~{directory} \
+                --h5ad \
+                --gene-names \
+                -t ~{threads} \
+                $interleaved_files_string 
         
         else
         
+        #add -r, --parity and --strand
+        
             #build ref nac
-            kb ref --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt -f1 ~{directory}/cdna.fasta -f2 ~{directory}/nascent.fasta ~{genome_fasta} ~{genome_gtf}
+            kb ref \
+                --workflow=nac \
+                -i ~{directory}/index.idx \
+                -g ~{directory}/t2g.txt \
+                -c1 ~{directory}/cdna.txt \
+                -c2 ~{directory}/nascent.txt \
+                -f1 ~{directory}/cdna.fasta \
+                -f2 ~{directory}/nascent.fasta \
+                ~{genome_fasta} \
+                ~{genome_gtf}
                         
             #kb count nac    
-            kb count --workflow=nac -i ~{directory}/index.idx -g ~{directory}/t2g.txt -c1 ~{directory}/cdna.txt -c2 ~{directory}/nascent.txt --sum=nucleus -x ~{index_string} -w ~{barcode_whitelist} -o ~{directory} --h5ad -t 4 $interleaved_files_string 
+            kb count \
+                --workflow=nac \
+                -i ~{directory}/index.idx \
+                -g ~{directory}/t2g.txt \
+                -c1 ~{directory}/cdna.txt \
+                -c2 ~{directory}/nascent.txt \
+                --sum=~{matrix_sum} \
+                -x ~{index_string} \
+                -w ~{barcode_whitelist} \
+                --strand ~{strand} \
+                ~{if defined(replacement_list) then "-r ~{replacement_list}" else ""} \
+                -o ~{directory} \
+                --h5ad \
+                --gene-names \
+                -t ~{threads} \
+                $interleaved_files_string 
         
         fi
 
