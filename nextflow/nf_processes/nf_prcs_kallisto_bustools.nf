@@ -28,6 +28,26 @@ process run_kb_ref {
   """
 }
 
+process run_kb_ref_with_jq_commands {
+  label 'kb_ref_from_jq'
+  debug true
+  input:
+    val script_name
+    path jq_commands_file
+    path transcriptome_file
+    path genome_fasta_gz
+    path gene_gtf
+  output:
+    path "index.idx",emit: index_out
+    path  "t2g.txt",emit: t2g_txt_out
+  script:
+  """
+  echo start run_kb_ref_with_jq_commands
+  /usr/local/bin/$script_name 'index.idx' 't2g.txt' $transcriptome_file $genome_fasta_gz $gene_gtf $jq_commands_file
+  echo finished run_kb_ref_with_jq_commands
+  """
+}
+
 
 process run_download_kb_idx {
   label 'download_kb_idx'

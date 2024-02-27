@@ -56,3 +56,4 @@
 2024-01-24 12:43:34	2m 25s	elegant_wescoff	OK	6e47c48f916bce74b03088b0aa1d6235	0cbd4d64-b857-4807-b564-11778fa2d750	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_atac.config -profile google_batch_profile -with-tower -resume
 2024-01-24 12:52:37	2m 38s	hopeful_jang	ERR	6e47c48f916bce74b03088b0aa1d6235	0cbd4d64-b857-4807-b564-11778fa2d750	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_atac.config -profile google_batch_profile -with-tower -resume
 2024-01-24 12:59:49	-	thirsty_brazil	-	6e47c48f916bce74b03088b0aa1d6235	0cbd4d64-b857-4807-b564-11778fa2d750	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_atac.config -profile google_batch_profile -with-tower -resume
+2024-02-14 21:57:18	24m 46s	jovial_swirles	OK	c0338550c1b6fe9c1678edfd6789433b	0cbd4d64-b857-4807-b564-11778fa2d750	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_atac.config -profile google_batch_profile -process.echo -with-tower -resume
