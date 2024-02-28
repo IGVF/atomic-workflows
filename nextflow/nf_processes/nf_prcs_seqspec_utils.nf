@@ -5,7 +5,7 @@ nextflow.enable.dsl=2
 
 process run_seqspec_test {
   debug true
-  label 'seqspec_local'
+  label 'seqspec'
   output:
     path "seqspec.print.out" , emit: seqspec_out
   script:
@@ -24,7 +24,7 @@ process run_seqspec_test {
  //   path "seqspec.print.out" , emit: seqspec_out
 process run_seqspec_print {
   debug true
-  label 'seqspec_local'
+  label 'seqspec'
   input:
     path(spec_yaml)
   output:
@@ -41,12 +41,36 @@ process run_seqspec_print {
   """
 }
 
+// TODO: see how to pass the names of the files and not the full FASTQ file
+// seqspec index -t kb -m rna -r $fastq1,$fastq2 $spec_yaml > seqspec.technology.out
+process run_retrieve_seqspec_technology_rna {
+  debug true
+  label 'seqspec_technology'
+  input:
+    val script_name
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file),  val(seqspec_rna_region_id)
+    path updated_seqspec_modify_rna
+  output:
+    path "seqspec.rna.technology.out" , emit: seqspec_rna_technology_out
+  script:
+  """
+    echo start run_retrieve_seqspec_technology_rna
+    echo spec_yaml is $spec_yaml
+    echo fastq1 is $fastq1
+    echo fastq2 is $fastq2
+    /usr/local/bin/$script_name $fastq1 $fastq2 $updated_seqspec_modify_rna $seqspec_rna_region_id seqspec.rna.technology.out
+    cat seqspec.rna.technology.out
+    echo finished run_retrieve_seqspec_technology_rna   
+  """
+}
+
+/*
 // seqspec index -t kb -m rna -r $RNA_R1_fastq_gz,$RNA_R2_fastq_gz $spec_yaml
 process run_seqspec_index_rna_kb {
   debug true
-  label 'seqspec_local'
+  label 'seqspec'
   input:
-    tuple path(fastq1), path(fastq2), path(fastq3), path(spec_yaml), path(whitelist_file)
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file),  val(seqspec_rna_region_id)
     path modified_spec_yaml
   output:
     path "seqspec.technology.out" , emit: seqspec_technology_out_file
@@ -55,19 +79,19 @@ process run_seqspec_index_rna_kb {
     echo spec_yaml is $modified_spec_yaml
     echo RNA_R1_fastq_gz is $fastq1
     echo RNA_R2_fastq_gz is $fastq2
-    echo RNA_R3_fastq_gz is $fastq3
     
     seqspec index -t kb -m rna -r $fastq1,$fastq2 $modified_spec_yaml > seqspec.technology.out
     cat seqspec.technology.out
     echo finished run_seqspec_index_rna   
   """
 }
+*/ 
 
 process run_seqspec_check {
   debug true
-  label 'seqspec_local'
+  label 'seqspec'
   input:
-    tuple path(fastq1), path(fastq2), path(fastq3), path(spec_yaml), path(whitelist_file)
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file),  val(seqspec_rna_region_id)
   output:
     path "seqspec.check.out" , emit: seqspec_check_out
   script:
@@ -81,31 +105,38 @@ process run_seqspec_check {
 
 process run_seqspec_modify_rna {
   debug true
-  label 'seqspec_local'
+  label 'seqspec_modify'
+  
   input:
-    tuple path(fastq1), path(fastq2), path(fastq3), path(spec_yaml), path(whitelist_file)
+    val script_name
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file), val(seqspec_rna_region_id)
+  
   output:
-    path "nf_seqspec_modify.yaml", emit: seqspec_modify_rna_out
+    path "seqspec_modify_rna_file_names.yaml", emit: seqspec_modify_rna_out
+  
   script:
   """
-  echo start run_seqspec_modify_rna
-  echo $fastq1
-  echo $fastq2
-  echo $fastq3
-  echo $spec_yaml
-  seqspec modify -m rna -o modrna1.yaml -r rna_R1.fastq.gz --region-id $fastq1 $spec_yaml
-  seqspec modify -m rna -o modrna2.yaml -r rna_R2.fastq.gz --region-id $fastq2 modrna1.yaml
-  seqspec modify -m rna -o nf_seqspec_modify.yaml -r rna_R2.fastq.gz --region-id $fastq2 modrna2.yaml
-  echo finished seqspec modify rna
+  echo "=== Start run_seqspec_modify_rna ==="
+  echo " Input Fastq Files:"
+  echo " R1: $fastq1"
+  echo " R2: $fastq2"
+  echo " Specification YAML: $spec_yaml"
+  echo " Whitelist File: $whitelist_file"
+  echo " seqspec_rna_region_id is: $seqspec_rna_region_id"
+  
+  /usr/local/bin/$script_name $fastq1 $fastq2 $spec_yaml seqspec_modify_rna_file_names.yaml $seqspec_rna_region_id
+  
+  echo "=== Finished seqspec modify rna ==="
   """
 }
 
+/*
 
 process run_seqspec_modify_atac {
   debug true
-  label 'seqspec_local'
+  label 'seqspec'
   input:
-    tuple path(fastq1), path(fastq2),path(fastq3), path(spec_yaml),path(whitelist_file)
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file),  val(seqspec_rna_region_id)
   output:
     path "nf_seqspec_modify.yaml", emit: seqspec_modify_atac_out
   script:
@@ -113,14 +144,15 @@ process run_seqspec_modify_atac {
   echo start run_seqspec_modify_atac
   echo $fastq1
   echo $fastq2
-  echo $fastq3
+
   echo $spec_yaml
   ls
   # if fastq3 is na.fasq - nothing will happen in the spec
   seqspec modify -m atac -o modatac1.yaml -r atac_R1.fastq.gz --region-id $fastq1 $spec_yaml
   seqspec modify -m atac -o modatac2.yaml -r atac_R2.fastq.gz --region-id $fastq2 modatac1.yaml
-  seqspec modify -m atac -o modatac3.yaml -r atac_R3.fastq.gz --region-id $fastq3 modatac2.yaml
+  #seqspec modify -m atac -o modatac3.yaml -r atac_R3.fastq.gz --region-id $fastq3 modatac2.yaml
   seqspec modify -m atac -o nf_seqspec_modify.yaml -r atac_R3.fastq.gz --region-id $fastq3 modatac3.yaml
   echo finished seqspec modify atac
   """
 }
+*/

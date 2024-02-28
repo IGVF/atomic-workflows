@@ -74,7 +74,7 @@ process run_cellatlas_build {
     val modality
     path genome_fasta_gz
     path genes_gtf
-    tuple path(fastq1), path(fastq2), path(seqspec_yaml), path(whitelist)
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file), val(seqspec_rna_region_id)
 
   // Define output files
   output:
@@ -84,7 +84,7 @@ process run_cellatlas_build {
   script:
   """
     echo 'calling cellatlas build'
-    /usr/local/bin/$script_name 'cellatlas_out' $modality $seqspec_yaml $genome_fasta_gz $genes_gtf $fastq1 $fastq2
+    /usr/local/bin/$script_name cellatlas_out $modality $spec_yaml $genome_fasta_gz $genes_gtf $fastq1 $fastq2
     ls
   """
 }

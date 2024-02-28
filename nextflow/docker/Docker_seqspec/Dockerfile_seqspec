@@ -1,36 +1,16 @@
-# Use a base image with Python
 FROM continuumio/miniconda3
 
-# Install wget, tar, and other basic utilities
-RUN apt-get update && apt-get install -y wget tar make g++ autoconf cmake git build-essential
+RUN conda create -n seqspec_env -y python=3.8 && \
+    conda run -n seqspec_env pip install seqspec && \
+    echo "source activate seqspec_env" > ~/.bashrc
+    
 
-# Install seqspec
-RUN pip install seqspec
-
-# dev environment
-#RUN pip install --quiet git+https://github.com/IGVF/seqspec.git
-
-# # # FOR DEBUG on local machine
-# # # Create a directory for Jupyter notebooks
-# RUN mkdir /notebooks
-
-# # Copy spec.yaml, copy the notebook
-# COPY spec.yaml /notebooks
-# COPY preprocess.ipynb /notebooks
-
-# # Install Jupyter Notebook
-# RUN pip install jupyter
-
-# # Set the working directory to /notebooks
-# WORKDIR /notebooks
-
-# # Expose port 8888 for Jupyter Notebook
-# EXPOSE 8888
-
-# # Start Jupyter Notebook on container startup
-# CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+# Set default command to start /bin/bash
+ENV PATH /usr/local/bin:/opt/conda/envs/seqspec_env/bin:$PATH
+ENV CONDA_DEFAULT_ENV seqspec_env
 
 
 # docker build -t eilalan/seqspec_env:latest -f Dockerfile_seqspec .
-# docker run -it eilalan/seqspec_env:latest bash
+# docker run -it eilalan/seqspec_env:latest
 # docker push eilalan/seqspec_env:latest
+

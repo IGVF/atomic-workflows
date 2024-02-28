@@ -1,0 +1,20 @@
+FROM continuumio/miniconda3
+
+RUN conda create -n kb_seqspec_env -y python=3.8 && \
+    conda run -n kb_seqspec_env pip install kb-python && \
+    conda run -n kb_seqspec_env pip install seqspec && \
+    echo "source activate kb_seqspec_env" > ~/.bashrc
+    
+    
+# if needed gget: pip install gget
+    
+
+# Set default command to start /bin/bash
+ENV PATH /usr/local/bin:/opt/conda/envs/kb_seqspec_env/bin:$PATH
+ENV CONDA_DEFAULT_ENV kb_seqspec_env
+
+
+# docker build -t eilalan/kb_seqspec_env:latest -f Dockerfile_kb_seqspec .
+# docker run -it eilalan/kb_seqspec_env:latest
+# docker push eilalan/kb_seqspec_env:latest
+

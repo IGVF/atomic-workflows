@@ -74,6 +74,7 @@ process run_download_kb_idx {
 
 
 // kb count -i index.idx -g t2g.txt -x 0,0,16:0,16,28:1,0,102 -w RNA-737K-arc-v1.txt -o rna_cellatlas_out --h5ad -t 2 fastqs/rna_R1_SRR18677629.fastq.gz fastqs/rna_R2_SRR18677629.fastq.gz
+/*
 process run_kb_count {
   label 'kb_count'
   debug true
@@ -82,7 +83,7 @@ process run_kb_count {
     path index_file
     path t2g_txt
     path gtf_gz
-    tuple path(fastq1), path(fastq2), path(fastq3), path(spec_yaml), path(whitelist_file)
+    tuple path(fastq1), path(fastq2), path(fastq3), path(spec_yaml), path(whitelist_file),  
     path technology
   output:
     path 'out/counts_unfiltered/adata.h5ad', emit: adata_out_h5ad
@@ -99,5 +100,37 @@ process run_kb_count {
   mkdir out
   kb count -i $index_file -g $t2g_txt -x \$technology_string -w $whitelist_file -o out --h5ad -t $task.cpus $fastq1 $fastq2
   echo finished run_kb_count
+  """
+}
+
+*/
+
+// TODO: fix the CPU parameter
+process run_kb_count_rna {
+  label 'kb_count_rna'
+  debug true
+  input:
+    val script_name
+    path index_file
+    path t2g_txt
+    path gtf_gz
+    tuple path(fastq1), path(fastq2), path(fastq3), path(spec_yaml), path(whitelist_file),  val(seqspec_rna_region_id)
+    path technology_file
+    val cpus
+  output:
+    path 'out/counts_unfiltered/adata.h5ad', emit: adata_out_h5ad
+  script:
+  """
+  echo start run_kb_count_rna !!!
+  echo $index_file
+  echo $t2g_txt
+  echo $fastq1
+  echo $fastq2
+  echo $technology
+  
+  /usr/local/bin/$script_name $index_file $t2g_txt $technology_file $whitelist_file $fastq1 $fastq2 $cpus
+  $fastq1 $fastq2 $spec_yaml "rna" $technology
+  
+  echo finished run_kb_count_rna
   """
 }
