@@ -64,28 +64,6 @@ process run_retrieve_seqspec_technology_rna {
   """
 }
 
-/*
-// seqspec index -t kb -m rna -r $RNA_R1_fastq_gz,$RNA_R2_fastq_gz $spec_yaml
-process run_seqspec_index_rna_kb {
-  debug true
-  label 'seqspec'
-  input:
-    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file),  val(seqspec_rna_region_id)
-    path modified_spec_yaml
-  output:
-    path "seqspec.technology.out" , emit: seqspec_technology_out_file
-  script:
-  """
-    echo spec_yaml is $modified_spec_yaml
-    echo RNA_R1_fastq_gz is $fastq1
-    echo RNA_R2_fastq_gz is $fastq2
-    
-    seqspec index -t kb -m rna -r $fastq1,$fastq2 $modified_spec_yaml > seqspec.technology.out
-    cat seqspec.technology.out
-    echo finished run_seqspec_index_rna   
-  """
-}
-*/ 
 
 process run_seqspec_check {
   debug true

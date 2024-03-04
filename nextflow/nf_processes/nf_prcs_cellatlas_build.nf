@@ -79,7 +79,7 @@ process run_cellatlas_build {
   // Define output files
   output:
     path 'cellatlas_out', emit: cellatlas_out
-    path 'cellatlas_out/cellatlas_info.json', emit: cellatlas_out_json
+    path 'cellatlas_out/cellatlas_info.json', emit: cellatlas_run_info_out_json
 
   script:
   """

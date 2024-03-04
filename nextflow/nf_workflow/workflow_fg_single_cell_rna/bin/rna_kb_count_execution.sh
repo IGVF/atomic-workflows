@@ -17,6 +17,7 @@ fastq1="$5"
 fastq2="$6"
 cpus="$7"
 
+
 # Extract technology_string from technology_file
 technology_string=$(cat "$technology_file")
 

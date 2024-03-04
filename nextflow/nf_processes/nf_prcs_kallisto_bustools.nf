@@ -39,11 +39,11 @@ process run_kb_ref_with_jq_commands {
     path gene_gtf
   output:
     path "index.idx",emit: index_out
-    path  "t2g.txt",emit: t2g_txt_out
+    path "t2g.txt",emit: t2g_txt_out
   script:
   """
   echo start run_kb_ref_with_jq_commands
-  /usr/local/bin/$script_name 'index.idx' 't2g.txt' $transcriptome_file $genome_fasta_gz $gene_gtf $jq_commands_file
+  /usr/local/bin/$script_name index.idx t2g.txt $transcriptome_file $genome_fasta_gz $gene_gtf $jq_commands_file
   echo finished run_kb_ref_with_jq_commands
   """
 }
@@ -74,36 +74,7 @@ process run_download_kb_idx {
 
 
 // kb count -i index.idx -g t2g.txt -x 0,0,16:0,16,28:1,0,102 -w RNA-737K-arc-v1.txt -o rna_cellatlas_out --h5ad -t 2 fastqs/rna_R1_SRR18677629.fastq.gz fastqs/rna_R2_SRR18677629.fastq.gz
-/*
-process run_kb_count {
-  label 'kb_count'
-  debug true
-  // conda 'kb-python'
-  input:
-    path index_file
-    path t2g_txt
-    path gtf_gz
-    tuple path(fastq1), path(fastq2), path(fastq3), path(spec_yaml), path(whitelist_file),  
-    path technology
-  output:
-    path 'out/counts_unfiltered/adata.h5ad', emit: adata_out_h5ad
-  script:
-  """
-  echo start run_kb_count !!!
-  echo $index_file
-  echo $t2g_txt
-  echo $fastq1
-  echo $fastq2
-  echo $technology
-  technology_string=\$(cat $technology)
-  echo \$technology_string
-  mkdir out
-  kb count -i $index_file -g $t2g_txt -x \$technology_string -w $whitelist_file -o out --h5ad -t $task.cpus $fastq1 $fastq2
-  echo finished run_kb_count
-  """
-}
 
-*/
 
 // TODO: fix the CPU parameter
 process run_kb_count_rna {
@@ -114,11 +85,15 @@ process run_kb_count_rna {
     path index_file
     path t2g_txt
     path gtf_gz
-    tuple path(fastq1), path(fastq2), path(fastq3), path(spec_yaml), path(whitelist_file),  val(seqspec_rna_region_id)
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file), val(seqspec_rna_region_id)
     path technology_file
     val cpus
   output:
     path 'out/counts_unfiltered/adata.h5ad', emit: adata_out_h5ad
+    path 'out/counts_unfiltered/cells_x_genes.barcodes.txt', emit: cells_x_genes_barcodes_out
+    path 'out/run_info.json', emit: kb_count_run_info_json
+    path 'out/inspect.json', emit: kb_count_inspect_json
+    
   script:
   """
   echo start run_kb_count_rna !!!
@@ -126,11 +101,41 @@ process run_kb_count_rna {
   echo $t2g_txt
   echo $fastq1
   echo $fastq2
-  echo $technology
+  echo $technology_file
   
   /usr/local/bin/$script_name $index_file $t2g_txt $technology_file $whitelist_file $fastq1 $fastq2 $cpus
-  $fastq1 $fastq2 $spec_yaml "rna" $technology
   
   echo finished run_kb_count_rna
   """
 }
+
+process run_jq_on_kb_count_outputs_to_logs {
+  label 'kb_count_output_jq'
+  debug true
+  input:
+    val script_name
+    val output_file_name
+    path run_info_json
+    path inspect_json
+  output:
+    path '${output_file_name}', emit: kb_count_out_json_files
+  script:
+  """
+  echo start run_jq_on_kb_count_outputs_to_logs !!!
+ 
+  /usr/local/bin/$script_name $run_info_json $inspect_json $output_file_name
+  
+  echo finished run_jq_on_kb_count_outputs_to_logs
+  """
+}
+
+
+
+/*
+
+interleaved_files_string=$(paste -d' ' <(printf "%s\n" BMMC_single_donor_RNA_L001_R1_corrected.fastq.gz BMMC_single_donor_RNA_L002_R1_corrected.fastq.gz) <(printf "%s\n" BMMC_single_donor_RNA_L001_R2_corrected.fastq.gz BMMC_single_donor_RNA_L002_R2_corrected.fastq.gz) | tr -s ' ')
+
+
+kb count -i index.idx -g t2g.txt -x 1,0,24:1,24,34:0,0,50 -w sai_192_whitelist.txt -o BMMC-single-donor.rna.align.cellatlas.hg38 --h5ad -t 2 $interleaved_files_string
+
+*/
