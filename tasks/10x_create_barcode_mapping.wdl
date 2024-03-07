@@ -38,9 +38,9 @@ task mapping_tenx_barcodes {
     command <<<
         set -e
 
-        if [ "$(zcat ~{whitelist_atac} | wc -l)" -eq "$(zcat ~{whitelist_rna} | wc -l)" ]; then
-            zcat ~{whitelist_atac} | tr ACGTacgt TGCAtgca | rev | paste -d '\t' - <(zcat ~{whitelist_rna}) > ~{barcode_conversion_dict}
-            paste -d '\t' <(zcat ~{whitelist_atac}) <(zcat ~{whitelist_rna}) >> ~{barcode_conversion_dict}
+        if [ "$(cat ~{whitelist_atac} | wc -l)" -eq "$(cat ~{whitelist_rna} | wc -l)" ]; then
+            cat ~{whitelist_atac} | tr ACGTacgt TGCAtgca | rev | paste -d '\t' - <(cat ~{whitelist_rna}) > ~{barcode_conversion_dict}
+            paste -d '\t' <(cat ~{whitelist_atac}) <(cat ~{whitelist_rna}) >> ~{barcode_conversion_dict}
         fi
         # Fix for chromap.
         awk -v OFS="\t" '{print $2,$1}' barcode_conversion_dict.csv > temp
