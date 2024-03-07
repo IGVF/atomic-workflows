@@ -21,7 +21,8 @@ task qc_atac {
         File? tss
         File? barcode_conversion_dict
 
-        Int? fragment_cutoff = 10
+        Int? fragment_cutoff = 500 # This is the fragment cutoff for snapatac
+        Int? tsse_cutoff = 10 # This is the TSS enrichment cutoff for snapatac
         File? gtf
         String? genome_name
         String? prefix
@@ -82,15 +83,7 @@ task qc_atac {
         fi
 
         echo '------ Number of barcodes BEFORE filtering------' 1>&2
-        wc -l temp_summary
-
-        echo '------ Filtering fragments ------' 1>&2
-        time awk -v threshold=~{fragment_cutoff} -v FS='[,|\t]' 'NR==FNR && ($2-$3-$4-$5)>threshold {Arr[$1]++;next} Arr[$4] {print $0}' temp_summary <( zcat in.fragments.tsv.gz )  | bgzip -l 5 -@ ~{cpus} -c > no-singleton.bed.gz
-        
-        echo '------ Number of barcodes AFTER filtering------' 1>&2
-        cat temp_summary | grep -v barcode | awk -v FS="," -v threshold=~{fragment_cutoff} '($2-$3-$4-$5)>threshold' | wc -l
-        
-        tabix --zero-based --preset bed no-singleton.bed.gz
+        wc -l temp_summary > barcode_number_raw.txt
 
         # TSS enrichment stats
         echo '------ START: Compute TSS enrichment bulk ------' 1>&2
@@ -99,7 +92,7 @@ task qc_atac {
             -p ~{cpus} \
             --regions ~{tss} \
             --prefix "~{prefix}.atac.qc.~{genome_name}" \
-            no-singleton.bed.gz
+            in.fragments.tsv.gz
 
         echo '------ START: Compute TSS enrichment snapatac2 ------' 1>&2
         time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv" ~{fragment_cutoff}
@@ -130,6 +123,7 @@ task qc_atac {
     >>>
 
     output {
+        Int atac_qc_barcode_number_raw = read_int("barcode_number_raw.txt")
         File atac_qc_final_hist_png = hist_log_png
         File atac_qc_final_hist = hist_log
 
