@@ -8,8 +8,8 @@ nextflow.enable.dsl=2
 //    echo "Script path: \$script_path"
 //    echo "ls \$script_path"
     
-process scrna_plot_qc_metrics_prcs {
-  label 'scrna_qc_plot'
+process rna_plot_qc_metrics_prcs {
+  label 'rna_qc_plot'
   debug true 
   input:
     val r_qc_plot_script
@@ -26,8 +26,8 @@ process scrna_plot_qc_metrics_prcs {
     path "gene_umi_plot_file_output.png", emit: gene_umi_plot_file
   script:
   """
-    # Print start of scrna_plot_qc_metrics_prcs
-    echo "Starting scrna_plot_qc_metrics_prcs..."
+    # Print start of rna_plot_qc_metrics_prcs
+    echo "Starting rna_plot_qc_metrics_prcs..."
     
     # Print input values for validation
     echo "R QC Plot Script: $r_qc_plot_script"
@@ -46,7 +46,7 @@ process scrna_plot_qc_metrics_prcs {
   
     echo "Executing main script..."
     Rscript \$script_path $r_qc_plot_helper_script $rna_qc_metrics_tsv $umi_cutoff $gene_cutoff $umi_rank_plot_all_output $umi_rank_plot_top_output $gene_umi_plot_file_output
-    # Print finish of scrna_plot_qc_metrics_prcs
-    echo "Finished scrna_plot_qc_metrics_prcs."
+    # Print finish of rna_plot_qc_metrics_prcs
+    echo "Finished rna_plot_qc_metrics_prcs."
   """
 }

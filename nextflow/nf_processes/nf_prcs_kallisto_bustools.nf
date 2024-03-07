@@ -1,11 +1,5 @@
-
 // Enable DSL2
 nextflow.enable.dsl=2
-
-// cell atlas commnads:
-// #### RNA
-//kb ref -i rna_cellatlas_out/index.idx -g rna_cellatlas_out/t2g.txt -f1 // rna_cellatlas_out/transcriptome.fa http://ftp.ensembl.org/pub/release-109/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz http://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz
-//kb count -i rna_cellatlas_out/index.idx -g rna_cellatlas_out/t2g.txt -x 0,0,16:0,16,28:1,0,102 -w RNA-737K-arc-v1.txt -o rna_cellatlas_out --h5ad -t 2 fastqs/rna_R1_SRR18677629.fastq.gz fastqs/rna_R2_SRR18677629.fastq.gz
 
 //kb ref -i rna_cellatlas_out/index.idx -g rna_cellatlas_out/t2g.txt -f1 rna_cellatlas_out/transcriptome.fa http://ftp.ensembl.org/pub/release-109/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz http://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz
 
@@ -49,34 +43,13 @@ process run_kb_ref_with_jq_commands {
 }
 
 
-process run_download_kb_idx {
-  label 'download_kb_idx'
-  debug true
-  input:
-    val org
-  output:
-    path "index.idx",emit: index_out
-    path  "t2g.txt",emit: t2g_txt_out
-  script:
-  """
-  echo kb ref -d $org -i index.idx -g t2g.txt --verbose
-  kb ref -d $org -i index.idx -g t2g.txt --verbose
-  ls
-  """
-}
-
-// !time kb count -i ref_cDNA/transcriptome.idx 
-// -g ref_cDNA/transcripts_to_genes.txt 
-// -x $(seqspec index -t kb -m RNA -r RNA-R1.fastq.gz,RNA-R2.fastq.gz broad_human_jamboree_test_spec-eugenio-fix.yaml)
-//  -o out/ 
-// -w sai_192_whitelist.txt 
-// rna/BMMC_single_donor_RNA_L001_R1.fastq.gz rna/BMMC_single_donor_RNA_L001_R2.fastq.gz
-
-
-// kb count -i index.idx -g t2g.txt -x 0,0,16:0,16,28:1,0,102 -w RNA-737K-arc-v1.txt -o rna_cellatlas_out --h5ad -t 2 fastqs/rna_R1_SRR18677629.fastq.gz fastqs/rna_R2_SRR18677629.fastq.gz
-
 
 // TODO: fix the CPU parameter
+// path 'out/counts_unfiltered/adata.h5ad', emit: adata_out_h5ad
+// path 'out/counts_unfiltered/cells_x_genes.barcodes.txt', emit: cells_x_genes_barcodes_out
+// path 'out/run_info.json', emit: kb_count_run_info_json
+// path 'out/inspect.json', emit: kb_count_inspect_json
+    
 process run_kb_count_rna {
   label 'kb_count_rna'
   debug true
@@ -85,14 +58,14 @@ process run_kb_count_rna {
     path index_file
     path t2g_txt
     path gtf_gz
-    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file), val(seqspec_rna_region_id)
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file), val(seqspec_rna_region_id), val(subpool)
     path technology_file
     val cpus
   output:
-    path 'out/counts_unfiltered/adata.h5ad', emit: adata_out_h5ad
-    path 'out/counts_unfiltered/cells_x_genes.barcodes.txt', emit: cells_x_genes_barcodes_out
-    path 'out/run_info.json', emit: kb_count_run_info_json
-    path 'out/inspect.json', emit: kb_count_inspect_json
+    path "out/counts_unfiltered/adata.h5ad", emit: adata_out_h5ad
+    path "out/counts_unfiltered/cells_x_genes.barcodes.txt", emit: cells_x_genes_barcodes_out
+    path "out/run_info.json", emit: kb_count_run_info_json
+    path "out/inspect.json", emit: kb_count_inspect_json
     
   script:
   """
@@ -118,16 +91,25 @@ process run_jq_on_kb_count_outputs_to_logs {
     path run_info_json
     path inspect_json
   output:
-    path '${output_file_name}', emit: kb_count_out_json_files
+    path "${output_file_name.baseName.replace('.', '_')}.json", emit: kb_count_out_json_files
+
   script:
-  """
-  echo start run_jq_on_kb_count_outputs_to_logs !!!
- 
-  /usr/local/bin/$script_name $run_info_json $inspect_json $output_file_name
+  """  
+  echo '------ Start run_jq_on_kb_count_outputs_to_logs ------'
+  echo 'Input script_name: $script_name'
+  echo 'Input output_file_name: $output_file_name'
+  echo 'Input run_info_json: $run_info_json'
+  echo 'Input inspect_json: $inspect_json'
   
-  echo finished run_jq_on_kb_count_outputs_to_logs
+  output_path="${output_file_name.baseName.replace('.', '_')}.json"
+  echo "Constructed output path: $output_path"
+ 
+  /usr/local/bin/$script_name $run_info_json $inspect_json $output_path
+  
+  echo '------ Finished run_jq_on_kb_count_outputs_to_logs ------'
   """
 }
+
 
 
 

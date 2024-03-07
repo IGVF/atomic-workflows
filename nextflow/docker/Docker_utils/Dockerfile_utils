@@ -4,6 +4,7 @@ FROM continuumio/miniconda3
 RUN conda create -n utils_env -y python=3.8 && \
     conda install -y -n utils_env -c conda-forge py-bgzip jq && \
     conda install -y -n utils_env -c bioconda tabix && \
+    conda install -y -n utils_env -c anaconda h5py && \
     echo "source activate utils_env" > ~/.bashrc
 
 # Set default command to start /bin/bash

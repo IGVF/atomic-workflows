@@ -87,7 +87,7 @@ process run_seqspec_modify_rna {
   
   input:
     val script_name
-    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file), val(seqspec_rna_region_id)
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file), val(seqspec_rna_region_id), val(subpool)
   
   output:
     path "seqspec_modify_rna_file_names.yaml", emit: seqspec_modify_rna_out

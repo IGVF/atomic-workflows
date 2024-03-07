@@ -3,8 +3,9 @@ nextflow.enable.dsl=2
 
 // Define the process
 // TODO: copy from merge_log docker where the conda envirnment is initiated when the container is executed
-process scrna_calculate_qc_metrics {
-  label 'scrna_qc_calculate'
+// process scrna_calculate_qc_metrics {
+process rna_calculate_qc_metrics {
+  label 'rna_qc_calculate'
   debug true
   input:
     val qc_python_script

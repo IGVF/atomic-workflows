@@ -15,28 +15,33 @@ process run_add_subpool_to_rna_kb_cout_outputs {
     val subpool_script_cell_gene
     path kb_count_h5ad_file
     path kb_count_fragments_file
-    tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix)
-  
-  output:
-    path "${input_h5ad_file.baseName}_${suffix}.h5ad", emit: kb_count_h5ad_file_subpppl
-    path "${kb_count_fragments_file.baseName}_${suffix}.txt", emit: kb_count_fragments_file_subpool
+    tuple path(fastq1), path(fastq2), path(spec_yaml), path(whitelist_file), val(seqspec_rna_region_id), val(subpool)
 
-  // Script section
+  output:
+    path "${kb_count_h5ad_file.baseName}_${subpool}.h5ad", emit: kb_count_h5ad_file_subpool
+    path "${kb_count_fragments_file.baseName}_${subpool}.txt", emit: kb_count_fragments_file_subpool
+
+  // Declare variables used in the output section
   script:
   """
+
     echo '------ Start run_add_subpool_to_rna_kb_cout_outputs ------'
-    echo 'Input count_fragments_out is $count_fragments_out'
-    echo 'Input subpool is $subpool'
-    echo 'Input subpool_script is $subpool_script'
-    parser.add_argument("input_h5ad_file", help="Path to the input h5ad file")
-    parser.add_argument("suffix", help="Suffix to append")
-    parser.add_argument("output_h5ad_file", help="Path to the output h5ad file")
-    /usr/local/bin/$subpool_script_modify_h5ad --input_h5ad_file $kb_count_h5ad_file --suffix subpool --output_h5ad_file ${input_h5ad_file.baseName}_${suffix}.h5ad
+    echo 'Input subpool_script_modify_h5ad: $subpool_script_modify_h5ad'
+    echo 'Input subpool_script_cell_gene: $subpool_script_cell_gene'
+    echo 'Input kb_count_h5ad_file: $kb_count_h5ad_file'
+    echo 'Input kb_count_fragments_file: $kb_count_fragments_file'
+    echo 'Input fastq1: $fastq1'
+    echo 'Input fastq2: $fastq2'
+    echo 'Input spec_yaml: $spec_yaml'
+    echo 'Input whitelist_file: $whitelist_file'
+    echo 'Input seqspec_rna_region_id: $seqspec_rna_region_id'
+    echo 'Input subpool: $subpool'
     
-    echo 'call for the update of the cells_x_genes.barcodes.txt'
-    /usr/local/bin/$subpool_script_cell_gene $kb_count_fragments_file ${kb_count_fragments_file.baseName}_${suffix}.txt
+    /usr/local/bin/$subpool_script_modify_h5ad --input_h5ad_file $kb_count_h5ad_file --subpool $subpool --output_h5ad_file ${kb_count_h5ad_file.baseName}_${subpool}.h5ad
+    
+    echo 'Output H5AD file: ${kb_count_h5ad_file.baseName}_${subpool}.h5ad'
+    echo 'Output Fragments file: ${kb_count_fragments_file.baseName}_${subpool}.txt'
     
     echo '------ Finished run_add_subpool_to_rna_kb_cout_outputs ------'
   """
 }
-

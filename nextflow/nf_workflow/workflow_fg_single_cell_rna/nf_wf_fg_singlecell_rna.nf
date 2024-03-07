@@ -8,12 +8,13 @@ include {run_retrieve_seqspec_technology_rna;run_seqspec_modify_rna} from './../
 
 workflow {
     println 'in the RNA workflow'
-    // STEP 1: cell input processing
+    // STEP 1: cell input processing    
     files_ch = Channel
-        .fromPath(params.FASTQS_SPEC_CH)
-        .splitCsv(header: true, sep: '\t')
-        .map { row -> tuple(file(row.R1_FASTQ_GZ), file(row.R2_FASTQ_GZ), file(row.seqspec), file(row.whitelist), row.seqspec_rna_region_id) }
-        .set { sample_run_ch }
+    .fromPath(params.FASTQS_SPEC_CH)
+    .splitCsv(header: true, sep: '\t')
+    .map { row -> tuple(file(row.R1_FASTQ_GZ), file(row.R2_FASTQ_GZ), file(row.seqspec), file(row.whitelist), row.seqspec_rna_region_id, row.subpool) }
+    .set { sample_run_ch }
+
     //--------STEP 1 END -------------
 
     // STEP 2: call cellatlas build
@@ -41,29 +42,48 @@ workflow {
     seqspec_modify_rna_out=run_seqspec_modify_rna.out.seqspec_modify_rna_out
     println ('after run_seqspec_modify_rna')
     
-     // STEP 5.2: get the technology from the modified seqspec
-    run_retrieve_seqspec_technology_rna(params.RETRIEVE_SEQSPEC_TECHNOLOGY,sample_run_ch,seqspec_modify_rna_out)
-    seqspec_rna_technology_out=run_retrieve_seqspec_technology_rna.out.seqspec_rna_technology_out
+    // STEP 5.2: get the technology from the modified seqspec. TODO: uncomment
+    // run_retrieve_seqspec_technology_rna(params.RETRIEVE_SEQSPEC_TECHNOLOGY,sample_run_ch,seqspec_modify_rna_out)
+    // seqspec_rna_technology_out=run_retrieve_seqspec_technology_rna.out.seqspec_rna_technology_out
     //--------STEP 5 END -------------
     
     
     // STEP 6: call kb count
+    // 6.1
     // TODO: comment debug. this is the file content"1,0,24:1,24,34:0,0,50"
-    seqspec_rna_technology_out=channel.value(file(params.KB_COUNT_TECHNOLGY_FILE_DENUG))
-    run_kb_count_rna(params.EXECUTE_KB_COUNT_RNA_SCRIPT,index_out,t2g_txt_out,genes_gtf,sample_run_ch,seqspec_rna_technology_out,params.KB_COUNT_CPUS)
-    adata_out_h5ad=run_kb_count_rna.out.adata_out_h5ad
-    kb_count_run_info_json=run_kb_count_rna.out.kb_count_run_info_json
-    kb_count_inspect_json=run_kb_count_rna.out.kb_count_inspect_json
+    seqspec_rna_technology_out=channel.value(file(params.KB_COUNT_TECHNOLGY_FILE_DEBUG))
+
+    //run_kb_count_rna(params.EXECUTE_KB_COUNT_RNA_SCRIPT,index_out,t2g_txt_out,genes_gtf,sample_run_ch,seqspec_rna_technology_out,params.KB_COUNT_CPUS)
+    //adata_out_h5ad=run_kb_count_rna.out.adata_out_h5ad
+    //kb_count_run_info_json=run_kb_count_rna.out.kb_count_run_info_json
+    //kb_count_inspect_json=run_kb_count_rna.out.kb_count_inspect_json
+    //cells_x_genes_barcodes_out=run_kb_count_rna.out.cells_x_genes_barcodes_out
     
-    cells_x_genes_barcodes_out=run_kb_count_rna.out.cells_x_genes_barcodes_out
+    // 6.2
+    // debug: // TODO: comment debug. 
+    adata_out_h5ad = channel.value(file(params.adata_out_h5ad_debug))
+    kb_count_run_info_json=channel.value(file(params.kb_count_run_info_json_debug))
+    kb_count_inspect_json=channel.value(file(params.kb_count_inspect_json_debug))
+    cells_x_genes_barcodes_out=channel.value(file(params.cells_x_genes_barcodes_out_debug))
     //--------STEP 6 END -------------
     
-    
     // STEP 7: call subpool
+    println "Calling run_add_subpool_to_rna_kb_cout_outputs with the following inputs:"
+    println "params.RNA_MODIFY_KB_COUNT_H5AD_WITH_SUBPOOL: ${params.RNA_MODIFY_KB_COUNT_H5AD_WITH_SUBPOOL}"
+    println "params.RNA_MODIFY_CELL_GENE_WITH_SUBPOOL: ${params.RNA_MODIFY_CELL_GENE_WITH_SUBPOOL}"
+    println "adata_out_h5ad: ${adata_out_h5ad}"
+    println "cells_x_genes_barcodes_out: ${cells_x_genes_barcodes_out}"
     run_add_subpool_to_rna_kb_cout_outputs(params.RNA_MODIFY_KB_COUNT_H5AD_WITH_SUBPOOL,params.RNA_MODIFY_CELL_GENE_WITH_SUBPOOL,adata_out_h5ad,cells_x_genes_barcodes_out,sample_run_ch) 
     //--------STEP 7 END -------------
     
+    
     // STEP 8: call cellatlas outputs to logs
-    run_jq_on_kb_count_outputs_to_logs(params.RNA_JQ_CELLATLAS_OUTPUT_TO_LOG,kb_count_run_info_json,kb_count_inspect_json,params.LOG_FILE_NAME)
+    // run_jq_on_kb_count_outputs_to_logs(params.RNA_JQ_CELLATLAS_OUTPUT_TO_LOG,kb_count_run_info_json,kb_count_inspect_json,params.LOG_FILE_NAME)
+    //--------STEP 8 END -------------
+    
+    
+    // STEP 9: prepare QC graphs for RNA
+    // rna_calculate_qc_metrics - nf_prcs_rna_qc.nf
+    // rna_plot_qc_metrics_prcs - nf_prcs_rna_qc_plots.nf
     
 }
