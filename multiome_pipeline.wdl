@@ -176,12 +176,13 @@ workflow multiome_pipeline {
                 input:
                     read1 = select_first([read1_atac_]),
                     read2 = select_first([read2_atac_]),
+                    seqspecs = seqspecs,
                     fastq_barcode = fastq_barcode_,
                     chemistry = chemistry,
                     reference_fasta = genome_fasta,
                     subpool = subpool,
                     gtf = gtf_,
-                    whitelist = whitelist_atac[0], #cannot coerce array
+                    barcode_whitelists = whitelist_atac,
                     trim_fastqs = trim_fastqs,
                     chrom_sizes = chrom_sizes_,
                     genome_index_tar = idx_tar_atac_,

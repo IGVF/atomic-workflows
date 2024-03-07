@@ -1,6 +1,7 @@
 version 1.0
 
 # Import the tasks called by the pipeline
+import "../tasks/task_seqspec_extract.wdl" as task_seqspec_extract
 import "../tasks/share_task_correct_fastq.wdl" as share_task_correct_fastq
 import "../tasks/share_task_trim_fastqs_atac.wdl" as share_task_trim
 import "../tasks/task_chromap.wdl" as task_align_chromap
@@ -36,7 +37,7 @@ workflow wf_atac {
 
         # Correct-specific inputs
         Boolean correct_barcodes = true
-        File whitelist
+        Array[File] barcode_whitelists
         # Runtime parameters
         Int? correct_cpus = 16
         Float? correct_disk_factor = 8.0
@@ -47,6 +48,7 @@ workflow wf_atac {
         Array[File] read1
         Array[File] read2
         Array[File] fastq_barcode
+        Array[File] seqspecs
         Int? align_multimappers
         File reference_fasta
         Boolean? remove_pcr_duplicates = true
@@ -95,6 +97,12 @@ workflow wf_atac {
         Float? qc_memory_factor = 0.15
         String? qc_docker_image
 
+        # RNA seqspec extract runtime parameters
+        Int? seqspec_extract_cpus
+        Float? seqspec_extract_disk_factor
+        Float? seqspec_extract_memory_factor
+        String? seqspec_extract_docker_image
+
         # Trim-specific inputs
         # Runtime parameters
         Int? trim_cpus = 16
@@ -112,7 +120,7 @@ workflow wf_atac {
                 input:
                     fastq_R1 = read_pair.left,
                     fastq_R2 = read_pair.right,
-                    whitelist = whitelist,
+                    whitelist = barcode_whitelists[0],
                     sample_type = "ATAC",
                     pkr = subpool,
                     prefix = prefix,
@@ -139,6 +147,30 @@ workflow wf_atac {
             }
         }
     }
+
+    scatter ( idx in range(length(seqspecs)) ) {
+        call task_seqspec_extract.seqspec_extract as seqspec_extract {
+            input:
+                seqspec = seqspecs[idx],
+                fastq_R1 = basename(read1[idx]),
+                fastq_R2 = basename(read2[idx]),
+                fastq_barcode = basename(fastq_barcode[idx]),
+                onlists = barcode_whitelists,
+                modality = "atac",
+                tool_format = "chromap",
+                cpus = seqspec_extract_cpus,
+                disk_factor = seqspec_extract_disk_factor,
+                memory_factor = seqspec_extract_memory_factor,
+                docker_image = seqspec_extract_docker_image
+        }
+    }
+    
+    #Assuming this whitelist is applicable to all fastqs for kb task
+    File barcode_whitelist_ = seqspec_extract.onlist[0]
+    
+    #Assuming this index_string is applicable to all fastqs for kb task
+    String index_string_ = if chemistry == "shareseq" then "bc:0:-1,r1:0:-1,r2:0:-1" else seqspec_extract.index_string[0] #fixed index string for shareseq
+
 #fastq_barcode = select_first([trim.fastq_barcode_trimmed, correct.corrected_fastq_barcode, fastq_barcode]),
     if (  "~{pipeline_modality}" != "no_align" ) {
         
@@ -152,7 +184,7 @@ workflow wf_atac {
                 genome_name = genome_name,
                 subpool = subpool,
                 multimappers = align_multimappers,
-                barcode_inclusion_list = whitelist,
+                barcode_inclusion_list = barcode_whitelist_,
                 barcode_conversion_dict = barcode_conversion_dict,
                 prefix = prefix,
                 disk_factor = align_disk_factor,
@@ -168,7 +200,7 @@ workflow wf_atac {
                 quality_filter = quality_filter,
                 bc_error_threshold = bc_error_threshold,
                 bc_probability_threshold = bc_probability_threshold,
-                read_format = read_format
+                read_format = index_string_
         }
 
         call task_log_atac.log_atac as log_atac {

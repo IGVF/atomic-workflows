@@ -20,6 +20,7 @@ task seqspec_extract {
         #Take input filenames, not actual files since not required. Filenames must EXACTLY match in seqspec
         String fastq_R1 
         String fastq_R2
+        String? fastq_barcode
         
         Int? cpus = 1
         Float? disk_factor = 1.0
@@ -28,7 +29,7 @@ task seqspec_extract {
     }
     
     #Create array of fastq filenames  
-    Array[String] fastq_files = [fastq_R1, fastq_R2]
+    Array[String] fastq_files = select_all([fastq_R1, fastq_R2, fastq_barcode])
     
     # Determine the size of the input
     Float input_file_size_gb = size(seqspec, "G") 
