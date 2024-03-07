@@ -33,6 +33,7 @@ workflow wf_rna {
         String prefix = "test-sample"
         
         # RNA kb runtime parameters
+        String? kb_strand
         Int? kb_cpus
         Float? kb_disk_factor
         Float? kb_memory_factor
@@ -112,6 +113,7 @@ workflow wf_rna {
             read1_fastqs = fastqs_R1,
             read2_fastqs = fastqs_R2,
             genome_fasta = genome_fasta,
+            strand = kb_strand,
             kb_workflow = kb_workflow,
             barcode_whitelist = barcode_whitelist_,
             index_string = index_string_,

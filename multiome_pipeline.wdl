@@ -21,7 +21,6 @@ workflow multiome_pipeline {
         String chemistry
         String prefix
         String? subpool = "none"
-        String? parse_strand
         String pipeline_modality = "full" # "full": run everything; "count_only": stops after producing fragment file and count matrix; "no_align": correct and trim raw fastqs.
 
         File genome_fasta
