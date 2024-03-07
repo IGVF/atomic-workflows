@@ -8,6 +8,7 @@ workflows:
              - main
              - dev
              - sw-synapse
+             - updated-qcs
          tags:
              - /.*/
 
