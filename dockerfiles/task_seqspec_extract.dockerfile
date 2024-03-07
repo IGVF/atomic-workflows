@@ -17,10 +17,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install softwares from apt repo
 RUN apt-get update && apt-get install -y \
-    build-essential && \
+    build-essential \
+    git && \
     rm -rf /var/lib/apt/lists/*
       
-RUN pip install seqspec==0.1.1 
+#RUN pip install seqspec==0.1.1 
+RUN pip install git+https://github.com/pachterlab/seqspec.git@libspec
 
 # Create and setup new user
 #ENV USER=igvf

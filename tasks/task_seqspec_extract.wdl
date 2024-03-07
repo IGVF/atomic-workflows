@@ -25,7 +25,7 @@ task seqspec_extract {
         Int? cpus = 1
         Float? disk_factor = 1.0
         Float? memory_factor = 0.1
-        String? docker_image = "swekhande/shareseq-prod:seqspec-extract"    
+        String? docker_image = "swekhande/shareseq-prod:seqspec-libspec-extract"    
     }
     
     #Create array of fastq filenames  
