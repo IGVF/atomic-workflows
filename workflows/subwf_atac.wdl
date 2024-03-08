@@ -61,7 +61,8 @@ workflow wf_atac {
         Int? quality_filter = 0
         Int? bc_error_threshold = 2
         Float? bc_probability_threshold = 0.9
-        String? read_format = "bc:0:-1,r1:0:-1,r2:0:-1"
+        #String? read_format = "bc:0:-1,r1:0:-1,r2:0:-1"
+        String? read_format
         # Runtime parameters
         Int? align_cpus
         Float? align_disk_factor = 8.0
@@ -204,7 +205,7 @@ workflow wf_atac {
                 quality_filter = quality_filter,
                 bc_error_threshold = bc_error_threshold,
                 bc_probability_threshold = bc_probability_threshold,
-                read_format = index_string_
+                read_format = select_first([read_format, index_string_])
         }
 
         call task_log_atac.log_atac as log_atac {
@@ -250,7 +251,8 @@ workflow wf_atac {
 
         # QC
         File? atac_qc_chromap_barcode_metadata = qc_atac.atac_qc_chromap_barcode_metadata
-        File? atac_qc_snapatac2_barcode_metadata = qc_atac.atac_qc_snapatac2_barcode_metadata        File? atac_qc_tss_enrichment = qc_atac.atac_qc_tss_enrichment_plot
+        File? atac_qc_snapatac2_barcode_metadata = qc_atac.atac_qc_snapatac2_barcode_metadata
+        File? atac_qc_tss_enrichment = qc_atac.atac_qc_tss_enrichment_plot
         File? atac_qc_barcode_rank_plot = qc_atac.atac_qc_barcode_rank_plot
         File? atac_qc_insertion_size_histogram = qc_atac.atac_qc_final_hist_png
         File? atac_qc_tsse_fragments_plot = qc_atac.atac_qc_tsse_fragments_plot
