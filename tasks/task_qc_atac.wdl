@@ -17,12 +17,14 @@ task qc_atac {
         File? fragments
         File? fragments_index
         File? barcode_summary
-        File? peaks
+        File? chrom_sizes
         File? tss
         File? barcode_conversion_dict
 
-        Int? fragment_cutoff = 0 # This is the fragment cutoff for snapatac
-        Int? tsse_cutoff = 10 # This is the TSS enrichment cutoff for snapatac
+        Int? fragment_min_snapatac_cutoff = 0 # This is the fragment cutoff for snapatac
+        Int? tsse_cutoff = 0 # This is the TSS enrichment cutoff for snapatac
+        Int? hist_max_fragment = 5000
+        Int? hist_min_fragment = 100
         File? gtf
         String? genome_name
         String? prefix
@@ -53,8 +55,11 @@ task qc_atac {
     String hist_log = '${default="share-seq" prefix}.atac.qc.hist.${genome_name}.log.txt'
     String tss_pileup_prefix = '${default="share-seq" prefix}.atac.qc.tss.pileup.${genome_name}.log'
     String tss_pileup_out = '${default="share-seq" prefix}.atac.qc.tss.pileup.${genome_name}.log.png'
-    String final_barcode_metadata = '${default="share-seq" prefix}.atac.qc.${genome_name}.metadata.tsv'
+    String final_snapatac2_barcode_metadata = '${default="share-seq" prefix}.atac.qc.${genome_name}.snapatac2.barcode.metadata.tsv'
+    String final_chromap_barcode_metadata = '${default="share-seq" prefix}.atac.qc.${genome_name}.chromap.barcode.metadata.tsv'
+    String fragment_histogram = "${default="share-seq" prefix}.atac.qc.${genome_name}.fragment.histogram.png"
     String fragment_barcode_rank_plot = "${default="share-seq" prefix}.atac.qc.${genome_name}.fragment.barcode.rank.plot.png"
+
 
     String monitor_log = "atac_qc_monitor.log"
 
@@ -65,7 +70,13 @@ task qc_atac {
         # I am not writing to a file anymore because Google keeps track of it automatically.
         bash $(which monitor_script.sh) 1>&2 &
 
-        gzip -c ~{gtf} > gtf.gz
+        if [[ '~{gtf}' == *.gz ]]; then
+            cp ~{gtf} gtf.gz
+        else
+            echo '------ Compressing GTF ------' 1>&2
+            gzip -c ~{gtf} > gtf.gz   
+        fi
+
         ln -s ~{fragments} in.fragments.tsv.gz
         ln -s ~{fragments_index} in.fragments.tsv.gz.tbi
 
@@ -82,8 +93,8 @@ task qc_atac {
             cp ~{barcode_summary} temp_summary
         fi
 
-        echo '------ Number of barcodes BEFORE filtering------' 1>&2
-        wc -l temp_summary > barcode_number_raw.txt
+        cut -f1 ~{chrom_sizes} > list-names-chromosomes
+        grep -wFf list-names-chromosomes ~{tss} > filtered.tss.bed
 
         # TSS enrichment stats
         echo '------ START: Compute TSS enrichment bulk ------' 1>&2
@@ -95,50 +106,55 @@ task qc_atac {
             in.fragments.tsv.gz
 
         echo '------ START: Compute TSS enrichment snapatac2 ------' 1>&2
-        time python3 /usr/local/bin/snapatac2-tss-enrichment.py no-singleton.bed.gz gtf.gz "~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv" ~{fragment_cutoff}
-        # Insert size plot bulk
-        echo '------ START: Generate Insert size plot ------' 1>&2
+        echo '------ Extend TSS ------' 1>&2
+        awk -v OFS="\t" '{if($2-150<0){$2=0}else{$2=$2-150};$3=$3+150; print $0}' filtered.tss.bed > tss.extended.bed
+        /usr/local/bin/bedClip -verbose=2 tss.extended.bed ~{chrom_sizes} tss.extended.clipped.bed 2> tss.bedClip.log.txt
+        echo '------ Promoter ------' 1>&2
+        awk -v OFS="\t" '{if($2-2000<0){$2=0}else{$2=$2-2000};$3=$3+2000; print $0}' filtered.tss.bed > promoter.bed
+        /usr/local/bin/bedClip -verbose=2 promoter.bed ~{chrom_sizes} promoter.clipped.bed 2> promoter.bedClip.log.txt
 
-        echo "insert_size" > ~{hist_log}
-        time awk '{print $3-$2}' <(zcat in.fragments.tsv.gz ) | sort --parallel 4 -n | uniq -c | awk -v OFS="\t" '{print $2,$1}' >> ~{hist_log}
-        time python3 $(which plot_insert_size_hist.py) ~{hist_log} ~{prefix} ~{hist_log_png}
+        echo '------ Snapatac2 ------' 1>&2
+        # h5ad: f"{prefix}.snapatac.h5ad"
+        # f"{prefix}.cutoff{fragment_min_snapatac_cutoff}.tsse.png"
+        # f"{prefix}.cutoff500.tsse.png"
+        # f"{prefix}.cutoff{fragment_min_snapatac_cutoff}.insertsize.distribution.png"
+        # f"{prefix}.barcode_stats.tsv"
+        #
+        time python3 /usr/local/bin/snapatac2-tss-enrichment.py in.fragments.tsv.gz \
+                                                                gtf.gz \
+                                                                ~{chrom_sizes} \
+                                                                tss.extended.clipped.bed \
+                                                                promoter.clipped.bed \
+                                                                ~{fragment_min_snapatac_cutoff} \
+                                                                "~{prefix}.atac.qc.~{genome_name}"
 
         echo '------ START: Generate metadata ------' 1>&2
 
-        awk -v FS=',' -v OFS=" " 'NR==1{$1=$1;print $0,"unique","pct_dup","pct_unmapped";next}{$1=$1;if ($2-$3-$4-$5>0){print $0,($2-$3-$4-$5),$3/($2-$4-$5),($5+$4)/$2} else { print $0,0,0,0}}' temp_summary  | sed 's/ /\t/g' > tmp-barcode-stats
+        awk -v FS=',' -v OFS=" " 'NR==1{$1=$1;print $0,"unique","pct_dup","pct_unmapped";next}{$1=$1;if ($2-$3-$4-$5>0){print $0,($2-$3-$4-$5),$3/($2-$4-$5),($5+$4)/$2} else { print $0,0,0,0}}' temp_summary  | sed 's/ /\t/g' > ~{final_chromap_barcode_metadata}
 
-        cut -f 1 ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv > barcodes_passing_threshold
+        cut -f 1 "~{prefix}.barcode_stats.tsv" > barcodes_passing_threshold
 
-        #time join -j 1  <(cat ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv | (sed -u 1q;sort -k1,1)) <(grep -wFf barcodes_passing_threshold tmp-barcode-stats | (sed -u 1q;sort -k1,1)) | 
-        #awk -v FS=" " -v OFS=" " 'NR==1{print $0,"pct_reads_promoter"}NR>1{print $0,$4*100/$7}' | sed 's/ /\t/g' > ~{final_barcode_metadata}
-
-        cat ~{prefix}.atac.qc.~{genome_name}.tss_enrichment_barcode_stats.tsv | sed 's/ /\t/g' > ~{final_barcode_metadata}
-
-        head ~{final_barcode_metadata}
-        head ~{final_barcode_metadata} | awk '{print NF}'
+        cat "~{prefix}.barcode_stats.tsv" | sed 's/ /\t/g' > ~{final_snapatac2_barcode_metadata}
 
         # Barcode rank plot
-        echo '------ START: Generate barcod rank plot ------' 1>&2
-        time Rscript /usr/local/bin/atac_qc_plots.R tmp-barcode-stats ~{fragment_cutoff} ~{fragment_barcode_rank_plot}
+        echo '------ START: Generate barcode rank plot ------' 1>&2
+        time Rscript $(which atac_qc_plots.R) ~{final_chromap_barcode_metadata} ~{fragment_min_snapatac_cutoff} ~{hist_min_fragment} ~{hist_max_fragment} ~{fragment_barcode_rank_plot} ~{fragment_histogram}
     >>>
 
     output {
-        Int atac_qc_barcode_number_raw = read_int("barcode_number_raw.txt")
-        File atac_qc_final_hist_png = hist_log_png
-        File atac_qc_final_hist = hist_log
+        File atac_qc_final_hist_png = "~{prefix}.cutoff~{fragment_min_snapatac_cutoff}.insertsize.distribution.png"
 
-        File temp_frag = "no-singleton.bed.gz"
-        
-        File temp_summary = "temp_summary"
+        Float atac_qc_bulk_tsse = read_float("${prefix}.atac.qc.${genome_name}.tss_score_bulk.txt")
 
-        File atac_qc_tss_enrichment_barcode_stats = "${prefix}.atac.qc.${genome_name}.tss_enrichment_barcode_stats.tsv"
+        File atac_qc_snapatac2_barcode_metadata = "~{final_snapatac2_barcode_metadata}"
+        File atac_qc_chromap_barcode_metadata = "~{final_chromap_barcode_metadata}"
         File atac_qc_tss_enrichment_plot = "${prefix}.atac.qc.${genome_name}.tss_enrichment_bulk.png"
-        File atac_qc_tss_enrichment_score_bulk = "${prefix}.atac.qc.${genome_name}.tss_score_bulk.txt"
+        File atac_qc_counts_per_chromosome = "~{prefix}.atac.qc.~{genome_name}.chromosome_counts_matrix.npz"
 
-        File atac_qc_raw_barcode_metadata = "tmp-barcode-stats"
-        File atac_qc_barcode_metadata = "${prefix}.atac.qc.${genome_name}.tss_enrichment_barcode_stats.tsv"
+        File atac_qc_tsse_fragments_plot = "~{prefix}.cutoff~{fragment_min_snapatac_cutoff}.tsse.png"
 
-        File? atac_qc_barcode_rank_plot = "fragment_barcode_rank_plot"
+        File? atac_qc_barcode_rank_plot = "~{fragment_barcode_rank_plot}"
+        File? atac_qc_fragments_histogram = "~{fragment_histogram}"
     }
 
     runtime {
@@ -154,7 +170,7 @@ task qc_atac {
                 help: 'List of TSS in bed format used for the enrichment plot.',
                 example: 'refseq.tss.bed'
             }
-        fragment_cutoff: {
+        fragment_min_snapatac_cutoff: {
                 description: 'Fragment cutoff',
                 help: 'Cutoff for number of fragments required when making fragment barcode rank plot.',
                 example: 10

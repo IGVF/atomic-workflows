@@ -200,7 +200,7 @@ workflow multiome_pipeline {
             if ( pipeline_modality != "no_align" ) {
                 call joint_qc.joint_qc_plotting as joint_qc {
                     input:
-                        atac_barcode_metadata = atac.atac_barcode_metadata,
+                        atac_barcode_metadata = atac.atac_qc_snapatac2_barcode_metadata,
                         rna_barcode_metadata = rna.rna_barcode_metadata,
                         prefix = prefix,
                         genome_name = genome_name_
@@ -219,7 +219,7 @@ workflow multiome_pipeline {
                 # RNA plots
                 image_files = [joint_qc.joint_qc_plot, joint_qc.joint_density_plot,
                             rna.rna_umi_barcode_rank_plot, rna.rna_gene_barcode_rank_plot, rna.rna_gene_umi_scatter_plot,
-                            atac.atac_qc_barcode_rank_plot, atac.atac_qc_hist_plot, atac.atac_qc_tss_enrichment],
+                            atac.atac_qc_barcode_rank_plot, atac.atac_qc_insertion_size_histogram, atac.atac_qc_tss_enrichment],
 
                 ## Links to files and logs to append to end of html
                 log_files = [rna.rna_align_log, rna.rna_log, atac.atac_alignment_log]
@@ -245,7 +245,8 @@ workflow multiome_pipeline {
         # ATAC ouputs
         File? atac_filter_fragments = atac.atac_fragments
         File? atac_filter_fragments_index = atac.atac_fragments_index
-        File? atac_barcode_metadata = atac.atac_barcode_metadata
+        File? atac_chromap_barcode_metadata = atac.atac_qc_chromap_barcode_metadata
+        File? atac_snapatac2_barcode_metadata = atac.atac_qc_snapatac2_barcode_metadata
 
         # Joint outputs
         File? joint_barcode_metadata = joint_qc.joint_barcode_metadata

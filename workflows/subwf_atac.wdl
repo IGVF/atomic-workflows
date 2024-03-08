@@ -68,6 +68,10 @@ workflow wf_atac {
         Float? align_memory_factor = 0.15
         String? align_docker_image
 
+        Int? qc_fragment_min_cutoff
+        Int? qc_hist_max_fragment = 5000
+        Int? qc_hist_min_fragment = 100
+
         # Merge-specific inputs
         # Runtime parameters
         Int? merge_cpus
@@ -219,7 +223,10 @@ workflow wf_atac {
                 gtf = gtf,
                 subpool = subpool,
                 barcode_conversion_dict = barcode_conversion_dict,
-                fragment_cutoff = qc_fragment_cutoff,
+                fragment_min_snapatac_cutoff = qc_fragment_min_cutoff,
+                chrom_sizes = chrom_sizes,
+                hist_max_fragment = qc_hist_max_fragment,
+                hist_min_fragment = qc_hist_min_fragment,
                 genome_name = genome_name,
                 prefix = prefix,
                 cpus = qc_cpus,
@@ -242,11 +249,13 @@ workflow wf_atac {
         File? atac_fragments_index = align.atac_fragments_index
 
         # QC
-        File? atac_barcode_metadata = qc_atac.atac_qc_barcode_metadata
-        File? atac_qc_hist_plot = qc_atac.atac_qc_final_hist_png
-        File? atac_qc_hist_txt = qc_atac.atac_qc_final_hist
-        File? atac_qc_tss_enrichment = qc_atac.atac_qc_tss_enrichment_plot
+        File? atac_qc_chromap_barcode_metadata = qc_atac.atac_qc_chromap_barcode_metadata
+        File? atac_qc_snapatac2_barcode_metadata = qc_atac.atac_qc_snapatac2_barcode_metadata        File? atac_qc_tss_enrichment = qc_atac.atac_qc_tss_enrichment_plot
         File? atac_qc_barcode_rank_plot = qc_atac.atac_qc_barcode_rank_plot
+        File? atac_qc_insertion_size_histogram = qc_atac.atac_qc_final_hist_png
+        File? atac_qc_tsse_fragments_plot = qc_atac.atac_qc_tsse_fragments_plot
+        File? atac_qc_fragment_histogram = qc_atac.atac_qc_fragments_histogram
+
 
         # Log
         File? atac_qc_metrics = log_atac.atac_statistics_csv
