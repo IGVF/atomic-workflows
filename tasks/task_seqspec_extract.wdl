@@ -63,7 +63,7 @@ task seqspec_extract {
         seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt
         mv $(cat whitelist_path.txt) final_barcodes.txt
 
-        if [[ '~{tool_format}' == "chromap"]]; then
+        if [[ '~{tool_format}' == "chromap" ]]; then
             awk '{print $NF}' index_string.txt > temp_index_string
             mv temp_index_string index_string.txt
         fi
