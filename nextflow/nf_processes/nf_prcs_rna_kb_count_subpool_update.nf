@@ -36,12 +36,15 @@ process run_add_subpool_to_rna_kb_cout_outputs {
     echo 'Input whitelist_file: $whitelist_file'
     echo 'Input seqspec_rna_region_id: $seqspec_rna_region_id'
     echo 'Input subpool: $subpool'
-    
-    /usr/local/bin/$subpool_script_modify_h5ad --input_h5ad_file $kb_count_h5ad_file --subpool $subpool --output_h5ad_file ${kb_count_h5ad_file.baseName}_${subpool}.h5ad
+
+    /usr/local/bin/$subpool_script_modify_h5ad $kb_count_h5ad_file $subpool ${kb_count_h5ad_file.baseName}_${subpool}.h5ad
     
     echo 'Output H5AD file: ${kb_count_h5ad_file.baseName}_${subpool}.h5ad'
     echo 'Output Fragments file: ${kb_count_fragments_file.baseName}_${subpool}.txt'
-    
+
+    # <filename> <subpool> <output_file_subpool>
+    /usr/local/bin/$subpool_script_cell_gene $kb_count_fragments_file $subpool ${kb_count_fragments_file.baseName}_${subpool}.txt
+
     echo '------ Finished run_add_subpool_to_rna_kb_cout_outputs ------'
   """
 }

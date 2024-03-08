@@ -9,7 +9,7 @@ nextflow.enable.dsl=2
 //    echo "ls \$script_path"
     
 process rna_plot_qc_metrics_prcs {
-  label 'rna_qc_plot'
+  label 'rna_qc_metrics'
   debug true 
   input:
     val r_qc_plot_script
@@ -21,9 +21,9 @@ process rna_plot_qc_metrics_prcs {
     val umi_rank_plot_top_output
     val gene_umi_plot_file_output
   output:
-    path "umi_rank_plot_all_output.png", emit: umi_rank_plot_all
-    path "umi_rank_plot_top_output.png", emit: umi_rank_plot_top
-    path "gene_umi_plot_file_output.png", emit: gene_umi_plot_file
+    path "${umi_rank_plot_all_output}", emit: umi_rank_plot_all
+    path "${umi_rank_plot_top_output}", emit: umi_rank_plot_top
+    path "${gene_umi_plot_file_output}", emit: gene_umi_plot_file
   script:
   """
     # Print start of rna_plot_qc_metrics_prcs

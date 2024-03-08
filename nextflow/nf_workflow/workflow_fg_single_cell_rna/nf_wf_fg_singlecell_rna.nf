@@ -4,6 +4,8 @@ include {run_add_subpool_to_rna_kb_cout_outputs} from './../../nf_processes/nf_p
 include {run_cellatlas_build;run_jq_on_cellatlas} from './../../nf_processes/nf_prcs_cellatlas_build.nf'
 include {run_kb_ref_with_jq_commands;run_kb_count_rna;run_jq_on_kb_count_outputs_to_logs} from './../../nf_processes/nf_prcs_kallisto_bustools.nf'
 include {run_retrieve_seqspec_technology_rna;run_seqspec_modify_rna} from './../../nf_processes/nf_prcs_seqspec_utils.nf'
+include {rna_calculate_qc_metrics} from './../../nf_processes/nf_prcs_rna_qc_metrics.nf'
+include {rna_plot_qc_metrics_prcs} from './../../nf_processes/nf_prcs_rna_qc_plots.nf'
 
 
 workflow {
@@ -74,16 +76,34 @@ workflow {
     println "adata_out_h5ad: ${adata_out_h5ad}"
     println "cells_x_genes_barcodes_out: ${cells_x_genes_barcodes_out}"
     run_add_subpool_to_rna_kb_cout_outputs(params.RNA_MODIFY_KB_COUNT_H5AD_WITH_SUBPOOL,params.RNA_MODIFY_CELL_GENE_WITH_SUBPOOL,adata_out_h5ad,cells_x_genes_barcodes_out,sample_run_ch) 
+    kb_count_h5ad_file_subpool=run_add_subpool_to_rna_kb_cout_outputs.out.kb_count_h5ad_file_subpool
+    kb_count_fragments_file_subpool=run_add_subpool_to_rna_kb_cout_outputs.out.kb_count_fragments_file_subpool
     //--------STEP 7 END -------------
     
     
     // STEP 8: call cellatlas outputs to logs
     // run_jq_on_kb_count_outputs_to_logs(params.RNA_JQ_CELLATLAS_OUTPUT_TO_LOG,kb_count_run_info_json,kb_count_inspect_json,params.LOG_FILE_NAME)
     //--------STEP 8 END -------------
-    
-    
-    // STEP 9: prepare QC graphs for RNA
-    // rna_calculate_qc_metrics - nf_prcs_rna_qc.nf
-    // rna_plot_qc_metrics_prcs - nf_prcs_rna_qc_plots.nf
-    
+    // STEP 8: call cellatlas outputs to logs
+    println "Calling run_jq_on_kb_count_outputs_to_logs with the following inputs:"
+    println "run_jq_on_kb_count_outputs_to_logs: params.RNA_JQ_CELLATLAS_OUTPUT_TO_LOG: ${params.RNA_JQ_CELLATLAS_OUTPUT_TO_LOG}"
+    println "run_jq_on_kb_count_outputs_to_logs: kb_count_run_info_json: ${kb_count_run_info_json}"
+    println "run_jq_on_kb_count_outputs_to_logs: kb_count_inspect_json: ${kb_count_inspect_json}"
+    println "run_jq_on_kb_count_outputs_to_logs: params.LOG_FILE_NAME: ${params.LOG_FILE_NAME}"
+    output_file_name = params.LOG_FILE_NAME.replaceAll(/\.txt$/, '')
+
+    run_jq_on_kb_count_outputs_to_logs(params.RNA_JQ_CELLATLAS_OUTPUT_TO_LOG, kb_count_run_info_json, kb_count_inspect_json, output_file_name)
+    //--------STEP 8 END -------------
+
+    // STEP 9: rna_calculate_qc_metrics
+    rna_calculate_qc_metrics(params.RNA_QC__METRICS_SCRIPT,kb_count_h5ad_file_subpool,sample_run_ch)
+    rna_qc_metrics_tsv=rna_calculate_qc_metrics.out.rna_qc_metrics_tsv
+
+
+    // STEP 10: prepare QC graphs for RNA
+    umi_rank_plot_all_output_file_name='umi_plot_all_'+output_file_name+'.png'
+    umi_rank_plot_top_output='umi_plot_top_'+output_file_name+'.png'
+    gene_umi_plot_file_output='gene_umi_'+output_file_name+'.png'
+    rna_plot_qc_metrics_prcs(params.RNA_QC_PLOT_SCRIPT,params.RNA_QC_PLOT_HELPER_SCRIPT,rna_qc_metrics_tsv,params.UMI_CUTOFF,params.GENE_CUTOFF,umi_rank_plot_all_output_file_name,umi_rank_plot_top_output,gene_umi_plot_file_output)
+
 }

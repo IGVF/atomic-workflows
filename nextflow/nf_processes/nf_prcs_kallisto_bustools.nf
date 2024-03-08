@@ -3,6 +3,7 @@ nextflow.enable.dsl=2
 
 //kb ref -i rna_cellatlas_out/index.idx -g rna_cellatlas_out/t2g.txt -f1 rna_cellatlas_out/transcriptome.fa http://ftp.ensembl.org/pub/release-109/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz http://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz
 
+/*
 // TODO: ask Sina about -k 21 -m 256G. will that make sure that we dont have memory issue?
 process run_kb_ref {
   label 'kb_ref'
@@ -18,9 +19,10 @@ process run_kb_ref {
   echo dna_assempbly_fa_gz is $dna_assempbly_fa_gz
   echo gtf_gz is $gtf_gz
   kb ref --tmp tmp2 --overwrite -i index.idx -g t2g.txt -f1 transcriptome.fa $dna_assempbly_fa_gz $gtf_gz
-  echo finished callling kb ref
+  echo finished calling kb ref
   """
 }
+*/
 
 process run_kb_ref_with_jq_commands {
   label 'kb_ref_from_jq'
@@ -83,31 +85,28 @@ process run_kb_count_rna {
 }
 
 process run_jq_on_kb_count_outputs_to_logs {
-  label 'kb_count_output_jq'
+  label 'kb_count_outputs_jq_merge'
   debug true
   input:
     val script_name
-    val output_file_name
     path run_info_json
     path inspect_json
+    val output_file_name
   output:
-    path "${output_file_name.baseName.replace('.', '_')}.json", emit: kb_count_out_json_files
-
+    path "${output_file_name}.json", emit: kb_count_out_json_files
   script:
-  """  
-  echo '------ Start run_jq_on_kb_count_outputs_to_logs ------'
-  echo 'Input script_name: $script_name'
-  echo 'Input output_file_name: $output_file_name'
-  echo 'Input run_info_json: $run_info_json'
-  echo 'Input inspect_json: $inspect_json'
-  
-  output_path="${output_file_name.baseName.replace('.', '_')}.json"
-  echo "Constructed output path: $output_path"
- 
-  /usr/local/bin/$script_name $run_info_json $inspect_json $output_path
-  
-  echo '------ Finished run_jq_on_kb_count_outputs_to_logs ------'
   """
+    echo '------ Start run_jq_on_kb_count_outputs_to_logs ------'
+    echo 'Input script_name: $script_name'
+    echo 'Input output_file_name with json : ${output_file_name}.json'
+    echo 'Input run_info_json: $run_info_json'
+    echo 'Input inspect_json: $inspect_json'
+
+    /usr/local/bin/$script_name $run_info_json $inspect_json ${output_file_name}.json
+
+    echo '------ Finished run_jq_on_kb_count_outputs_to_logs ------'
+"""
+
 }
 
 
