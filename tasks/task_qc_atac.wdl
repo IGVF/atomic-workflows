@@ -101,7 +101,7 @@ task qc_atac {
         time python3 /usr/local/bin/compute_tss_enrichment_bulk.py \
             -e 2000 \
             -p ~{cpus} \
-            --regions ~{tss} \
+            --regions filtered.tss.bed \
             --prefix "~{prefix}.atac.qc.~{genome_name}" \
             in.fragments.tsv.gz
 
