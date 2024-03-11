@@ -25,7 +25,6 @@ print('Running import', file=sys.stderr)
 data = snap.pp.import_data(
     fragment_file=fragment_file,
     chrom_sizes=chrom_sizes_dict,
-    file=f"{prefix}.snapatac.h5ad",
     sorted_by_barcode=False,
     min_num_fragments=100,
     shift_left=0,
@@ -50,4 +49,4 @@ data.obs.to_csv(f"{prefix}.barcode_stats.tsv", index_label="barcode", sep="\t")
 
 data.obs["sample"] = prefix
 
-data.close()
+data.write(f"{prefix}.snapatac.h5ad")
