@@ -136,7 +136,7 @@ task qc_atac {
 
         # Barcode rank plot
         echo '------ START: Generate barcode rank plot ------' 1>&2
-        time Rscript $(which atac_qc_plots.R) ~{final_chromap_barcode_metadata} ~{fragment_min_snapatac_cutoff} ~{hist_min_fragment} ~{hist_max_fragment} ~{fragment_barcode_rank_plot} ~{fragment_histogram}
+        time Rscript /usr/local/bin/atac_qc_plots.R ~{final_chromap_barcode_metadata} ~{fragment_min_snapatac_cutoff} ~{hist_min_fragment} ~{hist_max_fragment} ~{fragment_barcode_rank_plot} ~{fragment_histogram}
     >>>
 
     output {
