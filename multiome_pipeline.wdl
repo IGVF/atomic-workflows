@@ -24,7 +24,8 @@ workflow multiome_pipeline {
         String pipeline_modality = "full" # "full": run everything; "count_only": stops after producing fragment file and count matrix; "no_align": correct and trim raw fastqs.
 
         File genome_fasta
-
+        
+        #can be removed
         File whitelists_tsv = 'gs://broad-buenrostro-pipeline-genome-annotations/whitelists/whitelists.tsv'
         
         Array[File] whitelist_atac
@@ -86,46 +87,58 @@ workflow multiome_pipeline {
     File whitelist_rna_ = whitelist_rna[0]
     
     #ATAC Read1
-    scatter(file in read1_atac){
-        call check_inputs.check_inputs as check_read1_atac{
-            input:
-                path = file
+    
+    if (sub(basename(read1_atac[0]), "syn", "") != basename(read1_atac[0])){
+    
+        scatter(file in read1_atac){
+            call check_inputs.check_inputs as check_read1_atac{
+                input:
+                    path = file
+            }
         }
     }
     
     Array[File] read1_atac_ = select_first([ check_read1_atac.output_file, read1_atac ])
     
-    scatter(file in read2_atac){
-        call check_inputs.check_inputs as check_read2_atac{
-            input:
-                path = file
+    if (sub(basename(read2_atac[0]), "syn", "") != basename(read2_atac[0])){
+        scatter(file in read2_atac){
+            call check_inputs.check_inputs as check_read2_atac{
+                input:
+                    path = file
+            }
         }
     }
     
     Array[File] read2_atac_ = select_first([ check_read2_atac.output_file, read2_atac ])
     
-     scatter(file in fastq_barcode){
-        call check_inputs.check_inputs as check_fastq_barcode{
-            input:
-                path = file
+    if (sub(basename(fastq_barcode[0]), "syn", "") != basename(fastq_barcode[0])){
+        scatter(file in fastq_barcode){
+            call check_inputs.check_inputs as check_fastq_barcode{
+                input:
+                    path = file
+            }
         }
     }
     
     Array[File] fastq_barcode_ = select_first([ check_fastq_barcode.output_file, fastq_barcode ])
     
-    scatter(file in read1_rna){
-        call check_inputs.check_inputs as check_read1_rna{
-            input:
-                path = file
+    if (sub(basename(read1_rna[0]), "syn", "") != basename(read1_rna[0])){
+        scatter(file in read1_rna){
+            call check_inputs.check_inputs as check_read1_rna{
+                input:
+                    path = file
+            }
         }
     }
     
     Array[File] read1_rna_ = select_first([ check_read1_rna.output_file, read1_rna ])
     
-    scatter(file in read2_rna){
-        call check_inputs.check_inputs as check_read2_rna{
-            input:
-                path = file
+    if (sub(basename(read2_rna[0]), "syn", "") != basename(read2_rna[0])){
+        scatter(file in read2_rna){
+            call check_inputs.check_inputs as check_read2_rna{
+                input:
+                    path = file
+            }
         }
     }
     
