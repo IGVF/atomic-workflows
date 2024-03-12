@@ -145,7 +145,7 @@ task qc_atac {
         File atac_qc_chromap_barcode_metadata = "~{final_chromap_barcode_metadata}"
         File atac_qc_tss_enrichment_plot = "${prefix}.atac.qc.${genome_name}.tss_enrichment_bulk.png"
         File atac_qc_counts_per_chromosome = "~{prefix}.atac.qc.~{genome_name}.chromosome_counts_matrix.npz"
-        File atac_qc_tsse_fragments_plot = "~{prefix}.cutoff~{fragment_min_snapatac_cutoff}.tsse.png"
+        File atac_qc_tsse_fragments_plot = "~{prefix}.atac.qc.~{genome_name}.cutoff~{fragment_min_snapatac_cutoff}.tsse.png"
         File? atac_qc_barcode_rank_plot = "~{fragment_barcode_rank_plot}"
     }
 
