@@ -70,8 +70,6 @@ workflow wf_atac {
         String? align_docker_image
 
         Int? qc_fragment_min_cutoff
-        Int? qc_hist_max_fragment = 5000
-        Int? qc_hist_min_fragment = 100
 
         # Merge-specific inputs
         # Runtime parameters
@@ -226,8 +224,6 @@ workflow wf_atac {
                 barcode_conversion_dict = barcode_conversion_dict,
                 fragment_min_snapatac_cutoff = qc_fragment_min_cutoff,
                 chrom_sizes = chrom_sizes,
-                hist_max_fragment = qc_hist_max_fragment,
-                hist_min_fragment = qc_hist_min_fragment,
                 genome_name = genome_name,
                 prefix = prefix,
                 cpus = qc_cpus,
@@ -256,8 +252,6 @@ workflow wf_atac {
         File? atac_qc_barcode_rank_plot = qc_atac.atac_qc_barcode_rank_plot
         File? atac_qc_insertion_size_histogram = qc_atac.atac_qc_final_hist_png
         File? atac_qc_tsse_fragments_plot = qc_atac.atac_qc_tsse_fragments_plot
-        File? atac_qc_fragment_histogram = qc_atac.atac_qc_fragments_histogram
-
 
         # Log
         File? atac_qc_metrics = log_atac.atac_statistics_csv

@@ -23,8 +23,6 @@ task qc_atac {
 
         Int? fragment_min_snapatac_cutoff = 0 # This is the fragment cutoff for snapatac
         Int? tsse_cutoff = 0 # This is the TSS enrichment cutoff for snapatac
-        Int? hist_max_fragment = 5000
-        Int? hist_min_fragment = 100
         File? gtf
         String? genome_name
         String? prefix
@@ -57,7 +55,6 @@ task qc_atac {
     String tss_pileup_out = '${default="share-seq" prefix}.atac.qc.tss.pileup.${genome_name}.log.png'
     String final_snapatac2_barcode_metadata = '${default="share-seq" prefix}.atac.qc.${genome_name}.snapatac2.barcode.metadata.tsv'
     String final_chromap_barcode_metadata = '${default="share-seq" prefix}.atac.qc.${genome_name}.chromap.barcode.metadata.tsv'
-    String fragment_histogram = "${default="share-seq" prefix}.atac.qc.${genome_name}.fragment.histogram.png"
     String fragment_barcode_rank_plot = "${default="share-seq" prefix}.atac.qc.${genome_name}.fragment.barcode.rank.plot.png"
 
 
@@ -137,6 +134,7 @@ task qc_atac {
         # Barcode rank plot
         echo '------ START: Generate barcode rank plot ------' 1>&2
         time Rscript /usr/local/bin/atac_qc_plots.R ~{final_chromap_barcode_metadata} ~{fragment_min_snapatac_cutoff} ~{fragment_barcode_rank_plot}
+    >>>
 
     output {
         File atac_qc_final_hist_png = "~{prefix}.cutoff~{fragment_min_snapatac_cutoff}.insertsize.distribution.png"
@@ -147,11 +145,8 @@ task qc_atac {
         File atac_qc_chromap_barcode_metadata = "~{final_chromap_barcode_metadata}"
         File atac_qc_tss_enrichment_plot = "${prefix}.atac.qc.${genome_name}.tss_enrichment_bulk.png"
         File atac_qc_counts_per_chromosome = "~{prefix}.atac.qc.~{genome_name}.chromosome_counts_matrix.npz"
-
         File atac_qc_tsse_fragments_plot = "~{prefix}.cutoff~{fragment_min_snapatac_cutoff}.tsse.png"
-
         File? atac_qc_barcode_rank_plot = "~{fragment_barcode_rank_plot}"
-        File? atac_qc_fragments_histogram = "~{fragment_histogram}"
     }
 
     runtime {
