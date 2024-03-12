@@ -21,7 +21,7 @@ task qc_atac {
         File? tss
         File? barcode_conversion_dict
 
-        Int? fragment_min_snapatac_cutoff = 0 # This is the fragment cutoff for snapatac
+        Int? fragment_min_snapatac_cutoff = 1 # This is the fragment cutoff for snapatac
         Int? tsse_cutoff = 0 # This is the TSS enrichment cutoff for snapatac
         File? gtf
         String? genome_name
