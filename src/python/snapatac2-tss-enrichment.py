@@ -26,7 +26,7 @@ data = snap.pp.import_data(
     fragment_file=fragment_file,
     chrom_sizes=chrom_sizes_dict,
     sorted_by_barcode=False,
-    min_num_fragments=100,
+    min_num_fragments=min_frag_cutoff,
     shift_left=0,
     shift_right=1
 )
