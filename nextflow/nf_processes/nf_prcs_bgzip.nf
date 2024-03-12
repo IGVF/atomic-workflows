@@ -11,6 +11,7 @@ process run_bgzip_on_chromap_fragments_output {
 
   // Define input path
   input:
+    val script_name
     path fragment_file
 
   // Define output path
@@ -22,8 +23,7 @@ process run_bgzip_on_chromap_fragments_output {
   """
     echo 'Start run_bgzip_on_chromap_fragments_output'
     echo "Fragment file is: $fragment_file"
-    bgzip -c $fragment_file > "${fragment_file}.gz"
-    ls -lt
+    /usr/local/bin/$script_name $fragment_file
     echo 'Finished run_bgzip_on_chromap_fragments_output'
   """
 }

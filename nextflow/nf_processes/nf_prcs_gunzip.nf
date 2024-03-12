@@ -11,7 +11,8 @@ process run_whitelist_gunzip {
 
   // Define input paths
   input:
-    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file), val(subpool), path(conversion_dict), val(prefix)
+    val script_name
+    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file), val(subpool), path(conversion_dict), val(prefix),val(seqspec_atac_region_id)
 
   // Define output path
   output:
@@ -21,7 +22,13 @@ process run_whitelist_gunzip {
   script:
   """
     echo 'Start run_whitelist_gunzip'
-    echo 'Gunzip file is: $whitelist_file'
+    /usr/local/bin/$script_name $raw_file
+    echo 'Finished run_whitelist_gunzip'
+  """
+}
+
+/*
+echo 'Gunzip file is: $whitelist_file'
     echo 'Files before processing:'
     # Check if the file exists and is a gzipped file
     if [[ -e $whitelist_file && $whitelist_file == *.gz ]]; then
@@ -37,6 +44,5 @@ process run_whitelist_gunzip {
     
     echo 'Files after processing:'
     ls -lt
-    echo 'Finished run_whitelist_gunzip'
-  """
-}
+*/
+// /usr/local/bin/$script_name $raw_file

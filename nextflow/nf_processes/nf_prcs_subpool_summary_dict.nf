@@ -14,7 +14,7 @@ process run_add_subpool_to_chromap_output {
     val subpool_script
     path chromap_fragments_tsv
     path barcode_summary_csv
-    tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix)
+    tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix),val(seqspec_atac_region_id)
   
   // Define output paths
   // TODO: change the output name of the files with / without subpool - even if it is identical
@@ -51,7 +51,7 @@ process run_process_create_temp_summary_dict {
   // Define input paths
   input:
     val subpool_script
-    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file), val(subpool), path(barcode_conversion_dict_file), val(prefix)
+    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file), val(subpool), path(barcode_conversion_dict_file), val(prefix),val(seqspec_atac_region_id)
     path barcode_summary_csv
   // Define output paths
   output:

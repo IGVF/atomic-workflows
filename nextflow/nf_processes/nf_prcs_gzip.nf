@@ -12,6 +12,7 @@ process run_gzip_on_genes_gtf {
 
   // Define input paths
   input:
+    val script_name
     path raw_file
 
   // Define output path using output directive
@@ -22,19 +23,11 @@ process run_gzip_on_genes_gtf {
   script:
   """
     echo 'Start run_gzip'
-    echo "Gzip file is: ${raw_file}.gz"
-    
-    # Check if the input file exists
-    if [[ -e $raw_file ]]; then
-      gzip < $raw_file > "${raw_file}.gz"
-      echo 'Files after processing:'
-      ls -lt
-    else
-      # If the file doesn't exist, print an error and exit
-      echo "Error: File $raw_file not found."
-      exit 1
-    fi
+    echo "Gzip output file is: ${raw_file}.gz"
+
+    /usr/local/bin/$script_name $raw_file
     
     echo 'Finished run_gzip'
   """
 }
+

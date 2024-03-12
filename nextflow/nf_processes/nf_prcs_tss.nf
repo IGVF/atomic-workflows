@@ -26,7 +26,7 @@ process run_calculate_tss_enrichment_bulk {
   debug true
   label 'tss_bulk'
   input:
-    tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix)
+    tuple path(fastq1), path(fastq2),path(fastq3),path(fastq4),path(barcode1_fastq),path(barcode2_fastq), path(spec_yaml), path(whitelist_file),val(subpool),path(conversion_dict),val(prefix),val(seqspec_atac_region_id)
     val calculation_script
     path tbi_fragments
     path regions_file
@@ -49,11 +49,15 @@ process run_calculate_tss_enrichment_bulk {
   """
 }
 
+
+
+// python3 /usr/local/bin/compute_tss_enrichment_snapatac2.py --fragment-file no-singleton.bed.gz --compressed-gtf-file genes.gtf.gz --output-file "BMMC-single-donor.tss_enrichment_barcode_stats.tsv" --min-frag-cutoff 10
+// NOTE: sometimes if fails. therefore, there is a retry in the configuration file
 process run_calculate_tss_enrichment_snapatac2 {
   debug true
   label 'tss_snapatac2'
   input:
-    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file), val(subpool), path(conversion_dict), val(prefix)
+    tuple path(fastq1), path(fastq2), path(fastq3), path(fastq4), path(barcode1_fastq), path(barcode2_fastq), path(spec_yaml), path(whitelist_file), val(subpool), path(conversion_dict), val(prefix),val(seqspec_atac_region_id)
     val calculation_script
     path no_singleton_bed_gz
     path genes_gtf_gzip_file_out
@@ -63,12 +67,12 @@ process run_calculate_tss_enrichment_snapatac2 {
   script:
   """
     echo 'start run_calculate_tss_enrichment_snapatac2'
-    echo 'calculation_script is $calculation_script. check that it is: snapatac2'
-    echo 'no_singleton_bed_gz: $no_singleton_bed_gz'
-    echo 'genes_gtf_gzip_file_out: $genes_gtf_gzip_file_out'
-    echo 'min_frag_cutoff: $min_frag_cutoff'
-    echo 'prefix: $prefix'
-    echo 'output file: ${prefix}.tss_enrichment_barcode_stats.tsv'
+    echo "calculation_script is $calculation_script. Check that it is: snapatac2"
+    echo "no_singleton_bed_gz: $no_singleton_bed_gz"
+    echo "genes_gtf_gzip_file_out: $genes_gtf_gzip_file_out"
+    echo "min_frag_cutoff: $min_frag_cutoff"
+    echo "prefix: $prefix"
+    echo "output file: ${prefix}.tss_enrichment_barcode_stats.tsv"
 
     python3 /usr/local/bin/$calculation_script --fragment-file $no_singleton_bed_gz --compressed-gtf-file $genes_gtf_gzip_file_out --output-file "${prefix}.tss_enrichment_barcode_stats.tsv" --min-frag-cutoff $min_frag_cutoff
     echo 'finished run_calculate_tss_enrichment_snapatac2'
