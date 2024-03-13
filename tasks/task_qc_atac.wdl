@@ -125,6 +125,8 @@ task qc_atac {
                                                                 ~{fragment_min_snapatac_cutoff} \
                                                                 "~{prefix}.atac.qc.~{genome_name}"
 
+        ls
+
         echo '------ START: Generate metadata ------' 1>&2
 
         awk -v FS=',' -v OFS=" " 'NR==1{$1=$1;print $0,"unique","pct_dup","pct_unmapped";next}{$1=$1;if ($2-$3-$4-$5>0){print $0,($2-$3-$4-$5),$3/($2-$4-$5),($5+$4)/$2} else { print $0,0,0,0}}' temp_summary  | sed 's/ /\t/g' > ~{final_chromap_barcode_metadata}
@@ -137,7 +139,7 @@ task qc_atac {
     >>>
 
     output {
-        File atac_qc_final_hist_png = "~{prefix}.cutoff~{fragment_min_snapatac_cutoff}.insertsize.distribution.png"
+        File? atac_qc_final_hist_png = "~{prefix}.cutoff~{fragment_min_snapatac_cutoff}.insertsize.distribution.png"
 
         Float atac_qc_bulk_tsse = read_float("${prefix}.atac.qc.${genome_name}.tss_score_bulk.txt")
 
@@ -145,6 +147,8 @@ task qc_atac {
         File atac_qc_chromap_barcode_metadata = "~{final_chromap_barcode_metadata}"
         File atac_qc_tss_enrichment_plot = "${prefix}.atac.qc.${genome_name}.tss_enrichment_bulk.png"
         File atac_qc_tsse_fragments_plot = "~{prefix}.atac.qc.~{genome_name}.cutoff~{fragment_min_snapatac_cutoff}.tsse.png"
+        File atac_qc_tsse_strict_fragments_plot = "~{prefix}.atac.qc.~{genome_name}.cutoff500.tsse.png"
+        File atac_qc_snapatac_h5ad = "~{prefix}.atac.qc.~{genome_name}.snapatac.h5ad"
         File? atac_qc_barcode_rank_plot = "~{fragment_barcode_rank_plot}"
     }
 
