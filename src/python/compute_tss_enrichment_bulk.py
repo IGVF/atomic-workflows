@@ -284,4 +284,4 @@ if __name__ == '__main__':
         tss_score_bulk = compute_tss_enrichment(_merge_bulk_signal([result["bulk_signal"] for result in results]),
                                                 args.window,
                                                 tss_enrichment_plot_fnp)
-        print(f"tss_enrichment\n{tss_score_bulk}", file=out_file)
+        print(f"{tss_score_bulk}", file=out_file)

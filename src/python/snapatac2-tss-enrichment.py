@@ -39,9 +39,6 @@ snap.pl.tsse(data, min_fragment=min_frag_cutoff, width=800, height=1000, show=Fa
 print('Plot TSSe strict', file=sys.stderr)
 snap.pl.tsse(data, min_fragment=500, width=800, height=1000, show=False, out_file=f"{prefix}.cutoff500.tsse.png")
 
-print('Plot Insert size distribution', file=sys.stderr)
-snap.pl.frag_size_distr(data, width=800, height=1000, show=False, out_file=f"{prefix}.cutoff{min_frag_cutoff}.insertsize.distribution.png")
-
 print('Fraction in promoter', file=sys.stderr)
 snap.metrics.frip(data, {"tss_frac": tss_bed_file, "promoter_frac": promoter_bed_file})
 print('save metrics', file=sys.stderr)
