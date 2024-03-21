@@ -5,6 +5,7 @@ import "../tasks/task_seqspec_extract.wdl" as task_seqspec_extract
 import "../tasks/share_task_correct_fastq.wdl" as share_task_correct_fastq
 import "../tasks/share_task_trim_fastqs_atac.wdl" as share_task_trim
 import "../tasks/task_chromap.wdl" as task_align_chromap
+import "../tasks/task_chromap_bam.wdl" as task_align_chromap_bam
 import "../tasks/task_qc_atac.wdl" as task_qc_atac
 import "../tasks/task_log_atac.wdl" as task_log_atac
 
@@ -206,6 +207,35 @@ workflow wf_atac {
                 read_format = select_first([read_format, index_string_])
         }
 
+        call task_align_chromap_bam.atac_align_chromap as generate_bam {
+            input:
+                fastq_R1 = select_first([trim.fastq_R1_trimmed, correct.corrected_fastq_R1, read1]),
+                fastq_R2 = select_first([trim.fastq_R2_trimmed, correct.corrected_fastq_R2, read2]),
+                fastq_barcode = select_first([correct.corrected_fastq_barcode, fastq_barcode]),
+                reference_fasta = reference_fasta,
+                trim_adapters = trim_adapters,
+                genome_name = genome_name,
+                subpool = subpool,
+                multimappers = align_multimappers,
+                barcode_inclusion_list = barcode_whitelist_,
+                barcode_conversion_dict = barcode_conversion_dict,
+                prefix = prefix,
+                disk_factor = align_disk_factor,
+                memory_factor = align_memory_factor,
+                cpus = align_cpus,
+                docker_image = align_docker_image,
+                remove_pcr_duplicates = remove_pcr_duplicates,
+                remove_pcr_duplicates_at_cell_level = remove_pcr_duplicates_at_cell_level,
+                Tn5_shift = Tn5_shift,
+                low_mem = low_mem,
+                bed_output = bed_output,
+                max_insert_size = max_insert_size,
+                quality_filter = quality_filter,
+                bc_error_threshold = bc_error_threshold,
+                bc_probability_threshold = bc_probability_threshold,
+                read_format = select_first([read_format, index_string_])
+        }
+
         call task_log_atac.log_atac as log_atac {
             input:
                 alignment_log = align.atac_alignment_log,
@@ -235,11 +265,14 @@ workflow wf_atac {
 
     output {
         # Correction/trimming
-        Array[File]? atac_read1_processed = if defined(trim.fastq_R1_trimmed) then trim.fastq_R1_trimmed else correct.corrected_fastq_R1
-        Array[File]? atac_read2_processed = if defined(trim.fastq_R1_trimmed) then trim.fastq_R2_trimmed else correct.corrected_fastq_R2
+        Array[File]? atac_read1_processed = select_first([trim.fastq_R1_trimmed, correct.corrected_fastq_R1, read1])
+        Array[File]? atac_read2_processed = select_first([trim.fastq_R2_trimmed, correct.corrected_fastq_R2, read2])
+        Array[File]? atac_fastq_barcode_processed = select_first([correct.corrected_fastq_barcode, fastq_barcode])
 
         # Align
         File? atac_alignment_log = align.atac_alignment_log
+        File? atac_chromap_bam = generate_bam.atac_bam
+        File? atac_chromap_bam_alignement_stats = generate_bam.atac_alignment_log
 
         # Filter
         File? atac_fragments = align.atac_fragments

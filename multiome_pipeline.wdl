@@ -244,6 +244,7 @@ workflow multiome_pipeline {
         # Fastq after correction/trimming
         Array[File]? atac_read1_processed = atac.atac_read1_processed
         Array[File]? atac_read2_processed = atac.atac_read2_processed
+        Array[File]? atac_fastq_barcode_processed = atac.atac_fastq_barcode_processed
 
         Array[File]? rna_read1_processed = rna.rna_read1_processed
         Array[File]? rna_read2_processed = rna.rna_read2_processed
@@ -256,6 +257,8 @@ workflow multiome_pipeline {
         File? rna_barcode_metadata  = rna.rna_barcode_metadata
         
         # ATAC ouputs
+        File? atac_bam = atac.atac_chromap_bam
+        File? atac_bam_log = atac.atac_chromap_bam_alignement_stats
         File? atac_filter_fragments = atac.atac_fragments
         File? atac_filter_fragments_index = atac.atac_fragments_index
         File? atac_chromap_barcode_metadata = atac.atac_qc_chromap_barcode_metadata
