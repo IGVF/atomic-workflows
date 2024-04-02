@@ -7,7 +7,7 @@ process run_joint_cell_plotting_density {
   input:
     val script_name
     val pkr
-    path barcode_metadata_file
+    tuple path(rna_metrics_file), path(atac_metrics_file), path (barcode_metadata_file)
   output:
     path "joint_density_plot.png", emit: joint_density_plot_file
 
@@ -24,9 +24,6 @@ process run_joint_cell_plotting_density {
     echo 'Running R script...'
     Rscript \$script_path $pkr $barcode_metadata_file joint_density_plot.png
 
-    echo 'TODO: Delete wehn you have real data '
-    touch joint_density_plot.png
-    # Print finish of run_joint_cell_plotting_density
     echo 'Finished run_joint_cell_plotting_density.'
   """
 }

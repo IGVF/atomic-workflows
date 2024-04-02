@@ -1,22 +1,23 @@
 // Enable DSL2
 nextflow.enable.dsl=2
 
+//    path rna_metrics_file
+//    path atac_metrics_file
+
 process run_joint_barcode_cell_plotting {
   label 'joint_barcode_metadata_py'
   debug true 
   input:
     val script_name
     val pkr
-    path rna_metrics_file
-    path atac_metrics_file
+    tuple path(rna_metrics_file), path(atac_metrics_file), path (barcode_metadata_file)
     val remove_low_yielding_cells
-    path barcode_metadata_file
     val min_umis
     val min_genes
     val min_tss
     val min_frags
   output:
-    path 'plot_file.jpg', emit: joint_qc_plot_out
+    path 'joint_barcode_cell_plotting.jpg', emit: joint_qc_plot_out
     path 'joint_cell_plotting.log', emit: joint_cell_plotting
   script:
   """
@@ -38,12 +39,8 @@ process run_joint_barcode_cell_plotting {
     echo "- min_tss: $min_tss"
     echo "- min_frags: $min_frags"
 
-    python3 \$script_path --pkr $pkr --rna_metrics_file $rna_metrics_file --atac_metrics_file $atac_metrics_file --remove_low_yielding_cells $remove_low_yielding_cells --barcode_metadata_file $barcode_metadata_file --min_umis $min_umis --min_genes $min_genes --min_tss $min_tss --min_frags $min_frags --plot_file plot_file.jpg
+    python3 \$script_path --pkr $pkr --rna_metrics_file $rna_metrics_file --atac_metrics_file $atac_metrics_file --remove_low_yielding_cells $remove_low_yielding_cells --barcode_metadata_file $barcode_metadata_file --min_umis $min_umis --min_genes $min_genes --min_tss $min_tss --min_frags $min_frags --plot_file joint_barcode_cell_plotting.jpg
 
-    echo "TODO: remove the following command" 
-    touch plot_file.jpg
-    touch joint_cell_plotting.log
-    # Print finish of run_joint_barcode_metadata
     echo 'Finished run_joint_barcode_cell_plotting.'
   """
 }

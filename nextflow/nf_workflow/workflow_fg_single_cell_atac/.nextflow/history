@@ -66,3 +66,4 @@
 2024-03-12 02:13:19	2m 57s	determined_lalande	ERR	193a90c4f637f9cbe08614fe369edb53	0cbd4d64-b857-4807-b564-11778fa2d750	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_atac.config -profile google_batch_profile -with-tower -resume
 2024-03-12 02:20:55	2m 48s	nice_wescoff	ERR	193a90c4f637f9cbe08614fe369edb53	0cbd4d64-b857-4807-b564-11778fa2d750	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_atac.config -profile google_batch_profile -with-tower -resume
 2024-03-12 02:27:08	2h 21m 58s	peaceful_goldstine	OK	193a90c4f637f9cbe08614fe369edb53	0cbd4d64-b857-4807-b564-11778fa2d750	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_atac.config -profile google_batch_profile -with-tower -resume
+2024-04-01 16:34:51	-	irreverent_galileo	-	193a90c4f637f9cbe08614fe369edb53	0cbd4d64-b857-4807-b564-11778fa2d750	nextflow run nf_wf_fg_singlecell_atac.nf -c nextflow_atac.config -profile google_batch_profile -with-tower -resume

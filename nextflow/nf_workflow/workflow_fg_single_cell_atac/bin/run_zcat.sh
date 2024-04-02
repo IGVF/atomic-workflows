@@ -22,4 +22,4 @@ fi
 
 echo 'Files after processing:'
 ls -lt
-echo 'Finished run_zcat'
+echo 'Finished run_zcat.sh'

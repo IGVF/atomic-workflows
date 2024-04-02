@@ -41,7 +41,6 @@ echo "tsv is ${prefix}.atac.filter.fragments.tsv"
 echo "csv is ${prefix}.atac.align.barcode.summary.csv"
 echo "log out is ${prefix}.atac.align.k4.hg38.log.txt"
 
-ls > ls_input.txt
 echo 'start chromap execution'
 chromap -x $genome_chromap_idx --trim-adapters --remove-pcr-duplicates --remove-pcr-duplicates-at-cell-level --Tn5-shift --low-mem --BED -l $CHROMAP_READ_LENGTH --bc-error-threshold $CHROMAP_BC_ERROR_THRESHOLD --bc-probability-threshold $CHROMAP_BC_PROBABILITY_THRESHOLD --read-format $CHROMAP_READ_FORMAT --drop-repetitive-reads $CHROMAP_DROP_REPETITIVE_READS -r $genome_fasta -q $CHROMAP_QUALITY_THRESHOLD -t $CPUS_TO_USE -1 $fastq1,$fastq2 -2 $fastq3,$fastq4 -b $barcode1_fastq,$barcode2_fastq --barcode-whitelist $whitelist_file -o ${prefix}.atac.filter.fragments.tsv --summary ${prefix}.atac.align.barcode.summary.csv > ${prefix}.atac.align.k4.hg38.log.txt 2>&1
 echo 'finished run_chromap_map_to_idx'
