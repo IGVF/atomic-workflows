@@ -55,6 +55,7 @@ workflow multiome_pipeline {
         # ATAC - Filter
         ## Biological
         String? read_format = "bc:0:-1,r1:0:-1,r2:0:-1"
+        String? atac_read_format = "bc:0:-1,r1:0:-1,r2:0:-1"
         Int? atac_filter_minimum_fragments_cutoff = 1
         #Int? atac_filter_shift_plus = 4
         #Int? atac_filter_shift_minus = -4
@@ -63,6 +64,7 @@ workflow multiome_pipeline {
         Array[File] read1_rna
         Array[File] read2_rna
         File? gtf
+        String? rna_read_format
 
         # Joint qc
         Int remove_low_yielding_cells = 10
@@ -178,6 +180,8 @@ workflow multiome_pipeline {
                     prefix = prefix,
                     subpool = subpool,
                     genome_name = genome_name_
+                    genome_name = genome_name_,
+                    read_format = rna_read_format
             }
         }
     }
@@ -201,6 +205,7 @@ workflow multiome_pipeline {
                     tss_bed = tss_bed_,
                     prefix = prefix,
                     read_format = select_first([preprocess_tenx.tenx_barcode_complementation_out,read_format]),
+                    read_format = select_first([preprocess_tenx.tenx_barcode_complementation_out,atac_read_format]),
                     genome_name = genome_name_,
                     barcode_conversion_dict = barcode_mapping.tenx_barcode_conversion_dict,
                     pipeline_modality = pipeline_modality
