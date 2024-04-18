@@ -119,7 +119,6 @@ workflow wf_rna {
             strand = kb_strand,
             kb_workflow = kb_workflow,
             barcode_whitelist = barcode_whitelist_,
-            index_string = index_string_,
             index_string = select_first([read_format, index_string_]),
             genome_gtf = genome_gtf,
             subpool = subpool,
