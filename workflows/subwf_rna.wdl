@@ -73,6 +73,8 @@ workflow wf_rna {
                 onlists = barcode_whitelists,
                 modality = "rna",
                 tool_format = "kb",
+                chemistry = chemistry,
+                onlist_format = "multi",
                 cpus = seqspec_extract_cpus,
                 disk_factor = seqspec_extract_disk_factor,
                 memory_factor = seqspec_extract_memory_factor,

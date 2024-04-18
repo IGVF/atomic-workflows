@@ -16,6 +16,8 @@ task seqspec_extract {
         Array[File] onlists #Filenames must EXACTLY match in seqspec
         String modality
         String tool_format
+        String onlist_format
+        String chemistry
         
         #Take input filenames, not actual files since not required. Filenames must EXACTLY match in seqspec
         String fastq_R1 
@@ -58,15 +60,22 @@ task seqspec_extract {
         
         seqspec index -t ~{tool_format} -m ~{modality} -r ~{sep="," fastq_files} spec.yaml > index_string.txt
         
-        echo 'seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt'
+        echo 'seqspec onlist -m ~{modality} -f ~{onlist_format} -r barcode -s region-type spec.yaml > whitelist_path.txt'
         
-        seqspec onlist -m ~{modality} -r barcode spec.yaml > whitelist_path.txt
+        seqspec onlist -m ~{modality} -f ~{onlist_format} -r barcode -s region-type spec.yaml > whitelist_path.txt
         mv $(cat whitelist_path.txt) final_barcodes.txt
 
         if [[ '~{tool_format}' == "chromap" ]]; then
             awk '{print $NF}' index_string.txt > temp_index_string
             mv temp_index_string index_string.txt
         fi
+        
+        if [[ '~{chemistry}' == "shareseq" && '~{modality}' == "rna" ]]; then
+            awk '{for(i=1;i<=length($0);i+=8) printf "%s ",substr($0,i,8); printf "\n"}' final_barcodes.txt > tmp_barcodes
+            
+            mv tmp_barcodes final_barcodes.txt
+        fi
+        
         
     >>>
     output {

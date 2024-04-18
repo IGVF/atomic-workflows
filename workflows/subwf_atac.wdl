@@ -162,6 +162,8 @@ workflow wf_atac {
                 onlists = barcode_whitelists,
                 modality = "atac",
                 tool_format = "chromap",
+                onlist_format = "product",
+                chemistry = chemistry,
                 cpus = seqspec_extract_cpus,
                 disk_factor = seqspec_extract_disk_factor,
                 memory_factor = seqspec_extract_memory_factor,
