@@ -43,7 +43,7 @@ task kb {
         Float? memory_factor = 0.15
         
         #TODO:We need to setup a docker registry.
-        String? docker_image = "swekhande/igvf:task_cellatlas_rna"
+        String? docker_image = "swekhande/igvf:task_kb"
         
     }
     
@@ -135,7 +135,7 @@ task kb {
                 --gene-names \
                 -t ~{threads} \
                 $interleaved_files_string 
-        
+                
         fi
 
         #if subpool is defined add subpool suffix
@@ -146,6 +146,18 @@ task kb {
 
             #add subpool suffix in barcodes.txt file
             sed -i 's/$/_~{subpool}/' ~{directory}/counts_unfiltered/cells_x_genes.barcodes.txt
+        
+        fi
+        
+        if [[ '~{kb_workflow}' == "nac" ]]; then  
+        
+            #python script to create aggregated counts h5ad    
+            
+            python3 $(which write_h5ad_from_mtx.py) ~{directory}/counts_unfiltered/cells_x_genes.~{matrix_sum}.mtx \
+            {directory}/counts_unfiltered/cells_x_genes.barcodes.txt \
+            {directory}/counts_unfiltered/cells_x_genes.genes.names.txt
+            
+            mv output.h5ad ~{prefix}.rna.align.kb.~{genome_name}.cells_x_genes.~{matrix_sum}.h5ad
         
         fi
         
@@ -161,8 +173,9 @@ task kb {
         File rna_output = "~{directory}.tar.gz"
         File rna_alignment_json = alignment_json
         File rna_barcode_matrics_json = barcode_matrics_json
-        File rna_mtx_tar = count_matrix
-        File rna_counts_h5ad = "~{prefix}.rna.align.kb.~{genome_name}.count_matrix.h5ad"
+        File rna_mtxs_tar = count_matrix
+        File rna_mtxs_h5ad = "~{prefix}.rna.align.kb.~{genome_name}.count_matrix.h5ad"
+        File? rna_aggregated_counts_h5ad = "~{prefix}.rna.align.kb.~{genome_name}.cells_x_genes.~{matrix_sum}.h5ad"
     }
 
     runtime {

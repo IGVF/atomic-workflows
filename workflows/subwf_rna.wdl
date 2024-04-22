@@ -133,7 +133,7 @@ workflow wf_rna {
     
     call task_qc_rna.qc_rna as qc_rna {
         input:
-            counts_h5ad = kb.rna_counts_h5ad,
+            counts_h5ad = kb.rna_mtxs_h5ad,
             genome_name = genome_name,
             kb_workflow = kb_workflow,
             prefix = prefix,
@@ -157,8 +157,9 @@ workflow wf_rna {
         Array[File]? rna_read2_processed = correct.corrected_fastq_R2
         File rna_align_log = kb.rna_alignment_json
         File rna_kb_output = kb.rna_output
-        File rna_mtx_tar = kb.rna_mtx_tar
-        File rna_counts_h5ad = kb.rna_counts_h5ad
+        File rna_mtxs_tar = kb.rna_mtxs_tar
+        File rna_mtxs_h5ad = kb.rna_mtxs_h5ad
+        File? rna_aggregated_counts_h5ad = kb.rna_aggregated_counts_h5ad
         File rna_log = log_rna.rna_logfile
         File rna_barcode_metadata = qc_rna.rna_barcode_metadata
         File? rna_umi_barcode_rank_plot = qc_rna.rna_umi_barcode_rank_plot

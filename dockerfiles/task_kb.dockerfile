@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     rm -rf /var/lib/apt/lists/*
     
 # Install kb-python
-RUN pip install --quiet kb-python==0.28.2
+RUN pip install --quiet kb-python==0.28.2 scanpy==1.9.5 anndata==0.10.1
 
 # Create and setup new user
 #ENV USER=igvf
@@ -34,5 +34,6 @@ RUN pip install --quiet kb-python==0.28.2
 #COPY --chown=$USER:$USER src/bash/monitor_script.sh /usr/local/bin
 COPY src/bash/monitor_script.sh /usr/local/bin
 COPY src/python/modify_barcode_h5.py /usr/local/bin
+COPY src/python/write_h5ad_from_mtx.py /usr/local/bin
 
 USER $USER
