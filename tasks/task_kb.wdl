@@ -62,7 +62,7 @@ task kb {
 
     # Define the output names
     String directory = "${prefix}.rna.align.kb.${genome_name}"
-    String count_matrix = "${prefix}.rna.align.kb.${genome_name}.tar.gz"
+    String mtx_tar = "${prefix}.rna.align.kb.${genome_name}.mtx.tar.gz"
     String alignment_json = "${prefix}.rna.align.kb.${genome_name}/run_info.json"
     String barcode_matrics_json = "${prefix}.rna.align.kb.${genome_name}/inspect.json"
 
@@ -163,7 +163,7 @@ task kb {
         
         tar -kzcvf ~{directory}.tar.gz ~{directory}
         
-        tar -czvf ~{count_matrix}  --exclude='*.h5ad' -C ~{directory}/counts_unfiltered/ .
+        tar -czvf ~{mtx_tar}  --exclude='*.h5ad' -C ~{directory}/counts_unfiltered/ .
 
         mv ~{directory}/counts_unfiltered/adata.h5ad ~{prefix}.rna.align.kb.~{genome_name}.count_matrix.h5ad
 
@@ -173,7 +173,7 @@ task kb {
         File rna_output = "~{directory}.tar.gz"
         File rna_alignment_json = alignment_json
         File rna_barcode_matrics_json = barcode_matrics_json
-        File rna_mtxs_tar = count_matrix
+        File rna_mtxs_tar = mtx_tar
         File rna_mtxs_h5ad = "~{prefix}.rna.align.kb.~{genome_name}.count_matrix.h5ad"
         File? rna_aggregated_counts_h5ad = "~{prefix}.rna.align.kb.~{genome_name}.cells_x_genes.~{matrix_sum}.h5ad"
     }
