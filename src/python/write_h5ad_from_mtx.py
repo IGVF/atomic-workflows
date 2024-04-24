@@ -12,7 +12,7 @@ def main():
     # get arguments
     parser = argparse.ArgumentParser(description="This script takes in a mtx file, barcode.txt and genes.txt and outputs a h5ad.")
     parser.add_argument("mtx", help="Filename for input mtx file")
-    parser.add_argument("barcode", help="Filename for input barcode file")
+    parser.add_argument("barcodes", help="Filename for input barcode file")
     parser.add_argument("genes", help="Filename for input genes file")
     
     args = parser.parse_args()
@@ -29,6 +29,9 @@ def main():
     g=gene_file.read().splitlines()
     
     adata.obs_names = bc
-    adata.var_names = g[0]
+    adata.var_names = g
     
     adata.write_h5ad("output.h5ad")
+    
+if __name__ == "__main__":
+    main()
