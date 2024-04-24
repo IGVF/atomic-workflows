@@ -154,8 +154,8 @@ task kb {
             #python script to create aggregated counts h5ad    
             
             python3 $(which write_h5ad_from_mtx.py) ~{directory}/counts_unfiltered/cells_x_genes.~{matrix_sum}.mtx \
-            {directory}/counts_unfiltered/cells_x_genes.barcodes.txt \
-            {directory}/counts_unfiltered/cells_x_genes.genes.names.txt
+            ~{directory}/counts_unfiltered/cells_x_genes.barcodes.txt \
+            ~{directory}/counts_unfiltered/cells_x_genes.genes.names.txt
             
             mv output.h5ad ~{prefix}.rna.align.kb.~{genome_name}.cells_x_genes.~{matrix_sum}.h5ad
         
