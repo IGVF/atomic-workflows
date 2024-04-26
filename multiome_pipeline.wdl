@@ -87,6 +87,16 @@ workflow multiome_pipeline {
     File whitelist_atac_ = whitelist_atac[0]
     File whitelist_rna_ = whitelist_rna[0]
     
+    #seqspec
+    scatter(file in seqspecs){
+        call check_inputs.check_inputs as check_seqspec{
+            input:
+                path = file
+        }
+    }
+    
+    Array[File] seqspecs_ = select_first([ check_seqspec.output_file, seqspecs ])
+    
     #ATAC Read1
     
     if (sub(basename(read1_atac[0]), "syn", "") != basename(read1_atac[0])){
@@ -171,7 +181,7 @@ workflow multiome_pipeline {
                 input:
                     read1 = read1_rna_,
                     read2 = read2_rna_,
-                    seqspecs = seqspecs,
+                    seqspecs = seqspecs_,
                     chemistry = chemistry,
                     barcode_whitelists = whitelist_rna,
                     genome_fasta = genome_fasta,
