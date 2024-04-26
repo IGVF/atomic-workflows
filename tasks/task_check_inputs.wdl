@@ -17,7 +17,7 @@ task check_inputs {
         Int? cpus = 1
         Float? disk_factor = 1.0
         Float? memory_factor = 1.0
-        String? docker_image = "swekhande/shareseq-prod:synapse1"    
+        String? docker_image = "swekhande/shareseq-prod:check-inputs"    
     }
 
     Float mem_gb = 4.0
