@@ -13,6 +13,8 @@ LABEL software.organization="IGVF"
 LABEL software.version.is-production="No"
 LABEL software.task="task_synapse"
 
+RUN pip install wget
+
 # Install synapseclient package
 RUN pip install synapseclient==2.7.2
 
@@ -22,4 +24,4 @@ synapse login -p $TOKEN --remember-me
 
 # docker must be built locally using command: 
 # docker build -t your_image_name -f /path/to/dockerfile \
---secret id=synapse_token,src=/path/to/synapse_token .
+#--secret id=synapse_token,src=/path/to/synapse_token .

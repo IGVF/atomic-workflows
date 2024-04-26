@@ -41,7 +41,7 @@ task check_inputs {
         if [[ "~{path}" == syn* ]]; then
             synapse get ~{path}
         elif [[ "~{path}" == https* ]]; then
-            wget ~{path}
+            python -m wget ~{path}
         fi
   
     >>>
