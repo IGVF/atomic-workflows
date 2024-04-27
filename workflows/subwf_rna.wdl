@@ -74,7 +74,7 @@ workflow wf_rna {
                 modality = "rna",
                 tool_format = "kb",
                 chemistry = chemistry,
-                onlist_format = if chemistry=="10x_multiome" then "product" else "multi",
+                onlist_format = if chemistry=="shareseq" || chemistry=="parse" then "multi" else "product",
                 cpus = seqspec_extract_cpus,
                 disk_factor = seqspec_extract_disk_factor,
                 memory_factor = seqspec_extract_memory_factor,
