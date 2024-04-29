@@ -51,47 +51,50 @@ library_spec:
   region_type: atac
   name: atac
   sequence_type: joined
-  sequence: GCGATCGAGGACGGCAGATGTGTATAAGAGACAGCTGTCTCTTATACACATCTGAGGCGGAGACGGTGACACTCTTTCCCTACACGACGCTCTTCCGATCTNNNNNNNNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXAGATCGGAAGAGCACACGTCTGAACTCCAGTCACGCGTGGAGACGCTGCCGACGACACCGTCTCCGCCTCAGATGTGTATAAGAGACAG
+  sequence: TODO
   min_len: 209
   max_len: 306
   onlist: null
   regions:
   - !Region
-      region_id: illumina_p5
-      region_type: illumina_p5
-      name: Illumina P5
-      sequence_type: fixed
-      sequence: GCGATCGAGGACGGCAGATGTGTATAAGAGACAG
-      min_len: 34
-      max_len: 34
-      onlist: null
-      regions: null
-      parent_id: atac
+    region_id: illumina_p5
+    region_type: illumina_p5
+    name: Illumina P5
+    sequence_type: fixed
+    sequence: GCGATCGAGGACGGCAGATGTGTATAAGAGACAG
+    min_len: 34
+    max_len: 34
+    onlist: null
+    regions: null
+    parent_id: atac
   - !Region
-      region_id: index5
-      region_type: index5
-      name: index5
-      sequence_type: onlist
-      sequence: CTGTCTCTTATACACATCTGAGGCGGAGACGGTG
-      min_len: 34
-      max_len: 34
-      onlist: !Onlist
-        filename: index_onlist.txt
-        location: local
-        md5: 5b62453df2771f5aa856f78797f16591
-      regions: null
-      parent_id: atac
+    region_id: index5
+    region_type: index5
+    name: index5
+    sequence_type: onlist
+    sequence: CTGTCTCTTATACACATCTGAGGCGGAGACGGTG
+    min_len: 34
+    max_len: 34
+    onlist: !Onlist
+      filename: index_onlist.txt
+      location: local
+      md5: 5b62453df2771f5aa856f78797f16591
+    regions: null
+    parent_id: atac
   - !Region
-      region_id: truseq_read1
-      region_type: truseq_read1
-      name: Truseq Read 1
-      sequence_type: fixed
-      sequence: ACACTCTTTCCCTACACGACGCTCTTCCGATCT
-      min_len: 33
-      max_len: 33
-      onlist: null
-      regions: null
-      parent_id: atac
+    region_id: index7
+    region_type: index7
+    name: index7
+    sequence_type: onlist
+    sequence: GCGTGGAGACGCTGCCGACGAC
+    min_len: 22
+    max_len: 22
+    onlist: !Onlist
+      filename: index_onlist.txt
+      location: local
+      md5: 5b62453df2771f5aa856f78797f16591
+    regions: null
+    parent_id: atac
   - !Region
     region_id: barcode
     region_type: barcode
@@ -118,6 +121,17 @@ library_spec:
     regions: null
     parent_id: atac
   - !Region
+    region_id: truseq_read1
+    region_type: truseq_read1
+    name: Truseq Read 1
+    sequence_type: fixed
+    sequence: ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+    min_len: 33
+    max_len: 33
+    onlist: null
+    regions: null
+    parent_id: atac
+  - !Region
     region_id: cdna
     region_type: cdna
     name: Complementary DNA
@@ -137,20 +151,6 @@ library_spec:
     min_len: 34
     max_len: 34
     onlist: null
-    regions: null
-    parent_id: atac
-  - !Region
-    region_id: index7
-    region_type: index7
-    name: index7
-    sequence_type: onlist
-    sequence: GCGTGGAGACGCTGCCGACGA
-    min_len: 21
-    max_len: 21
-    onlist: !Onlist
-      filename: index_onlist.txt
-      location: local
-      md5: 5b62453df2771f5aa856f78797f16591
     regions: null
     parent_id: atac
   - !Region
