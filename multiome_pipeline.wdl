@@ -171,7 +171,8 @@ workflow multiome_pipeline {
                     barcode_offset = atac_barcode_offset,
                     prefix = prefix
         }
-        if ( chemistry == "10x_multiome" ){
+        
+        if ( chemistry == "10x_multiome" && process_rna){
             call tenx_barcode_map.mapping_tenx_barcodes as barcode_mapping{
                 input:
                     whitelist_atac = whitelist_atac_,
