@@ -65,7 +65,7 @@ task seqspec_extract {
         seqspec onlist -m ~{modality} -f ~{onlist_format} -r barcode -s region-type spec.yaml > whitelist_path.txt
         
         file_path=$(cat whitelist_path.txt); [[ $file_path =~ \.gz$ ]] && mv $(cat whitelist_path.txt) final_barcodes.txt.gz || mv $(cat whitelist_path.txt) final_barcodes.txt
-
+        
         if [[ '~{tool_format}' == "chromap" ]]; then
             awk '{print $NF}' index_string.txt > temp_index_string
             mv temp_index_string index_string.txt
@@ -81,7 +81,7 @@ task seqspec_extract {
     >>>
     output {
         String index_string = read_string("index_string.txt")
-        File onlist = "final_barcodes.txt" #read_string(path)
+        File onlist = glob("final_barcodes*")[0]
         File monitor_log = "~{monitor_fnp_log}"
     }
 
