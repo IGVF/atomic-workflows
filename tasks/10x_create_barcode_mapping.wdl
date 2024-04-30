@@ -37,10 +37,26 @@ task mapping_tenx_barcodes {
 
     command <<<
         set -e
+        
+        if [[ '~{whitelist_atac}' == *.gz ]]; then
+            echo '------ Decompressing the ATAC barcode inclusion list ------' 1>&2
+            gunzip -c ~{whitelist_atac} > atac_barcode_inclusion_list.txt
+        else
+            echo '------ No decompression needed for the ATAC barcode inclusion list ------' 1>&2
+            cat ~{whitelist_atac} > atac_barcode_inclusion_list.txt
+        fi
+        
+        if [[ '~{whitelist_rna}' == *.gz ]]; then
+            echo '------ Decompressing the RNA barcode inclusion list ------' 1>&2
+            gunzip -c ~{whitelist_rna} > rna_barcode_inclusion_list.txt
+        else
+            echo '------ No decompression needed for the RNA barcode inclusion list ------' 1>&2
+            cat ~{whitelist_rna} > rna_barcode_inclusion_list.txt
+        fi
 
-        if [ "$(cat ~{whitelist_atac} | wc -l)" -eq "$(cat ~{whitelist_rna} | wc -l)" ]; then
-            cat ~{whitelist_atac} | tr ACGTacgt TGCAtgca | rev | paste -d '\t' - <(cat ~{whitelist_rna}) > ~{barcode_conversion_dict}
-            paste -d '\t' <(cat ~{whitelist_atac}) <(cat ~{whitelist_rna}) >> ~{barcode_conversion_dict}
+        if [ "$(cat atac_barcode_inclusion_list.txt | wc -l)" -eq "$(cat rna_barcode_inclusion_list.txt | wc -l)" ]; then
+            cat atac_barcode_inclusion_list.txt | tr ACGTacgt TGCAtgca | rev | paste -d '\t' - <(cat rna_barcode_inclusion_list.txt) > ~{barcode_conversion_dict}
+            paste -d '\t' <(cat atac_barcode_inclusion_list.txt) <(cat rna_barcode_inclusion_list.txt) >> ~{barcode_conversion_dict}
         fi
         # Fix for chromap.
         awk -v OFS="\t" '{print $2,$1}' barcode_conversion_dict.csv > temp
