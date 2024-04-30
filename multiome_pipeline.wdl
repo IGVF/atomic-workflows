@@ -90,7 +90,7 @@ workflow multiome_pipeline {
     File whitelist_rna_ = whitelist_rna[0]
     
     #seqspec
-    if (sub(basename(seqspecs[0]), "gs://", "") == basename(seqspecs[0])){
+    if (sub(seqspecs[0], "gs://", "") == sub(seqspecs[0], "", "")){
         scatter(file in seqspecs){
             call check_inputs.check_inputs as check_seqspec{
                 input:
@@ -102,7 +102,7 @@ workflow multiome_pipeline {
     Array[File] seqspecs_ = select_first([ check_seqspec.output_file, seqspecs ])
     
     #ATAC Read1
-    if (sub(basename(read1_atac[0]), "gs://", "") == basename(read1_atac[0])){
+    if (sub(read1_atac[0], "gs://", "") == sub(read1_atac[0], "", "")){
     
         scatter(file in read1_atac){
             call check_inputs.check_inputs as check_read1_atac{
@@ -115,7 +115,7 @@ workflow multiome_pipeline {
     Array[File] read1_atac_ = select_first([ check_read1_atac.output_file, read1_atac ])
     
     #ATAC Read2
-    if (sub(basename(read2_atac[0]), "gs://", "") == basename(read2_atac[0])){
+    if (sub(read2_atac[0], "gs://", "") == sub(read2_atac[0], "", "")){
         scatter(file in read2_atac){
             call check_inputs.check_inputs as check_read2_atac{
                 input:
@@ -127,7 +127,7 @@ workflow multiome_pipeline {
     Array[File] read2_atac_ = select_first([ check_read2_atac.output_file, read2_atac ])
     
     #ATAC barcode
-    if (sub(basename(fastq_barcode[0]), "gs://", "") == basename(fastq_barcode[0])){
+    if (sub(fastq_barcode[0], "gs://", "") == sub(fastq_barcode[0], "", "")){
         scatter(file in fastq_barcode){
             call check_inputs.check_inputs as check_fastq_barcode{
                 input:
@@ -139,7 +139,7 @@ workflow multiome_pipeline {
     Array[File] fastq_barcode_ = select_first([ check_fastq_barcode.output_file, fastq_barcode ])
     
     #RNA Read1
-    if (sub(basename(read1_rna[0]), "gs://", "") == basename(read1_rna[0])){
+    if (sub(read1_rna[0], "gs://", "") == sub(read1_rna[0], "", "")){
         scatter(file in read1_rna){
             call check_inputs.check_inputs as check_read1_rna{
                 input:
@@ -151,7 +151,7 @@ workflow multiome_pipeline {
     Array[File] read1_rna_ = select_first([ check_read1_rna.output_file, read1_rna ])
     
     #RNA Read2
-    if (sub(basename(read2_rna[0]), "gs://", "") == basename(read2_rna[0])){
+    if (sub(read2_rna[0], "gs://", "") == sub(read2_rna[0], "", "")){
         scatter(file in read2_rna){
             call check_inputs.check_inputs as check_read2_rna{
                 input:
