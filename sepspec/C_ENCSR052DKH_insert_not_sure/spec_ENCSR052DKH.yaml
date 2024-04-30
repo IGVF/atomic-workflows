@@ -76,7 +76,7 @@ library_spec:
     min_len: 34
     max_len: 34
     onlist: !Onlist
-      filename: index_onlist.txt
+      filename:  mmc6.csv
       location: local
       md5: 5b62453df2771f5aa856f78797f16591
     regions: null
@@ -86,11 +86,11 @@ library_spec:
     region_type: index7
     name: index7
     sequence_type: onlist
-    sequence: GCGTGGAGACGCTGCCGACGAC
-    min_len: 22
-    max_len: 22
+    sequence: GCGTGGAGACGCTGCCGACGA
+    min_len: 21
+    max_len: 21
     onlist: !Onlist
-      filename: index_onlist.txt
+      filename: mmc6.csv
       location: local
       md5: 5b62453df2771f5aa856f78797f16591
     regions: null
