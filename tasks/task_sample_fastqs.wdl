@@ -40,7 +40,7 @@ task sample_fastqs {
         
         cd files
     
-        zcat tmp.fastq.gz | head -4000000 | gzip > $(basename -s .fastq.gz ~{path}).sampled.fastq.gz # fastq files has 4 lines per record so 1 million records = 4 million lines
+        zcat tmp.fastq.gz | head -4000000 | gzip > ~{path} # fastq files has 4 lines per record so 1 million records = 4 million lines
         
     >>>
     

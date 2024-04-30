@@ -162,12 +162,50 @@ workflow multiome_pipeline {
     
     Array[File] read2_rna_ = select_first([ check_read2_rna.output_file, read2_rna ])
     
+    #sample mode - use first million records in fastq
+    if (sample_flag){   
+        scatter(file in read1_atac_){
+                call sample_fastqs.sample_fastqs as sample_read1_atac{
+                    input:
+                        path = file
+                }
+            }      
+        
+        scatter(file in read2_atac_){
+                call sample_fastqs.sample_fastqs as sample_read2_atac{
+                    input:
+                        path = file
+                }
+            }      
+        
+        scatter(file in fastq_barcode_){
+                call sample_fastqs.sample_fastqs as sample_barcode{
+                    input:
+                        path = file
+                }
+            }      
     
-    #will be updated when changing atac? 
+        scatter(file in read1_rna_){
+                call sample_fastqs.sample_fastqs as sample_read1_rna{
+                    input:
+                        path = file
+                }
+            }      
+        
+        scatter(file in read2_rna_){
+                call sample_fastqs.sample_fastqs as sample_read2_rna{
+                    input:
+                        path = file
+                }
+            }      
+    }
+    
     if ( chemistry != "shareseq" && chemistry != "parse" && process_atac) {
+    
+        Array[File] fq_barcode_ = select_first([ sample_barcode.output_file, fastq_barcode_ ])
         call preprocess_tenx.preprocess_tenx as preprocess_tenx{
                 input:
-                    fastq_barcode = fastq_barcode_[0],
+                    fastq_barcode = fq_barcode_[0],
                     whitelist = whitelist_atac_,
                     chemistry = chemistry,
                     barcode_offset = atac_barcode_offset,
@@ -187,8 +225,8 @@ workflow multiome_pipeline {
         if ( read1_rna[0] != "" ) {
             call subwf_rna.wf_rna as rna{
                 input:
-                    read1 = read1_rna_,
-                    read2 = read2_rna_,
+                    read1 = select_first([sample_read1_rna.output_file,read1_rna_]),
+                    read2 = select_first([sample_read2_rna.output_file,read2_rna_]),
                     seqspecs = seqspecs_,
                     chemistry = chemistry,
                     barcode_whitelists = whitelist_rna,
@@ -206,10 +244,10 @@ workflow multiome_pipeline {
         if ( read1_atac[0] != "" ) {
             call subwf_atac.wf_atac as atac{
                 input:
-                    read1 = select_first([read1_atac_]),
-                    read2 = select_first([read2_atac_]),
+                    read1 = select_first([sample_read1_atac.output_file,read1_atac_]),
+                    read2 = select_first([sample_read2_atac.output_file,read2_atac_]),
                     seqspecs = seqspecs_,
-                    fastq_barcode = fastq_barcode_,
+                    fastq_barcode = select_first([ sample_barcode.output_file, fastq_barcode_ ]),
                     chemistry = chemistry,
                     reference_fasta = genome_fasta,
                     subpool = subpool,
