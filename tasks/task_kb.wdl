@@ -77,6 +77,14 @@ task kb {
            
         mkdir ~{directory}
         
+        if [[ '~{barcode_whitelist}' == *.gz ]]; then
+            echo '------ Decompressing the RNA barcode inclusion list ------' 1>&2
+            gunzip -c ~{barcode_whitelist} > barcode_inclusion_list.txt
+        else
+            echo '------ No decompression needed for the RNA barcode inclusion list ------' 1>&2
+            cat ~{barcode_whitelist} > barcode_inclusion_list.txt
+        fi
+        
         #build index based on kb_workflow
         if [[ '~{kb_workflow}' == "standard" ]]; then   
         
@@ -93,7 +101,7 @@ task kb {
                 -i ~{directory}/index.idx \
                 -g ~{directory}/t2g.txt \
                 -x ~{index_string} \
-                -w ~{barcode_whitelist} \
+                -w barcode_inclusion_list.txt \
                 --strand ~{strand} \
                 ~{if defined(replacement_list) then "-r ~{replacement_list}" else ""} \
                 -o ~{directory} \
@@ -127,7 +135,7 @@ task kb {
                 -c2 ~{directory}/nascent.txt \
                 --sum=~{matrix_sum} \
                 -x ~{index_string} \
-                -w ~{barcode_whitelist} \
+                -w barcode_inclusion_list.txt \
                 --strand ~{strand} \
                 ~{if defined(replacement_list) then "-r ~{replacement_list}" else ""} \
                 -o ~{directory} \
