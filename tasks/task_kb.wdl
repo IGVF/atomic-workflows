@@ -111,9 +111,7 @@ task kb {
                 $interleaved_files_string 
         
         else
-        
-        #add -r, --parity and --strand
-        
+                
             #build ref nac
             kb ref \
                 --workflow=nac \

@@ -174,8 +174,7 @@ workflow wf_atac {
     #Assuming this whitelist is applicable to all fastqs for kb task
     File barcode_whitelist_ = seqspec_extract.onlist[0]
     
-    #Assuming this index_string is applicable to all fastqs for kb task
-    String index_string_ = if chemistry == "shareseq" then "bc:0:-1,r1:0:-1,r2:0:-1" else seqspec_extract.index_string[0] #fixed index string for shareseq
+    String index_string_ = seqspec_extract.index_string[0] 
 
 #fastq_barcode = select_first([trim.fastq_barcode_trimmed, correct.corrected_fastq_barcode, fastq_barcode]),
     if (  "~{pipeline_modality}" != "no_align" ) {
