@@ -86,8 +86,7 @@ workflow wf_rna {
     File barcode_whitelist_ = seqspec_extract.onlist[0]
     
     #Assuming this index_string is applicable to all fastqs for kb task
-    String index_string_ = if chemistry == "shareseq" then "1,0,24:1,24,34:0,0,50" else seqspec_extract.index_string[0] #fixed index string for shareseq
-    
+    String index_string_ = select_first([read_format, seqspec_extract.index_string[0] ])
     
     #correct barcode logic for shareseq
     if ( chemistry == "shareseq" && correct_barcodes ) {
@@ -119,7 +118,7 @@ workflow wf_rna {
             strand = kb_strand,
             kb_workflow = kb_workflow,
             barcode_whitelist = barcode_whitelist_,
-            index_string = select_first([read_format, index_string_]),
+            index_string = index_string_,
             genome_gtf = genome_gtf,
             subpool = subpool,
             genome_name = genome_name,
