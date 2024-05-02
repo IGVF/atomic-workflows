@@ -259,7 +259,8 @@ workflow multiome_pipeline {
                     genome_index_tar = idx_tar_atac_,
                     tss_bed = tss_bed_,
                     prefix = prefix,
-                    read_format = select_first([preprocess_tenx.tenx_barcode_complementation_out,atac_read_format]),
+                    #read_format = select_first([preprocess_tenx.tenx_barcode_complementation_out,atac_read_format]),
+                    read_format = atac_read_format,
                     genome_name = genome_name_,
                     barcode_conversion_dict = barcode_mapping.tenx_barcode_conversion_dict,
                     pipeline_modality = pipeline_modality
