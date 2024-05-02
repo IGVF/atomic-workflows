@@ -2,7 +2,7 @@
 seqspec_version: 0.0.0
 assay_id: Illumina-single-nucleus ATAC-seq (snATAC-seq)
 name: single-nucleus ATAC-seq (snATAC-seq)
-doi: https://www.cell.com/cell/fulltext/S0092-8674(21)01279-4?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867421012794%3Fshowall%3Dtrue#bib21 
+doi: https://www.cell.com/cell/fulltext/S0092-8674(21)01279-4?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867421012794%3Fshowall%3Dtrue#bib21
 date: 29 April 2024
 description: Single Cell ATAC
 modalities:
@@ -51,7 +51,7 @@ library_spec:
   region_type: atac
   name: atac
   sequence_type: joined
-  sequence: TODO
+  sequence: GCGATCGAGGACGGCAGATGTGTATAAGAGACAGNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNXXXXXXXXXXACACTCTTTCCCTACACGACGCTCTTCCGATCTXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXAGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNNNNNNNNNNNNNNNNCACCGTCTCCGCCTCAGATGTGTATAAGAGACAG
   min_len: 209
   max_len: 306
   onlist: null
@@ -72,23 +72,9 @@ library_spec:
     region_type: index5
     name: index5
     sequence_type: onlist
-    sequence: CTGTCTCTTATACACATCTGAGGCGGAGACGGTG
+    sequence: NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
     min_len: 34
     max_len: 34
-    onlist: !Onlist
-      filename:  mmc6.csv
-      location: local
-      md5: 5b62453df2771f5aa856f78797f16591
-    regions: null
-    parent_id: atac
-  - !Region
-    region_id: index7
-    region_type: index7
-    name: index7
-    sequence_type: onlist
-    sequence: GCGTGGAGACGCTGCCGACGA
-    min_len: 21
-    max_len: 21
     onlist: !Onlist
       filename: mmc6.csv
       location: local
@@ -151,6 +137,20 @@ library_spec:
     min_len: 34
     max_len: 34
     onlist: null
+    regions: null
+    parent_id: atac
+  - !Region
+    region_id: index7
+    region_type: index7
+    name: index7
+    sequence_type: onlist
+    sequence: NNNNNNNNNNNNNNNNNNNNN
+    min_len: 21
+    max_len: 21
+    onlist: !Onlist
+      filename: mmc6.csv
+      location: local
+      md5: 5b62453df2771f5aa856f78797f16591
     regions: null
     parent_id: atac
   - !Region
