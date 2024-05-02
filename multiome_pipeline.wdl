@@ -56,7 +56,7 @@ workflow multiome_pipeline {
 
         # ATAC - Filter
         ## Biological
-        String? atac_read_format = "bc:0:-1,r1:0:-1,r2:0:-1"
+        String? atac_read_format
         Int? atac_filter_minimum_fragments_cutoff = 1
         #Int? atac_filter_shift_plus = 4
         #Int? atac_filter_shift_minus = -4
