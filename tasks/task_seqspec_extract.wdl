@@ -55,9 +55,6 @@ task seqspec_extract {
         
         mv ~{sep=" " onlists} ./
         mv ~{seqspec} ./spec.yaml
-        
-        #might have to replace ~{fastq_files} with echo "~{fastq_files}" | tr ',' '\n' | sort -u | awk '{printf("%s%s",sep,$0); sep=","}' to handle duplicate fastq names
-
                 
         echo 'seqspec index -t ~{tool_format} -m ~{modality} -r ~{sep="," fastq_files} spec.yaml > index_string.txt'
         
