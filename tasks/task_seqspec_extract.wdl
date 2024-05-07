@@ -70,14 +70,7 @@ task seqspec_extract {
             awk '{print $NF}' index_string.txt > temp_index_string
             mv temp_index_string index_string.txt
         fi
-        
-        if [[ '~{chemistry}' == "shareseq" && '~{modality}' == "rna" ]]; then
-            awk '{for(i=1;i<=length($0);i+=8) printf "%s ",substr($0,i,8); printf "\n"}' final_barcodes.txt > tmp_barcodes
-            
-            mv tmp_barcodes final_barcodes.txt
-        fi
-        
-        
+                
     >>>
     output {
         String index_string = read_string("index_string.txt")
