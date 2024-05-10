@@ -22,6 +22,7 @@ workflow wf_rna {
                 
         Array[File] seqspecs
         String? read_format
+        File? replacement_list
         
         File genome_fasta
         File genome_gtf
@@ -115,6 +116,7 @@ workflow wf_rna {
             read1_fastqs = fastqs_R1,
             read2_fastqs = fastqs_R2,
             genome_fasta = genome_fasta,
+            replacement_list = replacement_list,
             strand = kb_strand,
             kb_workflow = kb_workflow,
             barcode_whitelist = barcode_whitelist_,
