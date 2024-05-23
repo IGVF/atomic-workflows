@@ -21,3 +21,12 @@ workflows:
          tags:
              - /.*/
 
+   - name: "IGVF-check_inputs"
+     subclass: WDL
+     primaryDescriptorPath: /workflows/subwf_check_inputs_synapse.wdl
+     filters:  # Only develop or master branches and localAligner/** tags
+         branches:
+             - updated-qcs
+         tags:
+             - /.*/
+
