@@ -2,6 +2,7 @@ version 1.0
 
 # Import the sub-workflow for preprocessing the fastqs.
 import "../tasks/task_query_syn.wdl" as query_syn
+import "../tasks/task_check_inputs.wdl" as check_inputs
 import "../tasks/task_seqspec_extract.wdl" as task_seqspec_extract
 
 workflow wf_check_inputs {
@@ -43,7 +44,7 @@ workflow wf_check_inputs {
     
     if (sub(seqspecs[0], "^gs:\/\/", "") == sub(seqspecs[0], "", "")){
         scatter(file in seqspecs){
-            call query_syn.query_syn as check_seqspec{
+            call check_inputs.check_inputs as check_seqspec{
                 input:
                     path = file
             }
@@ -140,7 +141,7 @@ workflow wf_check_inputs {
     scatter ( idx in range(length(seqspecs)) ) {
         call task_seqspec_extract.seqspec_extract as atac_seqspec_extract {
             input:
-                seqspec = seqspecs[idx],
+                seqspec = seqspecs_[idx],
                 fastq_R1 = basename(read1_atac_[idx]),
                 fastq_R2 = basename(read2_atac_[idx]),
                 fastq_barcode = basename(fastq_barcode_[idx]),

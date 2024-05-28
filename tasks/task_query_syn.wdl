@@ -34,7 +34,7 @@ task query_syn {
 
         bash $(which monitor_script.sh) | tee ~{monitor_fnp_log} 1>&2 &
         
-        synapse show syn52253916 | grep "name*" | cut -f2 -d "=" > tmp.txt
+        synapse show ~{path} | grep "name*" | cut -f2 -d "=" > tmp.txt
   
     >>>
     output {
