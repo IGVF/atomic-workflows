@@ -22,7 +22,7 @@ task query_syn {
 
     Float mem_gb = 4.0
 
-    Int disk_gb = round(1.0 * disk_factor)
+    Int disk_gb = round(10.0 * disk_factor)
 
     String disk_type = if disk_gb > 375 then "SSD" else "LOCAL"
     
