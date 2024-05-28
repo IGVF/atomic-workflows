@@ -34,7 +34,7 @@ task seqspec_extract {
     Array[String] fastq_files = select_all([fastq_R1, fastq_R2, fastq_barcode])
     
     # Determine the size of the input
-    Float input_file_size_gb = size(seqspec, "G") 
+    Float input_file_size_gb = 1.0 
 
     # Determining memory size base on the size of the input files.
     Float mem_gb = 2.0 + memory_factor * input_file_size_gb
