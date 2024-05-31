@@ -164,8 +164,10 @@ workflow wf_check_inputs {
     
     output{
     
-        String atac_index = atac_index_string_
-        String rna_index = rna_index_string_
+        File seqspec_atac_onlist = atac_barcode_whitelist_
+        File seqspec_rna_onlist = rna_barcode_whitelist_
+        String seqspec_atac_index = atac_index_string_
+        String seqspec_rna_index = rna_index_string_
     
     }
 }
