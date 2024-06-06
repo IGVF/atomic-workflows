@@ -1,7 +1,7 @@
 version 1.0
 
 # TASK
-# Extract first 1M reads from fastqs
+# Extract first 10M reads from fastqs
 
 
 task sample_fastqs {
@@ -40,7 +40,7 @@ task sample_fastqs {
         
         cd files
     
-        zcat tmp.fastq.gz | head -4000000 | gzip > $(basename ~{path}) # fastq files has 4 lines per record so 1 million records = 4 million lines
+        zcat tmp.fastq.gz | head -40000000 | gzip > $(basename ~{path}) # fastq files has 4 lines per record so 10 million records = 40 million lines
         
         rm tmp.fastq.gz
         
