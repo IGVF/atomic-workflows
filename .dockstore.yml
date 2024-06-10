@@ -7,7 +7,7 @@ workflows:
          branches:
              - main
              - dev
-             - sw-synapse
+             - sw-kb-index
              - updated-qcs
          tags:
              - /.*/
