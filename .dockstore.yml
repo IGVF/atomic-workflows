@@ -29,4 +29,12 @@ workflows:
              - updated-qcs
          tags:
              - /.*/
-
+             
+   - name: "IGVF-kb_index"
+     subclass: WDL
+     primaryDescriptorPath: /workflows/subwf_kb_index.wdl
+     filters:  # Only develop or master branches and localAligner/** tags
+         branches:
+             - sw-kb-index
+         tags:
+             - /.*/
