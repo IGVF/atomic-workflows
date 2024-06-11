@@ -4,7 +4,7 @@ version 1.0
 # rna-kb
 
     
-task kb {
+task kb_count {
 
     meta {
         version: 'v0.1'
@@ -22,8 +22,10 @@ task kb {
         
         String index_string
         
-        File genome_fasta
-        File genome_gtf
+        #File genome_fasta
+        #File genome_gtf
+        
+        File index_directory
         File barcode_whitelist 
         File? replacement_list
         
@@ -62,6 +64,7 @@ task kb {
 
     # Define the output names
     String directory = "${prefix}.rna.align.kb.${genome_name}"
+    String index_dir = basename(index_directory, ".tar.gz")
     String mtx_tar = "${prefix}.rna.align.kb.${genome_name}.mtx.tar.gz"
     String alignment_json = "${prefix}.rna.align.kb.${genome_name}/run_info.json"
     String barcode_matrics_json = "${prefix}.rna.align.kb.${genome_name}/inspect.json"
@@ -76,6 +79,7 @@ task kb {
         interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
            
         mkdir ~{directory}
+        tar -xzvf ~{index_directory}
         
         if [[ '~{barcode_whitelist}' == *.gz ]]; then
             echo '------ Decompressing the RNA barcode inclusion list ------' 1>&2
@@ -86,20 +90,11 @@ task kb {
         fi
         
         #build index based on kb_workflow
-        if [[ '~{kb_workflow}' == "standard" ]]; then   
-        
-            #build ref standard
-            kb ref \
-                -i ~{directory}/index.idx \
-                -g ~{directory}/t2g.txt \
-                -f1 ~{directory}/transcriptome.fa \
-                ~{genome_fasta} \
-                ~{genome_gtf}
-                        
+        if [[ '~{kb_workflow}' == "standard" ]]; then                        
             #kb count standard
             kb count \
-                -i ~{directory}/index.idx \
-                -g ~{directory}/t2g.txt \
+                -i ~{index_dir}/index.idx \
+                -g ~{index_dir}/t2g.txt \
                 -x ~{index_string} \
                 -w barcode_inclusion_list.txt \
                 --strand ~{strand} \
@@ -111,26 +106,14 @@ task kb {
                 $interleaved_files_string 
         
         else
-                
-            #build ref nac
-            kb ref \
-                --workflow=nac \
-                -i ~{directory}/index.idx \
-                -g ~{directory}/t2g.txt \
-                -c1 ~{directory}/cdna.txt \
-                -c2 ~{directory}/nascent.txt \
-                -f1 ~{directory}/cdna.fasta \
-                -f2 ~{directory}/nascent.fasta \
-                ~{genome_fasta} \
-                ~{genome_gtf}
                         
             #kb count nac    
             kb count \
                 --workflow=nac \
-                -i ~{directory}/index.idx \
-                -g ~{directory}/t2g.txt \
-                -c1 ~{directory}/cdna.txt \
-                -c2 ~{directory}/nascent.txt \
+                -i ~{index_dir}/index.idx \
+                -g ~{index_dir}/t2g.txt \
+                -c1 ~{index_dir}/cdna.txt \
+                -c2 ~{index_dir}/nascent.txt \
                 --sum=~{matrix_sum} \
                 -x ~{index_string} \
                 -w barcode_inclusion_list.txt \
@@ -211,12 +194,6 @@ task kb {
             help: 'Fixed to RNA',
             example: 'rna'
         }
-        
-        genome_fasta: {
-            description: 'Genome reference',
-            help: 'Genome reference in .fa.gz file',
-            example: 'hg38.fa.gz'
-        } 
         
         cpus: {
             description: 'Number of cpus.',

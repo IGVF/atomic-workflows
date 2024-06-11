@@ -3,7 +3,7 @@ version 1.0
 # Import the tasks called by the pipeline
 import "../tasks/task_seqspec_extract.wdl" as task_seqspec_extract
 import "../tasks/share_task_correct_fastq.wdl" as share_task_correct_fastq
-import "../tasks/task_kb.wdl" as task_kb
+import "../tasks/task_kb_count.wdl" as task_kb
 import "../tasks/task_qc_rna.wdl" as task_qc_rna
 import "../tasks/task_log_rna.wdl" as task_log_rna
 
@@ -15,8 +15,7 @@ workflow wf_rna {
     }
 
     input {
-        # RNA Cell Atlas inputs
-
+    
         Array[File] read1
         Array[File] read2
                 
@@ -26,6 +25,7 @@ workflow wf_rna {
         
         File genome_fasta
         File genome_gtf
+        File kb_index_directory
         String chemistry
         
         Array[File] barcode_whitelists
@@ -111,17 +111,16 @@ workflow wf_rna {
     Array[File] fastqs_R1 = select_first([correct.corrected_fastq_R1, read1])
     Array[File] fastqs_R2 = select_first([correct.corrected_fastq_R2, read2])
 
-    call task_kb.kb as kb{
+    call task_kb.kb_count as kb{
         input:
             read1_fastqs = fastqs_R1,
             read2_fastqs = fastqs_R2,
-            genome_fasta = genome_fasta,
             replacement_list = replacement_list,
             strand = kb_strand,
             kb_workflow = kb_workflow,
+            index_directory = kb_index_directory,
             barcode_whitelist = barcode_whitelist_,
             index_string = index_string_,
-            genome_gtf = genome_gtf,
             subpool = subpool,
             genome_name = genome_name,
             prefix = prefix,

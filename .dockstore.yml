@@ -38,3 +38,12 @@ workflows:
              - sw-kb-index
          tags:
              - /.*/
+             
+   - name: "IGVF-kb_count"
+     subclass: WDL
+     primaryDescriptorPath: /workflows/subwf_rna.wdl
+     filters:  # Only develop or master branches and localAligner/** tags
+         branches:
+             - sw-kb-index
+         tags:
+             - /.*/
