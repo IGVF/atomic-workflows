@@ -23,8 +23,8 @@ workflow wf_rna {
         String? read_format
         File? replacement_list
         
-        File genome_fasta
-        File genome_gtf
+        #File genome_fasta
+        #File genome_gtf
         File kb_index_directory
         String chemistry
         
