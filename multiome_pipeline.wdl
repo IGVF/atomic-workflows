@@ -243,7 +243,7 @@ workflow multiome_pipeline {
                     barcode_whitelists = whitelist_atac,
                     trim_fastqs = trim_fastqs,
                     chrom_sizes = chrom_sizes_,
-                    genome_index_tar = idx_tar_atac_,
+                    reference_index_tar_gz = idx_tar_atac_,
                     tss_bed = tss_bed_,
                     prefix = prefix,
                     read_format = atac_read_format,
