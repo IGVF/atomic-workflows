@@ -35,7 +35,8 @@ workflows:
      primaryDescriptorPath: /workflows/subwf_kb_index.wdl
      filters:  # Only develop or master branches and localAligner/** tags
          branches:
-             - sw-kb-index
+             - dev
+             - updated-qcs
          tags:
              - /.*/
              
@@ -44,6 +45,17 @@ workflows:
      primaryDescriptorPath: /workflows/subwf_rna.wdl
      filters:  # Only develop or master branches and localAligner/** tags
          branches:
-             - sw-kb-index
+             - dev
+             - updated-qcs
+         tags:
+             - /.*/
+    
+   - name: "IGVF-chromap_index"
+     subclass: WDL
+     primaryDescriptorPath: /workflows/subwf_chromap_index.wdl
+     filters:  # Only develop or master branches and localAligner/** tags
+         branches:
+             - dev
+             - updated-qcs
          tags:
              - /.*/
