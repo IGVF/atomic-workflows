@@ -26,6 +26,7 @@ workflow multiome_pipeline {
         String pipeline_modality = "full" # "full": run everything; "count_only": stops after producing fragment file and count matrix; "no_align": correct and trim raw fastqs.
 
         File genome_fasta
+        File kb_index_directory
         
         #can be removed
         File whitelists_tsv = 'gs://broad-buenrostro-pipeline-genome-annotations/whitelists/whitelists.tsv'
@@ -84,7 +85,6 @@ workflow multiome_pipeline {
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
       
-    #could not coerce Array[File] to File?
     #onlists must be gs links. 
     File whitelist_atac_ = whitelist_atac[0]
     File whitelist_rna_ = whitelist_rna[0]
@@ -231,8 +231,9 @@ workflow multiome_pipeline {
                     seqspecs = seqspecs_,
                     chemistry = chemistry,
                     barcode_whitelists = whitelist_rna,
-                    genome_fasta = genome_fasta,
-                    genome_gtf = gtf_,
+                    #genome_fasta = genome_fasta,
+                    #genome_gtf = gtf_,
+                    kb_index_directory = kb_index_directory,
                     prefix = prefix,
                     subpool = subpool,
                     genome_name = genome_name_,
