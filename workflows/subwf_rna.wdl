@@ -2,7 +2,6 @@ version 1.0
 
 # Import the tasks called by the pipeline
 import "../tasks/task_seqspec_extract.wdl" as task_seqspec_extract
-import "../tasks/share_task_correct_fastq.wdl" as share_task_correct_fastq
 import "../tasks/task_kb_count.wdl" as task_kb
 import "../tasks/task_qc_rna.wdl" as task_qc_rna
 import "../tasks/task_log_rna.wdl" as task_log_rna
@@ -25,7 +24,7 @@ workflow wf_rna {
         
         #File genome_fasta
         #File genome_gtf
-        File kb_index_directory
+        File kb_index_tar_gz
         String chemistry
         
         Array[File] barcode_whitelists
@@ -41,15 +40,6 @@ workflow wf_rna {
         Float? kb_memory_factor
         String? kb_docker_image
         String? kb_workflow = "nac"
-        
-        # Correct-specific inputs
-        Boolean correct_barcodes = true #for shareseq
-        
-        # RNA correct runtime parameters
-        Int? correct_cpus
-        Float? correct_disk_factor
-        Float? correct_memory_factor
-        String? correct_docker_image
         
         # RNA seqspec extract runtime parameters
         Int? seqspec_extract_cpus
@@ -88,37 +78,15 @@ workflow wf_rna {
     
     #Assuming this index_string is applicable to all fastqs for kb task
     String index_string_ = select_first([read_format, seqspec_extract.index_string[0] ])
-    
-    #correct barcode logic for shareseq
-    if ( chemistry == "shareseq" && correct_barcodes ) {
-        scatter (read_pair in zip(read1, read2)) {
-            call share_task_correct_fastq.share_correct_fastq as correct {
-                input:
-                    fastq_R1 = read_pair.left,
-                    fastq_R2 = read_pair.right,
-                    whitelist = barcode_whitelist_,
-                    sample_type = "RNA",
-                    pkr = subpool,
-                    prefix = prefix,
-                    cpus = correct_cpus,
-                    disk_factor = correct_disk_factor,
-                    memory_factor = correct_memory_factor,
-                    docker_image = correct_docker_image
-            }
-        }
-    }
-    
-    Array[File] fastqs_R1 = select_first([correct.corrected_fastq_R1, read1])
-    Array[File] fastqs_R2 = select_first([correct.corrected_fastq_R2, read2])
 
     call task_kb.kb_count as kb{
         input:
-            read1_fastqs = fastqs_R1,
-            read2_fastqs = fastqs_R2,
+            read1_fastqs = read1,
+            read2_fastqs = read2,
             replacement_list = replacement_list,
             strand = kb_strand,
             kb_workflow = kb_workflow,
-            index_directory = kb_index_directory,
+            kb_index_tar_gz = kb_index_tar_gz,
             barcode_whitelist = barcode_whitelist_,
             index_string = index_string_,
             subpool = subpool,
@@ -153,8 +121,6 @@ workflow wf_rna {
     }
 
     output {
-        Array[File]? rna_read1_processed = correct.corrected_fastq_R1
-        Array[File]? rna_read2_processed = correct.corrected_fastq_R2
         File rna_align_log = kb.rna_alignment_json
         File rna_kb_output = kb.rna_output
         File rna_mtxs_tar = kb.rna_mtxs_tar

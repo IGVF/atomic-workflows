@@ -25,7 +25,7 @@ task kb_count {
         #File genome_fasta
         #File genome_gtf
         
-        File index_directory
+        File kb_index_tar_gz
         File barcode_whitelist 
         File? replacement_list
         
@@ -64,7 +64,7 @@ task kb_count {
 
     # Define the output names
     String directory = "${prefix}.rna.align.kb.${genome_name}"
-    String index_dir = basename(index_directory, ".tar.gz")
+    String index_dir = basename(kb_index_tar_gz, ".tar.gz")
     String mtx_tar = "${prefix}.rna.align.kb.${genome_name}.mtx.tar.gz"
     String alignment_json = "${prefix}.rna.align.kb.${genome_name}/run_info.json"
     String barcode_matrics_json = "${prefix}.rna.align.kb.${genome_name}/inspect.json"
@@ -79,7 +79,7 @@ task kb_count {
         interleaved_files_string=$(paste -d' ' <(printf "%s\n" ~{sep=" " read1_fastqs}) <(printf "%s\n" ~{sep=" " read2_fastqs}) | tr -s ' ')
            
         mkdir ~{directory}
-        tar -xzvf ~{index_directory}
+        tar -xzvf ~{kb_index_tar_gz}
         
         if [[ '~{barcode_whitelist}' == *.gz ]]; then
             echo '------ Decompressing the RNA barcode inclusion list ------' 1>&2

@@ -46,20 +46,13 @@ workflow multiome_pipeline {
         Int atac_barcode_offset
         String? barcode_tag = "CB"
 
-        #Int? cpus_atac
-        #Int? cutoff_atac = 100
-        #Int? atac_mapq_threshold = 30
-
 
         # ATAC - Align
-        #Int? atac_align_multimappers
 
         # ATAC - Filter
         ## Biological
         String? atac_read_format
         Int? atac_filter_minimum_fragments_cutoff = 1
-        #Int? atac_filter_shift_plus = 4
-        #Int? atac_filter_shift_minus = -4
 
         # RNA-specific inputs
         Array[File] read1_rna
@@ -67,7 +60,7 @@ workflow multiome_pipeline {
         File? gtf
         String? rna_read_format
         String? kb_workflow = "nac"
-        File? kb_index_directory
+        File? kb_index_tar_gz
 
         # Joint qc
         Int remove_low_yielding_cells = 10
@@ -78,11 +71,11 @@ workflow multiome_pipeline {
 
     Map[String, File] annotations = read_map(genome_tsv)
     String genome_name_ =  select_first([genome_name, annotations["genome_name"]])
-    File idx_tar_atac_ = select_first([atac_genome_index_tar, annotations["bowtie2_idx_tar"]])
     File chrom_sizes_ = select_first([chrom_sizes, annotations["chrsz"]])
     File tss_bed_ = select_first([tss_bed, annotations["tss"]])
     File gtf_ = select_first([gtf, annotations["genesgtf"]])
-    File idx_tar_rna_ = if (kb_workflow == "standard") then select_first([kb_index_directory, annotations["kb_standard_idx_tar"]]) else select_first([kb_index_directory, annotations["kb_nac_idx_tar"]])
+    File idx_tar_rna_ = if (kb_workflow == "standard") then select_first([kb_index_tar_gz, annotations["kb_standard_idx_tar"]]) else select_first([kb_index_tar_gz, annotations["kb_nac_idx_tar"]])
+    File idx_tar_atac_ = select_first([kb_index_tar_gz, annotations["chromap_idx_tar"]])
 
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
@@ -206,14 +199,6 @@ workflow multiome_pipeline {
     if ( chemistry != "shareseq" && chemistry != "parse" && process_atac) {
     
         Array[File] fq_barcode_ = select_first([ sample_barcode.output_file, fastq_barcode_ ])
-        call preprocess_tenx.preprocess_tenx as preprocess_tenx{
-                input:
-                    fastq_barcode = fq_barcode_[0],
-                    whitelist = whitelist_atac_,
-                    chemistry = chemistry,
-                    barcode_offset = atac_barcode_offset,
-                    prefix = prefix
-        }
         
         if ( chemistry == "10x_multiome" && process_rna){
             call tenx_barcode_map.mapping_tenx_barcodes as barcode_mapping{
@@ -234,7 +219,7 @@ workflow multiome_pipeline {
                     chemistry = chemistry,
                     barcode_whitelists = whitelist_rna,
                     kb_workflow = kb_workflow,
-                    kb_index_directory = idx_tar_rna_,
+                    kb_index_tar_gz = idx_tar_rna_,
                     prefix = prefix,
                     subpool = subpool,
                     genome_name = genome_name_,
@@ -261,8 +246,7 @@ workflow multiome_pipeline {
                     genome_index_tar = idx_tar_atac_,
                     tss_bed = tss_bed_,
                     prefix = prefix,
-                    read_format = select_first([preprocess_tenx.tenx_barcode_complementation_out,atac_read_format]),
-                    #read_format = atac_read_format,
+                    read_format = atac_read_format,
                     genome_name = genome_name_,
                     barcode_conversion_dict = barcode_mapping.tenx_barcode_conversion_dict,
                     pipeline_modality = pipeline_modality
@@ -303,14 +287,6 @@ workflow multiome_pipeline {
     }
 
     output{
-        # Fastq after correction/trimming
-        Array[File]? atac_read1_processed = atac.atac_read1_processed
-        Array[File]? atac_read2_processed = atac.atac_read2_processed
-        Array[File]? atac_fastq_barcode_processed = atac.atac_fastq_barcode_processed
-
-        Array[File]? rna_read1_processed = rna.rna_read1_processed
-        Array[File]? rna_read2_processed = rna.rna_read2_processed
-
         # RNA outputs
         File? rna_kb_output = rna.rna_kb_output
         File? rna_mtx_tar = rna.rna_mtxs_tar
