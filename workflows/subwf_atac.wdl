@@ -160,6 +160,7 @@ workflow wf_atac {
                 fastq_R2 = read2,
                 fastq_barcode = fastq_barcode,
                 reference_fasta = reference_fasta,
+                reference_index_tar_gz = reference_index_tar_gz,
                 trim_adapters = trim_adapters,
                 genome_name = genome_name,
                 subpool = subpool,

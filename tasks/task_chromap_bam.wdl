@@ -16,6 +16,7 @@ task atac_align_chromap {
         Array[File] fastq_R2
         Array[File]? fastq_barcode
         File reference_fasta
+        File reference_index_tar_gz
         File? barcode_inclusion_list
         File? barcode_conversion_dict
 
@@ -72,10 +73,9 @@ task atac_align_chromap {
 
         bash $(which monitor_script.sh) 1>&2 &
 
-        # Create index
-        mkdir chromap_index
-        echo '------ indexing ------' 1>&2
-        time chromap -i -r <(zcat ~{reference_fasta}) -o chromap_index/index
+        # Extracting index
+        echo '------ Extracting indexing ------' 1>&2
+        time tar -xzf ~{reference_index_tar_gz}
 
         if [[ '~{barcode_inclusion_list}' == *.gz ]]; then
             echo '------ Decompressing the barcode inclusion list ------' 1>&2
