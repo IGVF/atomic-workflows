@@ -52,7 +52,7 @@ task atac_align_chromap {
     Float input_file_size_gb = size(fastq_R1, "G") + size(fastq_R2, "G")
 
     # Determining memory size base on the size of the input files.
-    Float mem_gb = 24.0 + size(reference_fasta, "G") + memory_factor * input_file_size_gb
+    Float mem_gb = 36.0 + size(reference_fasta, "G") + memory_factor * input_file_size_gb
 
     # Determining disk size base on the size of the input files.
     Int disk_gb = round(500.0 + disk_factor * input_file_size_gb)
