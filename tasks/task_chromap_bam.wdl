@@ -61,8 +61,8 @@ task atac_align_chromap {
     String disk_type = if disk_gb > 375 then "SSD" else "LOCAL"
 
     # Define the output names
-    String sam = '${prefix}.atac.filter.fragments.${genome_name}.sam'
-    String bam = '${prefix}.atac.filter.fragments.${genome_name}.bam'
+    String sam = '${prefix}.atac.align.k${multimappers}.${genome_name}.sam'
+    String bam = '${prefix}.atac.align.k${multimappers}.${genome_name}.bam'
     String barcode_log = "${prefix}.atac.align.k${multimappers}.${genome_name}.barcode.summary.csv"
     String alignment_log = "${prefix}.atac.align.k${multimappers}.${genome_name}.log.txt"
 
