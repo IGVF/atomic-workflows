@@ -89,7 +89,7 @@ task atac_align_chromap {
         # The start and end are inclusive and -1 means the end of the read. User may use multiple fields to specify non-consecutive segments, e.g. bc:0:15,bc:32:-1.
         # The strand is presented by '+' and '-' symbol, if '-' the barcode will be reverse-complemented after extraction
         echo '------ align chromap ------' 1>&2
-        time chromap -x chromap_index/index \
+        time chromap \
                 ~{true='--trim-adapters ' false='' trim_adapters} \
                 ~{true='--remove-pcr-duplicates ' false='' remove_pcr_duplicates} \
                 ~{true='--remove-pcr-duplicates-at-cell-level ' false='' remove_pcr_duplicates_at_cell_level} \
