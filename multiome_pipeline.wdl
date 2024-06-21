@@ -80,10 +80,6 @@ workflow multiome_pipeline {
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
       
-    #onlists must be gs links. 
-    File whitelist_atac_ = whitelist_atac[0]
-    File whitelist_rna_ = whitelist_rna[0]
-    
     #seqspec
     if (sub(seqspecs[0], "^gs:\/\/", "") == sub(seqspecs[0], "", "")){
         scatter(file in seqspecs){
@@ -203,8 +199,8 @@ workflow multiome_pipeline {
         if ( chemistry == "10x_multiome" && process_rna){
             call tenx_barcode_map.mapping_tenx_barcodes as barcode_mapping{
                 input:
-                    whitelist_atac = whitelist_atac_,
-                    whitelist_rna = whitelist_rna_
+                    whitelist_atac = whitelist_atac[0],
+                    whitelist_rna = whitelist_rna[0]
             }
         }
     }
