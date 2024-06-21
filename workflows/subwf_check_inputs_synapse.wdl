@@ -38,10 +38,6 @@ workflow wf_check_inputs {
     Boolean process_atac = if length(read1_atac)>0 then true else false
     Boolean process_rna = if length(read1_rna)>0 then true else false
     
-    #onlists must be gs links. 
-    File whitelist_atac_ = whitelist_atac[0]
-    File whitelist_rna_ = whitelist_rna[0]
-    
     if (sub(seqspecs[0], "^gs:\/\/", "") == sub(seqspecs[0], "", "")){
         scatter(file in seqspecs){
             call check_inputs.check_inputs as check_seqspec{
@@ -134,9 +130,9 @@ workflow wf_check_inputs {
     }
     
     #Assuming this whitelist is applicable to all fastqs for kb task
-    File rna_barcode_whitelist_ = rna_seqspec_extract.onlist[0]
+    File? rna_barcode_whitelist_ = rna_seqspec_extract.onlist[0]
     
-    String rna_index_string_ = rna_seqspec_extract.index_string[0]
+    String? rna_index_string_ = rna_seqspec_extract.index_string[0]
     
     scatter ( idx in range(length(seqspecs)) ) {
         call task_seqspec_extract.seqspec_extract as atac_seqspec_extract {
@@ -158,16 +154,16 @@ workflow wf_check_inputs {
     }
     
     #Assuming this whitelist is applicable to all fastqs for kb task
-    File atac_barcode_whitelist_ = atac_seqspec_extract.onlist[0]
+    File? atac_barcode_whitelist_ = atac_seqspec_extract.onlist[0]
     
-    String atac_index_string_ = atac_seqspec_extract.index_string[0]
+    String? atac_index_string_ = atac_seqspec_extract.index_string[0]
     
     output{
     
-        File seqspec_atac_onlist = atac_barcode_whitelist_
-        File seqspec_rna_onlist = rna_barcode_whitelist_
-        String seqspec_atac_index = atac_index_string_
-        String seqspec_rna_index = rna_index_string_
+        File? seqspec_atac_onlist = atac_barcode_whitelist_
+        File? seqspec_rna_onlist = rna_barcode_whitelist_
+        String? seqspec_atac_index = atac_index_string_
+        String? seqspec_rna_index = rna_index_string_
     
     }
 }
