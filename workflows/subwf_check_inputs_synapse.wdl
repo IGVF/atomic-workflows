@@ -50,91 +50,43 @@ workflow wf_check_inputs {
     Array[File] seqspecs_ = select_first([ check_seqspec.output_file, seqspecs ])
     
     if(process_atac){
-        #ATAC Read1
-        if ( (sub(read1_atac[0], "^gs:\/\/", "") == sub(read1_atac[0], "", "")) ){
+            #ATAC Read1
+            if ( (sub(read1_atac[0], "^gs:\/\/", "") == sub(read1_atac[0], "", "")) ){
 
-            scatter(file in read1_atac){
-                call query_syn.query_syn as check_read1_atac{
-                    input:
-                        path = file
+                scatter(file in read1_atac){
+                    call query_syn.query_syn as check_read1_atac{
+                        input:
+                            path = file
+                    }
                 }
             }
-        }
+
+            #ATAC Read2
+            if ( (sub(read2_atac[0], "^gs:\/\/", "") == sub(read2_atac[0], "", "")) ){
+                scatter(file in read2_atac){
+                    call query_syn.query_syn as check_read2_atac{
+                        input:
+                            path = file
+                    }
+                }
+            }
+
+            #ATAC barcode
+            if ( (sub(fastq_barcode[0], "^gs:\/\/", "") == sub(fastq_barcode[0], "", "")) ){
+                scatter(file in fastq_barcode){
+                    call query_syn.query_syn as check_fastq_barcode{
+                        input:
+                            path = file
+                    }
+                }
+            }
+
+
+        Array[String] read1_atac_ = select_first([ check_read1_atac.output_file, read1_atac ])
+        Array[String] read2_atac_ = select_first([ check_read2_atac.output_file, read2_atac ])
+        Array[String] fastq_barcode_ = select_first([ check_fastq_barcode.output_file, fastq_barcode ])
         
-        #ATAC Read2
-        if ( (sub(read2_atac[0], "^gs:\/\/", "") == sub(read2_atac[0], "", "")) ){
-            scatter(file in read2_atac){
-                call query_syn.query_syn as check_read2_atac{
-                    input:
-                        path = file
-                }
-            }
-        }
-
-        #ATAC barcode
-        if ( (sub(fastq_barcode[0], "^gs:\/\/", "") == sub(fastq_barcode[0], "", "")) ){
-            scatter(file in fastq_barcode){
-                call query_syn.query_syn as check_fastq_barcode{
-                    input:
-                        path = file
-                }
-            }
-        }
-    }
-    
-    Array[String] read1_atac_ = select_first([ check_read1_atac.output_file, read1_atac ])
-    Array[String] read2_atac_ = select_first([ check_read2_atac.output_file, read2_atac ])
-    Array[String] fastq_barcode_ = select_first([ check_fastq_barcode.output_file, fastq_barcode ])
-    
-    if(process_rna){
-        #RNA Read1
-        if ( (sub(read1_rna[0], "^gs:\/\/", "") == sub(read1_rna[0], "", "")) ){
-            scatter(file in read1_rna){
-                call query_syn.query_syn as check_read1_rna{
-                    input:
-                        path = file
-                }
-            }
-        }
-
-        #RNA Read2
-        if ( (sub(read2_rna[0], "^gs:\/\/", "") == sub(read2_rna[0], "", "")) ){
-            scatter(file in read2_rna){
-                call query_syn.query_syn as check_read2_rna{
-                    input:
-                        path = file
-                }
-            }
-        }
-    }
-    
-    Array[String] read1_rna_ = select_first([ check_read1_rna.output_file, read1_rna ])
-    Array[String] read2_rna_ = select_first([ check_read2_rna.output_file, read2_rna ])
-    
-    scatter ( idx in range(length(seqspecs_)) ) {
-        call task_seqspec_extract.seqspec_extract as rna_seqspec_extract {
-            input:
-                seqspec = seqspecs_[idx],
-                fastq_R1 = basename(read1_rna_[idx]),
-                fastq_R2 = basename(read2_rna_[idx]),
-                onlists = whitelist_rna,
-                modality = "rna",
-                tool_format = "kb",
-                chemistry = chemistry,
-                onlist_format = if chemistry=="shareseq" || chemistry=="parse" then "multi" else "product",
-                cpus = seqspec_extract_cpus,
-                disk_factor = seqspec_extract_disk_factor,
-                memory_factor = seqspec_extract_memory_factor,
-                docker_image = seqspec_extract_docker_image
-        }
-    }
-    
-    #Assuming this whitelist is applicable to all fastqs for kb task
-    File? rna_barcode_whitelist_ = rna_seqspec_extract.onlist[0]
-    
-    String? rna_index_string_ = rna_seqspec_extract.index_string[0]
-    
-    scatter ( idx in range(length(seqspecs)) ) {
+        scatter ( idx in range(length(seqspecs)) ) {
         call task_seqspec_extract.seqspec_extract as atac_seqspec_extract {
             input:
                 seqspec = seqspecs_[idx],
@@ -150,13 +102,65 @@ workflow wf_check_inputs {
                 disk_factor = seqspec_extract_disk_factor,
                 memory_factor = seqspec_extract_memory_factor,
                 docker_image = seqspec_extract_docker_image
+            }
         }
+
+        #Assuming this whitelist is applicable to all fastqs for kb task
+        File? atac_barcode_whitelist_ = atac_seqspec_extract.onlist[0]
+
+        String? atac_index_string_ = atac_seqspec_extract.index_string[0]
+    
     }
     
-    #Assuming this whitelist is applicable to all fastqs for kb task
-    File? atac_barcode_whitelist_ = atac_seqspec_extract.onlist[0]
+    if(process_rna){
+            #RNA Read1
+            if ( (sub(read1_rna[0], "^gs:\/\/", "") == sub(read1_rna[0], "", "")) ){
+                scatter(file in read1_rna){
+                    call query_syn.query_syn as check_read1_rna{
+                        input:
+                            path = file
+                    }
+                }
+            }
+
+            #RNA Read2
+            if ( (sub(read2_rna[0], "^gs:\/\/", "") == sub(read2_rna[0], "", "")) ){
+                scatter(file in read2_rna){
+                    call query_syn.query_syn as check_read2_rna{
+                        input:
+                            path = file
+                    }
+                }
+            }
+
+
+        Array[String] read1_rna_ = select_first([ check_read1_rna.output_file, read1_rna ])
+        Array[String] read2_rna_ = select_first([ check_read2_rna.output_file, read2_rna ])
+
+        scatter ( idx in range(length(seqspecs_)) ) {
+            call task_seqspec_extract.seqspec_extract as rna_seqspec_extract {
+                input:
+                    seqspec = seqspecs_[idx],
+                    fastq_R1 = basename(read1_rna_[idx]),
+                    fastq_R2 = basename(read2_rna_[idx]),
+                    onlists = whitelist_rna,
+                    modality = "rna",
+                    tool_format = "kb",
+                    chemistry = chemistry,
+                    onlist_format = if chemistry=="shareseq" || chemistry=="parse" then "multi" else "product",
+                    cpus = seqspec_extract_cpus,
+                    disk_factor = seqspec_extract_disk_factor,
+                    memory_factor = seqspec_extract_memory_factor,
+                    docker_image = seqspec_extract_docker_image
+            }
+        }
+
+        #Assuming this whitelist is applicable to all fastqs for kb task
+        File? rna_barcode_whitelist_ = rna_seqspec_extract.onlist[0]
+
+        String? rna_index_string_ = rna_seqspec_extract.index_string[0]
+    }
     
-    String? atac_index_string_ = atac_seqspec_extract.index_string[0]
     
     output{
     
