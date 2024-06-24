@@ -147,7 +147,8 @@ workflow wf_check_inputs {
                     modality = "rna",
                     tool_format = "kb",
                     chemistry = chemistry,
-                    onlist_format = if chemistry=="shareseq" || chemistry=="parse" then "multi" else "product",
+                    #onlist_format = if chemistry=="shareseq" || chemistry=="parse" then "multi" else "product",
+                    onlist_format = "product", #temp fix until bustools bug is fixed
                     cpus = seqspec_extract_cpus,
                     disk_factor = seqspec_extract_disk_factor,
                     memory_factor = seqspec_extract_memory_factor,
