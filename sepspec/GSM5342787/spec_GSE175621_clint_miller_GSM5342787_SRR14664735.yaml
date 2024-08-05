@@ -1,0 +1,193 @@
+!Assay
+seqspec_version: 0.0.0
+assay_id: Illumina-novaseq-Chromium-Next-GEM-Single-Cell-Multiome-ATAC
+name: Chromium-Next-GEM-Single-Cell-ATAC
+doi: https://teichlab.github.io/scg_lib_structs/methods_html/10xChromium_multiome.html
+date: 05 August 2024
+description: Single Cell ATAC
+modalities:
+- atac
+lib_struct: 10X_scATAC_V1_GSE175621
+library_protocol: 10xChromium_scATAC
+library_kit: 10xChromium_scATAC
+sequence_protocol: Illumina
+sequence_kit: NovaSeq 6000
+sequence_spec:
+- !Read
+  read_id: atac.R1.fastq.gz
+  name: Read 1
+  modality: atac
+  primer_id: nextera_read1
+  min_len: 1
+  max_len: 98
+  strand: pos
+- !Read
+  read_id: atac.I1.fastq.gz
+  name: Index 1 (i7 index)
+  modality: atac
+  primer_id: nextera_read2
+  min_len: 8
+  max_len: 8
+  strand: pos
+- !Read
+  read_id: atac.I2.fastq.gz
+  name: Index 2 (i5 index)
+  modality: atac
+  primer_id: nextera_read1
+  min_len: 16
+  max_len: 16
+  strand: neg
+- !Read
+  read_id: atac.R2.fastq.gz
+  name: Read 2
+  modality: atac
+  primer_id: nextera_read2
+  min_len: 1
+  max_len: 250
+  strand: neg
+library_spec:
+- !Region
+  region_id: atac
+  region_type: atac
+  name: atac
+  sequence_type: joined
+  sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXNNNNNNNNNNNNNNNNTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
+  min_len: 153
+  max_len: 202
+  onlist: null
+  regions:
+  - !Region
+    region_id: illumina_p5
+    region_type: illumina_p5
+    name: Illumina P5
+    sequence_type: random
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    min_len: 29
+    max_len: 29
+    onlist: null
+    regions: null
+    parent_id: atac
+  - !Region
+    region_id: barcode
+    region_type: barcode
+    name: Barcode
+    sequence_type: onlist
+    sequence: NNNNNNNNNNNNNNNN
+    min_len: 16
+    max_len: 16
+    onlist: !Onlist
+      filename: barcode_onlist.txt
+      location: local
+      md5: 5b62453df2771f5aa856f78797f16591
+    regions: null
+    parent_id: atac
+  - !Region
+    region_id: spacer
+    region_type: spacer_sequence
+    name: Spacer Sequence
+    sequence_type: fixed
+    sequence: CGCGTCTG
+    min_len: 8
+    max_len: 8
+    onlist: null
+    regions: null
+    parent_id: atac
+  - !Region
+    region_id: nextera_read1
+    region_type: nextera_read1
+    name: nextera_read1
+    sequence_type: fixed
+    sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG
+    min_len: 33
+    max_len: 33
+    onlist:
+    regions:
+    - !Region
+      region_id: s5
+      region_type: s5
+      name: s5
+      sequence_type: fixed
+      sequence: TCGTCGGCAGCGTC
+      min_len: 14
+      max_len: 14
+      onlist: null
+      regions: null
+    - !Region
+      region_id: ME1
+      region_type: ME1
+      name: ME1
+      sequence_type: fixed
+      sequence: AGATGTGTATAAGAGACAG
+      min_len: 19
+      max_len: 19
+      onlist: null
+      regions: null
+    parent_id: atac
+  - !Region
+    region_id: cDNA
+    region_type: cDNA
+    name: Complementary DNA
+    sequence_type: random
+    sequence: X
+    min_len: 1
+    max_len: 50
+    onlist: null
+    regions: null
+    parent_id: atac
+  - !Region
+    region_id: nextera_read2
+    region_type: nextera_read2
+    name: nextera_read2
+    sequence_type: joined
+    sequence: CTGTCTCTTATACACATCTCCGAGCCCACGAGAC
+    min_len: 34
+    max_len: 34
+    onlist: null
+    regions:
+    - !Region
+      region_id: ME2
+      region_type: ME2
+      name: ME2
+      sequence_type: fixed
+      sequence: CTGTCTCTTATACACATCT
+      min_len: 19
+      max_len: 19
+      onlist: null
+      regions: null
+    - !Region
+      region_id: s7
+      region_type: s7
+      name: s7
+      sequence_type: fixed
+      sequence: CCGAGCCCACGAGAC
+      min_len: 15
+      max_len: 15
+      onlist: null
+      regions: null
+    parent_id: atac
+  - !Region
+    region_id: index7
+    region_type: index7
+    name: Truseq Read 2
+    sequence_type: onlist
+    sequence: NNNNNNNN
+    min_len: 8
+    max_len: 8
+    onlist: !Onlist
+      filename: index7_onlist.txt
+      md5: null
+      location: local
+    regions: null
+    parent_id: atac
+  - !Region
+    region_id: illumina_p7
+    region_type: illumina_p7
+    name: Illumina P7
+    sequence_type: fixed
+    sequence: ATCTCGTATGCCGTCTTCTGCTTG
+    min_len: 24
+    max_len: 24
+    onlist: null
+    regions: null
+    parent_id: atac
+  parent_id: null
