@@ -83,7 +83,7 @@ library_spec:
     parent_id: atac
   - !Region
     region_id: spacer
-    region_type: spacer_sequence
+    region_type: linker
     name: Spacer Sequence
     sequence_type: fixed
     sequence: CGCGTCTG
@@ -96,38 +96,16 @@ library_spec:
     region_id: nextera_read1
     region_type: nextera_read1
     name: nextera_read1
-    sequence_type: joined
+    sequence_type: fixed
     sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG
     min_len: 33
     max_len: 33
     onlist: null
-    regions:
-    - !Region
-      region_id: s5
-      region_type: s5
-      name: s5
-      sequence_type: fixed
-      sequence: TCGTCGGCAGCGTC
-      min_len: 14
-      max_len: 14
-      onlist: null
-      regions: null
-      parent_id: nextera_read1
-    - !Region
-      region_id: ME1
-      region_type: ME1
-      name: ME1
-      sequence_type: fixed
-      sequence: AGATGTGTATAAGAGACAG
-      min_len: 19
-      max_len: 19
-      onlist: null
-      regions: null
-      parent_id: nextera_read1
+    regions: null
     parent_id: atac
   - !Region
-    region_id: cDNA
-    region_type: cDNA
+    region_id: cdna
+    region_type: cdna
     name: Complementary DNA
     sequence_type: random
     sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -140,34 +118,12 @@ library_spec:
     region_id: nextera_read2
     region_type: nextera_read2
     name: nextera_read2
-    sequence_type: joined
+    sequence_type: fixed
     sequence: CTGTCTCTTATACACATCTCCGAGCCCACGAGAC
     min_len: 34
     max_len: 34
     onlist: null
-    regions:
-    - !Region
-      region_id: ME2
-      region_type: ME2
-      name: ME2
-      sequence_type: fixed
-      sequence: CTGTCTCTTATACACATCT
-      min_len: 19
-      max_len: 19
-      onlist: null
-      regions: null
-      parent_id: nextera_read2
-    - !Region
-      region_id: s7
-      region_type: s7
-      name: s7
-      sequence_type: fixed
-      sequence: CCGAGCCCACGAGAC
-      min_len: 15
-      max_len: 15
-      onlist: null
-      regions: null
-      parent_id: nextera_read2
+    regions: null
     parent_id: atac
   - !Region
     region_id: index7
