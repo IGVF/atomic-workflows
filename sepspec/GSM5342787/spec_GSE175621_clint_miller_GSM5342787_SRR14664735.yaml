@@ -51,7 +51,7 @@ library_spec:
   region_type: atac
   name: atac
   sequence_type: joined
-  sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXNNNNNNNNNNNNNNNNTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
+  sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXNNNNNNNNNNNNNNNNCGCGTCTGTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
   min_len: 153
   max_len: 202
   onlist: null
@@ -96,11 +96,11 @@ library_spec:
     region_id: nextera_read1
     region_type: nextera_read1
     name: nextera_read1
-    sequence_type: fixed
+    sequence_type: joined
     sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG
     min_len: 33
     max_len: 33
-    onlist:
+    onlist: null
     regions:
     - !Region
       region_id: s5
@@ -112,6 +112,7 @@ library_spec:
       max_len: 14
       onlist: null
       regions: null
+      parent_id: nextera_read1
     - !Region
       region_id: ME1
       region_type: ME1
@@ -122,13 +123,14 @@ library_spec:
       max_len: 19
       onlist: null
       regions: null
+      parent_id: nextera_read1
     parent_id: atac
   - !Region
     region_id: cDNA
     region_type: cDNA
     name: Complementary DNA
     sequence_type: random
-    sequence: X
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     min_len: 1
     max_len: 50
     onlist: null
@@ -154,6 +156,7 @@ library_spec:
       max_len: 19
       onlist: null
       regions: null
+      parent_id: nextera_read2
     - !Region
       region_id: s7
       region_type: s7
@@ -164,6 +167,7 @@ library_spec:
       max_len: 15
       onlist: null
       regions: null
+      parent_id: nextera_read2
     parent_id: atac
   - !Region
     region_id: index7
