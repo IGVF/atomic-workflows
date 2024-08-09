@@ -1,7 +1,7 @@
 !Assay
 seqspec_version: 0.0.0
 assay_id: Illumina-novaseq-Chromium-Next-GEM-Single-Cell-Multiome-ATAC
-name: Chromium-Next-GEM-Single-Cell-ATAC
+name: Chromium-Single-Cell-ATAC
 doi: https://teichlab.github.io/scg_lib_structs/methods_html/10xChromium_multiome.html
 date: 05 August 2024
 description: Single Cell ATAC
