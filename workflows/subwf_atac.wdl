@@ -57,6 +57,10 @@ workflow wf_atac {
         Float? align_disk_factor = 8.0
         Float? align_memory_factor = 0.15
         String? align_docker_image
+        
+        Int? align_bam_cpus
+        Float? align_bam_disk_factor = 8.0
+        Float? align_bam_memory_factor = 0.15
 
         Int? qc_fragment_min_cutoff
 
@@ -168,9 +172,9 @@ workflow wf_atac {
                 barcode_inclusion_list = barcode_whitelist_,
                 barcode_conversion_dict = barcode_conversion_dict,
                 prefix = prefix,
-                disk_factor = align_disk_factor,
-                memory_factor = align_memory_factor,
-                cpus = align_cpus,
+                disk_factor = align_bam_disk_factor,
+                memory_factor = align_bam_memory_factor,
+                cpus = align_bam_cpus,
                 docker_image = align_docker_image,
                 remove_pcr_duplicates = remove_pcr_duplicates,
                 remove_pcr_duplicates_at_cell_level = remove_pcr_duplicates_at_cell_level,
