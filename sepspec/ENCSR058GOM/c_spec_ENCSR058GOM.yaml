@@ -78,12 +78,12 @@ library_spec:
     onlist: !Onlist
       filename: barcode_onlist.txt
       location: local
-      md5: 5b62453df2771f5aa856f78797f16591
+      md5: null
     regions: null
     parent_id: atac
   - !Region
     region_id: spacer
-    region_type: spacer_sequence
+    region_type: linker
     name: Spacer Sequence
     sequence_type: fixed
     sequence: CGCGTCTG
