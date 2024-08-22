@@ -6,8 +6,8 @@ doi: https://www.encodeproject.org/documents/4d42b1ef-c9e6-4b31-a443-1266079545d
 date: 18 April 2024
 description: Single Cell ATAC
 modalities:
-  - atac
-  - rna
+- atac
+- rna
 lib_struct: https://teichlab.github.io/scg_lib_structs/methods_html/10xChromium_scATAC.html
 library_protocol: 10xChromium_scATAC
 library_kit: 10xChromium_scATAC
@@ -85,8 +85,8 @@ library_spec:
   name: atac
   sequence_type: joined
   sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXNNNNNNNNNNNNNNNNCGCGTCTGTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
-  min_len: 145
-  max_len: 242
+  min_len: 153
+  max_len: 202
   onlist: null
   regions:
   - !Region
@@ -134,34 +134,14 @@ library_spec:
     min_len: 33
     max_len: 33
     onlist: null
-    regions:
-      - !Region
-        region_id: s5
-        region_type: s5
-        name: s5
-        sequence_type: fixed
-        sequence: TCGTCGGCAGCGTC
-        min_len: 14
-        max_len: 14
-        onlist: null
-        regions: null
-      - !Region
-        region_id: ME1
-        region_type: ME1
-        name: ME1
-        sequence_type: fixed
-        sequence: AGATGTGTATAAGAGACAG
-        min_len: 19
-        max_len: 19
-        onlist: null
-        regions: null
+    regions: null
     parent_id: atac
   - !Region
-    region_id: cDNA-1
-    region_type: cDNA
+    region_id: cdna-1
+    region_type: cdna
     name: Complementary DNA
     sequence_type: random
-    sequence: X
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     min_len: 1
     max_len: 50
     onlist: null
@@ -171,32 +151,12 @@ library_spec:
     region_id: nextera_read2
     region_type: nextera_read2
     name: nextera_read2
-    sequence_type: joined
+    sequence_type: fixed
     sequence: CTGTCTCTTATACACATCTCCGAGCCCACGAGAC
     min_len: 34
     max_len: 34
     onlist: null
-    regions:
-      - !Region
-        region_id: ME2
-        region_type: ME2
-        name: ME2
-        sequence_type: fixed
-        sequence: CTGTCTCTTATACACATCT
-        min_len: 19
-        max_len: 19
-        onlist: null
-        regions: null
-      - !Region
-        region_id: s7
-        region_type: s7
-        name: s7
-        sequence_type: fixed
-        sequence: CCGAGCCCACGAGAC
-        min_len: 15
-        max_len: 15
-        onlist: null
-        regions: null
+    regions: null
     parent_id: atac
   - !Region
     region_id: index7
@@ -229,9 +189,9 @@ library_spec:
   region_type: named
   name: rna
   sequence_type: joined
-  sequence: AATGATACGGCGACCACCGAGATCTNNNNNNNNNACACTCTTTCCCTACACGACGCTCTTCCGATCTNNNNNNNNNNNNNNNNNNNNNNNNNNNNTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTVNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXAGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
-  min_len: 106
-  max_len: 295
+  sequence: AATGATACGGCGACCACCGAGATCTNNNNNNNNNNACACTCTTTCCCTACACGACGCTCTTCCGATCTNNNNNNNNNNNNNNNNXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXAGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
+  min_len: 197
+  max_len: 286
   onlist: null
   regions:
   - !Region
@@ -289,7 +249,7 @@ library_spec:
     region_type: umi
     name: Unique Molecular Identifier
     sequence_type: random
-    sequence: NNNNNNNNNNNN
+    sequence: XXXXXXXXXXXX
     min_len: 12
     max_len: 12
     onlist: null
@@ -300,18 +260,18 @@ library_spec:
     region_type: Poly(dT)VN
     name: Poly(dT)VN
     sequence_type: random
-    sequence: TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTVN
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     min_len: 32
     max_len: 32
     onlist: null
     regions: null
     parent_id: rna
   - !Region
-    region_id: cDNA-2
-    region_type: cDNA
+    region_id: cdna-2
+    region_type: cdna
     name: Complementary DNA
     sequence_type: random
-    sequence: X
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     min_len: 1
     max_len: 90
     onlist: null
