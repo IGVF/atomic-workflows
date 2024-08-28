@@ -2,7 +2,7 @@
 seqspec_version: 0.0.0
 assay_id: Illumina-novaseq-Chromium-Next-GEM-Single-Cell-Multiome-ATAC
 name: Chromium-Next-GEM-Single-Cell-Multiome-ATAC
-doi: https://www.encodeproject.org/documents/4d42b1ef-c9e6-4b31-a443-1266079545d0/@@download/attachment/Chromium_Multiome_ATAC_GEX.pdf 
+doi: https://www.encodeproject.org/documents/4d42b1ef-c9e6-4b31-a443-1266079545d0/@@download/attachment/Chromium_Multiome_ATAC_GEX.pdf
 date: 18 April 2024
 description: Single Cell ATAC
 modalities:
@@ -18,16 +18,16 @@ sequence_spec:
   name: Read 1
   modality: atac
   primer_id: nextera_read1
-  min_len: 1
-  max_len: 98
+  min_len: 50
+  max_len: 50
   strand: pos
 - !Read
   read_id: atac.I1.fastq.gz
   name: Index 1 (i7 index)
   modality: atac
   primer_id: nextera_read2
-  min_len: 8
-  max_len: 8
+  min_len: 16
+  max_len: 16
   strand: pos
 - !Read
   read_id: atac.I2.fastq.gz
@@ -42,8 +42,8 @@ sequence_spec:
   name: Read 2
   modality: atac
   primer_id: nextera_read2
-  min_len: 1
-  max_len: 250
+  min_len: 50
+  max_len: 50
   strand: neg
 library_spec:
 - !Region
@@ -52,8 +52,8 @@ library_spec:
   name: atac
   sequence_type: joined
   sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXNNNNNNNNNNNNNNNNCGCGTCTGTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
-  min_len: 145
-  max_len: 242
+  min_len: 153
+  max_len: 202
   onlist: null
   regions:
   - !Region
@@ -91,7 +91,7 @@ library_spec:
     max_len: 8
     onlist: null
     regions: null
-    parent_id: atac    
+    parent_id: atac
   - !Region
     region_id: nextera_read1
     region_type: nextera_read1

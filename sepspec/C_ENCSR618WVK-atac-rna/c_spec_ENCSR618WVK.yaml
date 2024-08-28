@@ -43,32 +43,24 @@ sequence_spec:
   name: Read 1
   modality: atac
   primer_id: atac-nextera_read1
-  min_len: 100
-  max_len: 100
+  min_len: 50
+  max_len: 50
   strand: pos
 - !Read
   read_id: atac.I1.fastq.gz
   name: Index 1 (i7 index)
   modality: atac
   primer_id: atac-nextera_read2
-  min_len: 8
-  max_len: 8
-  strand: pos
-- !Read
-  read_id: atac.R1.fastq.gz
-  name: Read 1
-  modality: atac
-  primer_id: atac-nextera_read1
   min_len: 24
   max_len: 24
-  strand: neg
+  strand: pos
 - !Read
   read_id: atac.R2.fastq.gz
   name: Read 2
   modality: atac
   primer_id: atac-nextera_read2
-  min_len: 100
-  max_len: 100
+  min_len: 50
+  max_len: 50
   strand: neg
 library_spec:
 - !Region
@@ -182,9 +174,9 @@ library_spec:
   region_type: atac
   name: ATAC
   sequence_type: joined
-  sequence: AATGATACGGCGACCACCGAGATCTACACNNNNNNNNNNNNNNNNCGCGTCTGTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
-  min_len: 153
-  max_len: 202
+  sequence: AATGATACGGCGACCACCGAGATCTACACNNNNNNNNNNNNNNNNNNNNNNNNCGCGTCTGTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
+  min_len: 161
+  max_len: 210
   onlist: null
   regions:
   - !Region
@@ -204,9 +196,9 @@ library_spec:
     region_type: barcode
     name: R2 Cell Barcode
     sequence_type: onlist
-    sequence: NNNNNNNNNNNNNNNN
-    min_len: 16
-    max_len: 16
+    sequence: NNNNNNNNNNNNNNNNNNNNNNNN
+    min_len: 24
+    max_len: 24
     onlist: !Onlist
       filename: 737K-arc-v1_ATAC_whitelist.txt.gz
       md5: null
