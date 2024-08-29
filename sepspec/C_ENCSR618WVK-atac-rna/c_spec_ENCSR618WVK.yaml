@@ -50,10 +50,10 @@ sequence_spec:
   read_id: atac.I1.fastq.gz
   name: Index 1 (i7 index)
   modality: atac
-  primer_id: atac-nextera_read2
+  primer_id: atac-nextera_read1
   min_len: 24
   max_len: 24
-  strand: pos
+  strand: neg
 - !Read
   read_id: atac.R2.fastq.gz
   name: Read 2
@@ -169,54 +169,41 @@ library_spec:
     onlist: null
     regions: null
 - !Region
-  parent_id: null
   region_id: atac
   region_type: atac
   name: ATAC
   sequence_type: joined
-  sequence: AATGATACGGCGACCACCGAGATCTACACNNNNNNNNNNNNNNNNNNNNNNNNCGCGTCTGTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
-  min_len: 161
-  max_len: 210
+  sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXNNNNNNNNNNNNNNNNNNNNNNNNTCGTCGGCAGCGTCAGATGTGTATAAGAGACAGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
+  min_len: 153
+  max_len: 202
   onlist: null
   regions:
   - !Region
-    parent_id: atac
     region_id: atac-illumina_p5
     region_type: illumina_p5
     name: Illumina P5
-    sequence_type: fixed
-    sequence: AATGATACGGCGACCACCGAGATCTACAC
+    sequence_type: random
+    sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     min_len: 29
     max_len: 29
     onlist: null
     regions: null
-  - !Region
     parent_id: atac
-    region_id: atac-cell_barcode
+  - !Region
+    region_id: atac-barcode
     region_type: barcode
-    name: R2 Cell Barcode
+    name: Barcode
     sequence_type: onlist
     sequence: NNNNNNNNNNNNNNNNNNNNNNNN
     min_len: 24
     max_len: 24
     onlist: !Onlist
-      filename: 737K-arc-v1_ATAC_whitelist.txt.gz
-      md5: null
+      filename: 737K-cratac-v1.txt.gz
       location: local
+      md5: null
     regions: null
-  - !Region
     parent_id: atac
-    region_id: atac-linker
-    region_type: linker
-    name: atac linker
-    sequence_type: fixed
-    sequence: CGCGTCTG
-    min_len: 8
-    max_len: 8
-    onlist: null
-    regions: null
   - !Region
-    parent_id: atac
     region_id: atac-nextera_read1
     region_type: nextera_read1
     name: nextera_read1
@@ -226,19 +213,19 @@ library_spec:
     max_len: 33
     onlist: null
     regions: null
-  - !Region
     parent_id: atac
-    region_id: gDNA
+  - !Region
+    region_id: atac-gdna
     region_type: gdna
-    name: gDNA
+    name: Complementary DNA
     sequence_type: random
     sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     min_len: 1
     max_len: 50
     onlist: null
     regions: null
-  - !Region
     parent_id: atac
+  - !Region
     region_id: atac-nextera_read2
     region_type: nextera_read2
     name: nextera_read2
@@ -248,22 +235,22 @@ library_spec:
     max_len: 34
     onlist: null
     regions: null
-  - !Region
     parent_id: atac
+  - !Region
     region_id: atac-index7
     region_type: index7
-    name: ATAC index7
+    name: Truseq Read 2
     sequence_type: onlist
     sequence: NNNNNNNN
     min_len: 8
     max_len: 8
     onlist: !Onlist
-      filename: TODO-ATAC.txt
-      md5: fcb5fe7d14ffc9984cd5450413c7a742
+      filename: index7_onlist.txt
+      md5: null
       location: local
     regions: null
-  - !Region
     parent_id: atac
+  - !Region
     region_id: atac-illumina_p7
     region_type: illumina_p7
     name: Illumina P7
@@ -273,3 +260,5 @@ library_spec:
     max_len: 24
     onlist: null
     regions: null
+    parent_id: atac
+  parent_id: null
