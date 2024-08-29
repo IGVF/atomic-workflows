@@ -14,7 +14,7 @@ sequence_protocol: Illumina
 sequence_kit: NovaSeq 6000
 sequence_spec:
 - !Read
-  read_id: atac.R1.fastq.gz
+  read_id: R1.fastq.gz
   name: Read 1
   modality: atac
   primer_id: nextera_read1
@@ -22,7 +22,7 @@ sequence_spec:
   max_len: 50
   strand: pos
 - !Read
-  read_id: atac.I1.fastq.gz
+  read_id: BC.fastq.gz
   name: Index 1 (i7 index)
   modality: atac
   primer_id: nextera_read2
@@ -38,7 +38,7 @@ sequence_spec:
   max_len: 16
   strand: neg
 - !Read
-  read_id: atac.R2.fastq.gz
+  read_id: R2.fastq.gz
   name: Read 2
   modality: atac
   primer_id: nextera_read2
