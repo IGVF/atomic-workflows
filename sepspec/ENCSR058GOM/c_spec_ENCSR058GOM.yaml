@@ -104,8 +104,8 @@ library_spec:
     regions: null
     parent_id: atac
   - !Region
-    region_id: cdna
-    region_type: cdna
+    region_id: gdna
+    region_type: gdna
     name: Complementary DNA
     sequence_type: random
     sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
