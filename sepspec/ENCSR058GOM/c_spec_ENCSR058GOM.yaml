@@ -14,7 +14,7 @@ sequence_protocol: Illumina
 sequence_kit: NovaSeq 6000
 sequence_spec:
 - !Read
-  read_id: atac.R1.fastq.gz
+  read_id: R1.fastq.gz
   name: Read 1
   modality: atac
   primer_id: nextera_read1
@@ -30,15 +30,7 @@ sequence_spec:
   max_len: 16
   strand: pos
 - !Read
-  read_id: atac.I2.fastq.gz
-  name: Index 2 (i5 index)
-  modality: atac
-  primer_id: nextera_read1
-  min_len: 16
-  max_len: 16
-  strand: neg
-- !Read
-  read_id: atac.R2.fastq.gz
+  read_id: R2.fastq.gz
   name: Read 2
   modality: atac
   primer_id: nextera_read2
@@ -76,20 +68,9 @@ library_spec:
     min_len: 16
     max_len: 16
     onlist: !Onlist
-      filename: barcode_onlist.txt
+      filename: 737K-cratac-v1.txt.gz
       location: local
       md5: null
-    regions: null
-    parent_id: atac
-  - !Region
-    region_id: spacer
-    region_type: linker
-    name: Spacer Sequence
-    sequence_type: fixed
-    sequence: CGCGTCTG
-    min_len: 8
-    max_len: 8
-    onlist: null
     regions: null
     parent_id: atac
   - !Region
@@ -104,8 +85,8 @@ library_spec:
     regions: null
     parent_id: atac
   - !Region
-    region_id: cdna
-    region_type: cdna
+    region_id: gdna
+    region_type: gdna
     name: Complementary DNA
     sequence_type: random
     sequence: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
