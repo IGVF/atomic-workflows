@@ -22,7 +22,7 @@ sequence_spec:
   max_len: 50
   strand: pos
 - !Read
-  read_id: BC.fastq.gz
+  read_id: atac.I1.fastq.gz
   name: Index 1 (i7 index)
   modality: atac
   primer_id: nextera_read2
@@ -30,7 +30,7 @@ sequence_spec:
   max_len: 16
   strand: pos
 - !Read
-  read_id: atac.I2.fastq.gz
+  read_id: BC.fastq.gz
   name: Index 2 (i5 index)
   modality: atac
   primer_id: nextera_read1
@@ -79,17 +79,6 @@ library_spec:
       filename: barcode_onlist.txt
       location: local
       md5: null
-    regions: null
-    parent_id: atac
-  - !Region
-    region_id: spacer
-    region_type: linker
-    name: Spacer Sequence
-    sequence_type: fixed
-    sequence: CGCGTCTG
-    min_len: 8
-    max_len: 8
-    onlist: null
     regions: null
     parent_id: atac
   - !Region
