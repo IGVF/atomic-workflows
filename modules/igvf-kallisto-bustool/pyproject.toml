@@ -1,0 +1,20 @@
+[project]
+name = "igvf-kallisto-bustools"
+version = "1.0.0"
+description = "Align scRNA using kallisto-bustools"
+requires-python = "==3.10.11"
+dependencies = [
+    "click>=8.1.7",
+    "kb-python==0.28.2",
+    "anndata==0.10.1"
+]
+
+[project.scripts]
+run_kallisto = "run_kallisto:cli"
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.module]
+name = "run_kallisto"
