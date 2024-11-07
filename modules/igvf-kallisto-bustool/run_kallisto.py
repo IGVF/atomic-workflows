@@ -137,7 +137,6 @@ def quant_standard(index_dir, read_format, output_dir, strand, threads, barcode_
 
 
 @quant.command("nac")
-@quant.command("standard")
 @click.option('--index_dir', type=click.Path(exists=True), help='Path to the index directory.', required=True)
 @click.option('--read_format', type=str, help='String indicating the position of umi and barcode.', required=True)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
