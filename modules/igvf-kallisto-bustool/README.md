@@ -17,7 +17,7 @@
 ## Usage
 The igvf-kallisto-bustools tool provides a command-line interface (CLI) with several subcommands for managing the index creation and quantification steps.
 
-### Index Creation
+## Index Creation
 
 ### Arguments
 - `--output_directory`: Directory where the output files will be saved.
@@ -39,7 +39,7 @@ run_kallisto index nac --output_dir <output_dir> --genome-fasta <genome_fasta> -
 ```
 
 
-### Quantification
+## Quantification
 
 ### Arguments
 - `--index dir`: Path to the Kallisto index file.
