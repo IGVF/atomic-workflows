@@ -35,6 +35,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Check out the repository
+      run: |
+        echo "Checking out the repository"
+        pwd
+        ls -lht
     - name: Build the Docker image
       run: docker build . --file docker_builder.dockerfile --tag ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }}
     - name: Push image
