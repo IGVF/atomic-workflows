@@ -18,7 +18,7 @@ LABEL software.description="Run the kallisto-bustools module of the IGVF single-
 RUN pip install --upgrade pip
 
 RUN mkdir /software
-COPY src/python/run_kallisto.py /software
+COPY run_kallisto.py /software
 RUN cd /software && pip install --editable .
 
 # Create and setup new user
