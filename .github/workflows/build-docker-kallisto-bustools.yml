@@ -1,4 +1,5 @@
-name: IGVF atomic workflows CI
+
+name: IGVF kallisto-bustools CI
 
 on:
   push:
