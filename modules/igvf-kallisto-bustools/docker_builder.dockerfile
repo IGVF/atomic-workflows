@@ -19,6 +19,7 @@ RUN pip install --upgrade pip
 
 RUN mkdir /software
 COPY run_kallisto.py /software
+COPY pyproject.toml /software
 RUN cd /software && pip install --editable .
 
 # Create and setup new user

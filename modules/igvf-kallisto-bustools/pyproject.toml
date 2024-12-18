@@ -2,11 +2,11 @@
 name = "igvf-kallisto-bustools"
 version = "1.0.0"
 description = "Align scRNA using kallisto-bustools"
-requires-python = "==3.10.11"
+requires-python = "==3.10.15"
 dependencies = [
     "click>=8.1.7",
-    "kb-python==0.28.2",
-    "anndata==0.10.1"
+    "kb-python==0.29.1",
+    "anndata==0.11.1"
 ]
 
 [project.scripts]
