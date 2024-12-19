@@ -1,15 +1,14 @@
-
 name: IGVF kallisto-bustools CI
 
 on:
   push:
     branches: [ "dev", "main" ]
     paths:
-      -  'modules/igvf-kallisto-bustools/**'
+      - 'modules/igvf-kallisto-bustools/**'
   pull_request:
     branches: [ "dev", "main" ]
     paths:
-      -  'modules/igvf-kallisto-bustools/**'
+      - 'modules/igvf-kallisto-bustools/**'
   workflow_dispatch:
     inputs:
       image_tag:
@@ -26,7 +25,7 @@ env:
 
 jobs:
 
-  build-for-dockerhub:
+  build-and-test:
 
     runs-on: ubuntu-latest
     defaults:
@@ -42,5 +41,8 @@ jobs:
         ls -lht
     - name: Build the Docker image
       run: docker build . --file docker_builder.dockerfile --tag ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }}
+    - name: Run tests in Docker container
+      run: |
+        docker run --init --rm -v ${{ github.workspace }}/test_data:/software/test_data ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }} pytest /software/tests/test_run_kallisto.py
     - name: Push image
-      run: "docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }}"
+      run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }}

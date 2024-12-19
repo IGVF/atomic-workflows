@@ -1,10 +1,31 @@
 import click
+import gzip
 import logging
+import shutil
 import sys
 import subprocess
 
 # Configure logging
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+
+
+def check_and_unzip(file_path):
+    """
+    Checks if a file is gzipped and unzips it if necessary.
+
+    Parameters:
+    file_path (str): Path to the file to check and unzip.
+
+    Returns:
+    str: Path to the unzipped file.
+    """
+    if file_path.endswith('.gz'):
+        unzipped_file_path = file_path[:-3]  # Remove the .gz extension
+        with gzip.open(file_path, 'rb') as f_in:
+            with open(unzipped_file_path, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        return unzipped_file_path
+    return file_path
 
 
 @click.group()
@@ -39,6 +60,8 @@ def index_standard(output_dir, genome_fasta, gtf):
         {output_dir}.tar.gz: A tarball of the output directory containing all the indexes.
     """
     logging.info(f"Creating standard kallisto index in {output_dir}.")
+    genome_fasta = check_and_unzip(genome_fasta)
+    gtf = check_and_unzip(gtf)
     # Create the command line string and run it using subprocess
     cmd = f"kb ref -i {output_dir}/index.idx -g {output_dir}/t2g.txt -f1 {output_dir}/transcriptome.fa  {genome_fasta} {gtf}"
     logging.info(f"Running command: {cmd}")
@@ -75,6 +98,8 @@ def index_nac(output_dir, genome_fasta, gtf):
         {output_dir}.tar.gz (File): A tarball of the output directory containing all the indexes.
     """
     logging.info(f"Creating nac kallisto index in {output_dir}.")
+    genome_fasta = check_and_unzip(genome_fasta)
+    gtf = check_and_unzip(gtf)
     # Create the command line string and run it using subprocess
     cmd = f"kb ref --workflow=nac -i {output_dir}/index.idx -g {output_dir}/t2g.txt -c1 ~{output_dir}/cdna.txt -c2 ~{output_dir}/nascent.txt -f1 ~{output_dir}/cdna.fasta -f2 ~{output_dir}/nascent.fasta ~{genome_fasta} {gtf}"
     logging.info(f"Running command: {cmd}")

@@ -4,7 +4,7 @@
 # Based on Python
 ############################################################
 
-FROM python@sha256:fd0fa50d997eb56ce560c6e5ca6a1f5cf8fdff87572a16ac07fb1f5ca01eb608
+FROM --platform="linux/amd64" python:3.10-slim
 
 LABEL maintainer="Eugenio Mattei"
 LABEL software="IGVF single-cell pipeline"
