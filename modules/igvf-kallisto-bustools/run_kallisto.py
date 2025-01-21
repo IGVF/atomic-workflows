@@ -47,7 +47,7 @@ def index():
 
 @index.command("standard")
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
-@click.option('--genome-fasta', type=click.Path(exists=True), help='Path to the genome fasta file.', required=True)
+@click.option('--genome_fasta', type=click.Path(exists=True), help='Path to the genome fasta file.', required=True)
 @click.option('--gtf', type=click.Path(exists=True), help='Path to the GTF file.', required=True)
 def index_standard(output_dir, genome_fasta, gtf):
     """
@@ -85,7 +85,7 @@ def index_standard(output_dir, genome_fasta, gtf):
 
 @index.command("nac")
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
-@click.option('--genome-fasta', type=click.Path(exists=True), help='Path to the genome fasta file.', required=True)
+@click.option('--genome_fasta', type=click.Path(exists=True), help='Path to the genome fasta file.', required=True)
 @click.option('--gtf', type=click.Path(exists=True), help='Path to the GTF file.', required=True)
 def index_nac(output_dir, genome_fasta, gtf):
     """
