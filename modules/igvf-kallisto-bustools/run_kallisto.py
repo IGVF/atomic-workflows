@@ -36,12 +36,14 @@ def cli():
     This script runs the kallisto and bustools pipeline.
     You can run the quantification step or the index creation step.
     """
+    pass
 
 
 # Index sub-command
 @cli.group("index")
 def index():
     """Manages the index creation step."""
+    pass
 
 @index.command("standard")
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
@@ -119,12 +121,12 @@ def index_nac(output_dir, genome_fasta, gtf):
 
 
 # Quantification sub-command
-@cli.group("quant")
-def quant():
+@cli.group("quantify")
+def quantify():
     """Manages the quantification step."""
+    pass
 
-
-@quant.command("standard")
+@quantify.command("standard")
 @click.option('--index_dir', type=click.Path(exists=True), help='Path to the index directory.', required=True)
 @click.option('--read_format', type=str, help='String indicating the position of umi and barcode.', required=True)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
@@ -132,23 +134,23 @@ def quant():
 @click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
 @click.option('--replacement_list', type=click.Path(exists=True), help='Replacement list file.')
-@click.argument('interleaved_fastqs', nargs=-1, type=click.Path(exists=True), help='FASTQ files to align. The file needs to be supply in interleaved format(Example: pairA_1.fastq pairA_2.fastq pairB_1.fastq pairB_2.fastq).')
-def quant_standard(index_dir, read_format, output_dir, strand, threads, barcode_onlist, interleaved_fastqs, replacement_list):
+@click.argument('interleaved_fastqs', nargs=-1, type=click.Path(exists=True))
+def quantify_standard(index_dir, read_format, output_dir, strand, threads, barcode_onlist, replacement_list, interleaved_fastqs):
     """
     Runs the standard quantification pipeline using kallisto and bustools.
 
     Parameters:
-    index_dir (Path): Directory containing the kallisto index and transcript-to-gene mapping files.
-    read_format (str): Format of the reads (e.g., '10xv2', '10xv3').
-    output_dir (Path): Directory where the output files will be saved.
-    strand (str): Strand specificity (e.g., 'unstranded', 'forward', 'reverse').
-    threads (int): Number of threads to use for the computation.
-    barcode_onlist (File): Path to the whitelist of barcodes.
-    replacement_list (File): Path to the replacement list file.
-    interleaved_fastqs (File): Path to the interleaved FASTQ files.
+        index_dir (Path): Directory containing the kallisto index and transcript-to-gene mapping files.
+        read_format (str): Format of the reads (e.g., '10xv2', '10xv3').
+        output_dir (Path): Directory where the output files will be saved.
+        strand (str): Strand specificity (e.g., 'unstranded', 'forward', 'reverse').
+        threads (int): Number of threads to use for the computation.
+        barcode_onlist (File): Path to the whitelist of barcodes.
+        replacement_list (File): Path to the replacement list file.
+        interleaved_fastqs (File): Path to the interleaved FASTQ files. The files need to be supplied in interleaved format(Example: pairA_1.fastq pairA_2.fastq pairB_1.fastq pairB_2.fastq).
 
     Returns:
-    Please refer to the kallisto and bustools documentation for the output files.
+        Please refer to the kallisto and bustools documentation for the output files.
     """
     logging.info("Running standard quantification pipeline.")
     # Create the command line string and run it using subprocess
@@ -161,7 +163,7 @@ def quant_standard(index_dir, read_format, output_dir, strand, threads, barcode_
         logging.error(f"Command failed with error: {e.stderr}")
 
 
-@quant.command("nac")
+@quantify.command("nac")
 @click.option('--index_dir', type=click.Path(exists=True), help='Path to the index directory.', required=True)
 @click.option('--read_format', type=str, help='String indicating the position of umi and barcode.', required=True)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
@@ -169,23 +171,23 @@ def quant_standard(index_dir, read_format, output_dir, strand, threads, barcode_
 @click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
 @click.option('--replacement_list', type=click.Path(exists=True), help='Replacement list file.')
-@click.argument('interleaved_fastqs', nargs=-1, type=click.Path(exists=True), help='FASTQ files to align. The file needs to be supply in interleaved format(Example: pairA_1.fastq pairA_2.fastq pairB_1.fastq pairB_2.fastq).')
-def quant_nac(index_dir, read_format, replacement_list, barcode_onlist, strand, output_dir, threads, interleaved_fastqs):
+@click.argument('interleaved_fastqs', nargs=-1, type=click.Path(exists=True))
+def quantify_nac(index_dir, read_format, replacement_list, barcode_onlist, strand, output_dir, threads, interleaved_fastqs):
     """
     Runs the nac quantification pipeline using kallisto and bustools.
 
     Parameters:
-    index_dir (Path): Directory containing the kallisto index and transcript-to-gene mapping files.
-    read_format (str): Format of the reads (e.g., '10xv2', '10xv3').
-    output_dir (Path): Directory where the output files will be saved.
-    strand (str): Strand specificity (e.g., 'unstranded', 'forward', 'reverse').
-    threads (int): Number of threads to use for the computation.
-    barcode_onlist (File): Path to the whitelist of barcodes.
-    replacement_list (File): Path to the replacement list file.
-    interleaved_fastqs (File): Path to the interleaved FASTQ files.
+        index_dir (Path): Directory containing the kallisto index and transcript-to-gene mapping files.
+        read_format (str): Format of the reads (e.g., '10xv2', '10xv3').
+        output_dir (Path): Directory where the output files will be saved.
+        strand (str): Strand specificity (e.g., 'unstranded', 'forward', 'reverse').
+        threads (int): Number of threads to use for the computation.
+        barcode_onlist (File): Path to the whitelist of barcodes.
+        replacement_list (File): Path to the replacement list file.
+        interleaved_fastqs (File): Path to the interleaved FASTQ files. The files need to be supplied in interleaved format(Example: pairA_1.fastq pairA_2.fastq pairB_1.fastq pairB_2.fastq).
 
     Returns:
-    Please refer to the kallisto and bustools documentation for the output files.
+        Please refer to the kallisto and bustools documentation for the output files.
     """
     logging.info("Running nac quantification pipeline.")
     # Create the command line string and run it using subprocess
@@ -196,5 +198,3 @@ def quant_nac(index_dir, read_format, replacement_list, barcode_onlist, strand, 
         logging.info(f"Command output: {result.stdout}")
     except subprocess.CalledProcessError as e:
         logging.error(f"Command failed with error: {e.stderr}")
-
-
