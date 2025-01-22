@@ -20,7 +20,8 @@ def check_and_unzip(file_path):
     str: Path to the unzipped file.
     """
     if file_path.endswith('.gz'):
-        unzipped_file_path = file_path[:-3]  # Remove the .gz extension
+        file_name = file_path.split('/')[-1]
+        unzipped_file_path = file_name[:-3]  # Remove the .gz extension
         with gzip.open(file_path, 'rb') as f_in:
             with open(unzipped_file_path, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
