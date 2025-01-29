@@ -1,6 +1,8 @@
 import click
 import gzip
+import h5py
 import logging
+import numpy as np
 import shutil
 import sys
 import subprocess
@@ -29,11 +31,25 @@ def check_and_unzip(file_path):
     return file_path
 
 
+def append_suffix_to_h5ad(h5ad_file, suffix):
+    # Open the h5ad file for modification
+    with h5py.File(h5ad_file, "r+") as h5file:
+        # Access the dataset containing the list of byte strings
+        dataset = h5file["/obs/barcode"]
+
+        # Convert the dataset to regular Python strings, append the suffix, and convert back to bytes
+        dataset[:] = np.array([item.decode('utf-8') + suffix.decode("utf-8") for item in dataset], dtype='S')
+
+        # Save the modified dataset
+        h5file.flush()
+
+
+
 @click.group()
 @click.version_option(package_name="igvf-kallisto-bustools")
 def cli():
     """Kallisto and bustools
-    
+
     This script runs the kallisto and bustools pipeline.
     You can run the quantification step or the index creation step.
     """
@@ -110,7 +126,7 @@ def index_nac(output_dir, genome_fasta, gtf):
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
         logging.info(f"Command output: {result.stdout}")
     except subprocess.CalledProcessError as e:
-        logging.error(f"Command failed with error: {e.stderr}")   
+        logging.error(f"Command failed with error: {e.stderr}")
     # Archive the directory
     archive_cmd = f"tar -kzcvf {output_dir}.tar.gz {output_dir}"
     logging.info(f"Running archive command: {archive_cmd}")
@@ -132,11 +148,12 @@ def quantify():
 @click.option('--read_format', type=str, help='String indicating the position of umi and barcode.', required=True)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
 @click.option('--strand', type=str, help='Library strand orientation.', required=True)
+@click.option('--subpool', type=str, help='Subpool ID string to append to the barcode.', required=False, default="")
 @click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
-@click.option('--replacement_list', type=click.Path(exists=True), help='Replacement list file.')
+@click.option('--replacement_list', type=click.Path(exists=True), default=None, help='Replacement list file.')
 @click.argument('interleaved_fastqs', nargs=-1, type=click.Path(exists=True))
-def quantify_standard(index_dir, read_format, output_dir, strand, threads, barcode_onlist, replacement_list, interleaved_fastqs):
+def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, barcode_onlist, replacement_list, interleaved_fastqs):
     """
     Runs the standard quantification pipeline using kallisto and bustools.
 
@@ -145,6 +162,7 @@ def quantify_standard(index_dir, read_format, output_dir, strand, threads, barco
         read_format (str): Format of the reads (e.g., '10xv2', '10xv3').
         output_dir (Path): Directory where the output files will be saved.
         strand (str): Strand specificity (e.g., 'unstranded', 'forward', 'reverse').
+        subpool (str): Subpool ID string to append to the barcode.
         threads (int): Number of threads to use for the computation.
         barcode_onlist (File): Path to the whitelist of barcodes.
         replacement_list (File): Path to the replacement list file.
@@ -155,7 +173,8 @@ def quantify_standard(index_dir, read_format, output_dir, strand, threads, barco
     """
     logging.info("Running standard quantification pipeline.")
     # Create the command line string and run it using subprocess
-    cmd = f"kb count -i {index_dir}/index.idx -g {index_dir}/t2g.txt -x {read_format} -w {barcode_onlist} --strand {strand} -r {replacement_list} -o {output_dir} --h5ad --gene-names -t {threads} {interleaved_fastqs}"
+    replacement_list_param = f"-r {replacement_list}" if replacement_list else ""
+    cmd = f"kb count -i {index_dir}/index.idx -g {index_dir}/t2g.txt -x {read_format} -w {barcode_onlist} --strand {strand} {replacement_list_param} -o {output_dir} --h5ad -t {threads} {interleaved_fastqs}"
     logging.info(f"Running command: {cmd}")
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
@@ -163,17 +182,49 @@ def quantify_standard(index_dir, read_format, output_dir, strand, threads, barco
     except subprocess.CalledProcessError as e:
         logging.error(f"Command failed with error: {e.stderr}")
 
+    # Append the subpool to the barcodes in the h5ad file
+    if subpool:
+        h5ad_file = f"{output_dir}/counts_unfiltered/adata.h5ad"
+        append_suffix_to_h5ad(h5ad_file, subpool)
+        logging.info(f"Appended subpool '{subpool}' to barcodes in {h5ad_file}.")
+        cmd = f"sed -i 's/$/_{subpool}/' {output_dir}/counts_unfiltered/cells_x_genes.barcodes.txt"
+        logging.info(f"Running command: {cmd}")
+        try:
+            result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
+            logging.info(f"Command output: {result.stdout}")
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Command failed with error: {e.stderr}")
+
+    # Rename the h5ad file
+    cmd = f"mv {output_dir}/counts_unfiltered/adata.h5ad {output_dir}/counts_unfiltered/{output_dir}.h5ad"
+    logging.info(f"Running command: {cmd}")
+    try:
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
+        logging.info(f"Command output: {result.stdout}")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Command failed with error: {e.stderr}")
+
+    # Archive the directory
+    archive_cmd = f"tar -kzcvf {output_dir}.tar.gz {output_dir}"
+    logging.info(f"Running archive command: {archive_cmd}")
+    try:
+        result = subprocess.run(archive_cmd, shell=True, capture_output=True, text=True, check=True)
+        logging.info(f"Archive command output: {result.stdout}")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Archive command failed with error: {e.stderr}")
+
 
 @quantify.command("nac")
 @click.option('--index_dir', type=click.Path(exists=True), help='Path to the index directory.', required=True)
 @click.option('--read_format', type=str, help='String indicating the position of umi and barcode.', required=True)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
 @click.option('--strand', type=str, help='Library strand orientation.', required=True)
+@click.option('--subpool', type=str, help='Subpool ID string to append to the barcode.', required=False, default="")
 @click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
 @click.option('--replacement_list', type=click.Path(exists=True), help='Replacement list file.')
 @click.argument('interleaved_fastqs', nargs=-1, type=click.Path(exists=True))
-def quantify_nac(index_dir, read_format, replacement_list, barcode_onlist, strand, output_dir, threads, interleaved_fastqs):
+def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, barcode_onlist, replacement_list, interleaved_fastqs):
     """
     Runs the nac quantification pipeline using kallisto and bustools.
 
@@ -182,6 +233,7 @@ def quantify_nac(index_dir, read_format, replacement_list, barcode_onlist, stran
         read_format (str): Format of the reads (e.g., '10xv2', '10xv3').
         output_dir (Path): Directory where the output files will be saved.
         strand (str): Strand specificity (e.g., 'unstranded', 'forward', 'reverse').
+        subpool (str): Subpool ID string to append to the barcode.
         threads (int): Number of threads to use for the computation.
         barcode_onlist (File): Path to the whitelist of barcodes.
         replacement_list (File): Path to the replacement list file.
@@ -192,10 +244,42 @@ def quantify_nac(index_dir, read_format, replacement_list, barcode_onlist, stran
     """
     logging.info("Running nac quantification pipeline.")
     # Create the command line string and run it using subprocess
-    cmd = f"kb count --workflow=nac -i {index_dir}/index.idx -g {index_dir}/t2g.txt -c1 {index_dir}/cdna.txt -c2 {index_dir}/nascent.txt --sum=total -x {read_format} -w {barcode_onlist} -r {replacement_list} --strand {strand} -o {output_dir} --h5ad --gene-names -t {threads} {interleaved_fastqs}"
+    cmd = f"kb count --workflow=nac -i {index_dir}/index.idx -g {index_dir}/t2g.txt -c1 {index_dir}/cdna.txt -c2 {index_dir}/nascent.txt --sum=total -x {read_format} -w {barcode_onlist} -r {replacement_list} --strand {strand} -o {output_dir} --h5ad -t {threads} {interleaved_fastqs}"
     logging.info(f"Running command: {cmd}")
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
         logging.info(f"Command output: {result.stdout}")
     except subprocess.CalledProcessError as e:
         logging.error(f"Command failed with error: {e.stderr}")
+
+    # Append the subpool to the barcodes in the h5ad file
+    if subpool:
+        h5ad_file = f"{output_dir}/counts_unfiltered/adata.h5ad"
+        append_suffix_to_h5ad(h5ad_file, subpool)
+        logging.info(f"Appended subpool '{subpool}' to barcodes in {h5ad_file}.")
+        cmd = f"sed -i 's/$/_{subpool}/' {output_dir}/counts_unfiltered/cells_x_genes.barcodes.txt"
+        logging.info(f"Running command: {cmd}")
+        try:
+            result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
+            logging.info(f"Command output: {result.stdout}")
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Command failed with error: {e.stderr}")
+
+    # Rename the h5ad file
+    cmd = f"mv {output_dir}/counts_unfiltered/adata.h5ad {output_dir}/counts_unfiltered/{output_dir}.h5ad"
+    logging.info(f"Running command: {cmd}")
+    try:
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
+        logging.info(f"Command output: {result.stdout}")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Command failed with error: {e.stderr}")
+
+    # Archive the directory
+    archive_cmd = f"tar -kzcvf {output_dir}.tar.gz {output_dir}"
+    logging.info(f"Running archive command: {archive_cmd}")
+    try:
+        result = subprocess.run(archive_cmd, shell=True, capture_output=True, text=True, check=True)
+        logging.info(f"Archive command output: {result.stdout}")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Archive command failed with error: {e.stderr}")
+
