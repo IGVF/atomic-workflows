@@ -152,8 +152,8 @@ def quantify():
 @click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
 @click.option('--replacement_list', type=click.Path(exists=True), default=None, help='Replacement list file.')
-@click.argument('interleaved_fastqs', nargs=-1, type=click.Path(exists=True))
-def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, barcode_onlist, replacement_list, interleaved_fastqs):
+@click.argument('interleaved_fastqs', nargs=-1, type=str, required=True)
+def quantify_standard(index_dir, read_format, output_dir, strand, subpool, threads, barcode_onlist, replacement_list, interleaved_fastqs):
     """
     Runs the standard quantification pipeline using kallisto and bustools.
 
@@ -166,7 +166,7 @@ def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, b
         threads (int): Number of threads to use for the computation.
         barcode_onlist (File): Path to the whitelist of barcodes.
         replacement_list (File): Path to the replacement list file.
-        interleaved_fastqs (File): Path to the interleaved FASTQ files. The files need to be supplied in interleaved format(Example: pairA_1.fastq pairA_2.fastq pairB_1.fastq pairB_2.fastq).
+        interleaved_fastqs (str): Path to the interleaved FASTQ files. The files need to be supplied in interleaved format(Example: pairA_1.fastq pairA_2.fastq pairB_1.fastq pairB_2.fastq).
 
     Returns:
         Please refer to the kallisto and bustools documentation for the output files.
@@ -223,7 +223,7 @@ def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, b
 @click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
 @click.option('--replacement_list', type=click.Path(exists=True), help='Replacement list file.')
-@click.argument('interleaved_fastqs', nargs=-1, type=click.Path(exists=True))
+@click.argument('interleaved_fastqs', nargs=-1, type=str, required=True)
 def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, barcode_onlist, replacement_list, interleaved_fastqs):
     """
     Runs the nac quantification pipeline using kallisto and bustools.
