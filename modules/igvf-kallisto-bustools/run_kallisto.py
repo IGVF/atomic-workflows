@@ -174,7 +174,8 @@ def quantify_standard(index_dir, read_format, output_dir, strand, subpool, threa
     logging.info("Running standard quantification pipeline.")
     # Create the command line string and run it using subprocess
     replacement_list_param = f"-r {replacement_list}" if replacement_list else ""
-    cmd = f"kb count -i {index_dir}/index.idx -g {index_dir}/t2g.txt -x {read_format} -w {barcode_onlist} --strand {strand} {replacement_list_param} -o {output_dir} --h5ad -t {threads} {interleaved_fastqs}"
+    interleaved_fastqs_str = " ".join(interleaved_fastqs)
+    cmd = f"kb count -i {index_dir}/index.idx -g {index_dir}/t2g.txt -x {read_format} -w {barcode_onlist} --strand {strand} {replacement_list_param} -o {output_dir} --h5ad -t {threads} {interleaved_fastqs_str}"
     logging.info(f"Running command: {cmd}")
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
