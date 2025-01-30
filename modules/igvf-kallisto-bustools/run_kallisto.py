@@ -148,7 +148,7 @@ def quantify():
 @click.option('--read_format', type=str, help='String indicating the position of umi and barcode.', required=True)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
 @click.option('--strand', type=str, help='Library strand orientation.', required=True)
-@click.option('--subpool', type=str, help='Subpool ID string to append to the barcode.', required=False, default="")
+@click.option('--subpool', type=str, help='Subpool ID string to append to the barcode.', required=False, default=None)
 @click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
 @click.option('--replacement_list', type=click.Path(exists=True), default=None, help='Replacement list file.')
@@ -219,7 +219,7 @@ def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, b
 @click.option('--read_format', type=str, help='String indicating the position of umi and barcode.', required=True)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
 @click.option('--strand', type=str, help='Library strand orientation.', required=True)
-@click.option('--subpool', type=str, help='Subpool ID string to append to the barcode.', required=False, default="")
+@click.option('--subpool', type=str, help='Subpool ID string to append to the barcode.', required=False, default=None)
 @click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
 @click.option('--replacement_list', type=click.Path(exists=True), help='Replacement list file.')
@@ -230,7 +230,7 @@ def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, b
 
     Parameters:
         index_dir (Path): Directory containing the kallisto index and transcript-to-gene mapping files.
-        read_format (str): Format of the reads (e.g., '10xv2', '10xv3').
+        read_format (str): Format of the reads.
         output_dir (Path): Directory where the output files will be saved.
         strand (str): Strand specificity (e.g., 'unstranded', 'forward', 'reverse').
         subpool (str): Subpool ID string to append to the barcode.
@@ -266,7 +266,7 @@ def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, b
             logging.error(f"Command failed with error: {e.stderr}")
 
     # Rename the h5ad file
-    cmd = f"mv {output_dir}/counts_unfiltered/adata.h5ad {output_dir}/counts_unfiltered/{output_dir}.h5ad"
+    cmd = f"mv {output_dir}/counts_unfiltered/adata.h5ad {output_dir}.h5ad"
     logging.info(f"Running command: {cmd}")
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)

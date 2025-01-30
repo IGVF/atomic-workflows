@@ -39,12 +39,12 @@ jobs:
         echo "Checking out the repository"
         pwd
         ls -lht
-    - name: log in to DockerHub
-      run: ${{ secrets.DOCKER_LOGIN_CMD }}
     - name: Build the Docker image
       run: docker build . --file docker_builder.dockerfile --tag ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }}
 #    - name: Run tests in Docker container
 #      run: |
 #        docker run --init --rm -v ${{ github.workspace }}/test_data:/software/test_data ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }} pytest /software/tests/test_run_kallisto.py
+    - name: log in to DockerHub
+      run: ${{ secrets.DOCKER_LOGIN_CMD }}
     - name: Push image
       run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }}

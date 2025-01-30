@@ -14,13 +14,10 @@ LABEL software.version.is-production="Yes"
 LABEL software.task="run-kallisto-bustools-module"
 LABEL software.description="Run the kallisto-bustools module of the IGVF single-cell pipeline"
 
-# Install the required packages
-RUN pip install --upgrade pip
-
 RUN mkdir /software
 COPY run_kallisto.py /software
 COPY pyproject.toml /software
-RUN cd /software && pip install --editable .
+RUN cd /software && pip install --upgrade pip && pip install --editable .
 
 # Create and setup new user
 ENV USER=igvf
