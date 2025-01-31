@@ -2,12 +2,46 @@ import click
 import csv
 import gzip
 import logging
+import os
 import shutil
+import signal
 import sys
 import subprocess
 
 # Configure logging
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+
+
+def run_shell_cmd(cmd):
+    p = subprocess.Popen(
+        ['/bin/bash', '-o', 'pipefail'],  # to catch error in pipe
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+        preexec_fn=os.setsid)  # to make a new process with a new PGID
+    pid = p.pid
+    pgid = os.getpgid(pid)
+    logging.info('run_shell_cmd: PID={}, PGID={}, CMD={}'.format(pid, pgid, cmd))
+    stdout, stderr = p.communicate(cmd)
+    rc = p.returncode
+    err_str = (
+        'PID={pid}, PGID={pgid}, RC={rc}'
+        'STDERR={stde}\nSTDOUT={stdo}'
+    ).format(
+        pid=pid, pgid=pgid, rc=rc, stde=stderr.strip(), stdo=stdout.strip()
+    )
+    if rc:
+        # kill all child processes
+        try:
+            os.killpg(pgid, signal.SIGKILL)
+        except Exception:
+            pass
+        finally:
+            raise Exception(err_str)
+    else:
+        logging.info(err_str)
+    return stdout.strip('\n')
 
 
 def check_and_unzip(file_path):
@@ -148,11 +182,7 @@ def align(index_dir, read_format, reference_fasta, output_dir, subpool, threads,
 
     cmd = f"chromap -x {index_dir}/index --read_format {read_format} -r {reference_fasta} --remove-pcr-duplicates-at-cell-level --trim-adapters --low-mem --BED -l 2000 --bc-error-threshold 1 -t {threads} --bc-probability-threshold 0.90 -q 30 --barcode-whitelist {barcode_onlist} {barcode_translate_param} -o {output_dir}.fragments.tsv --summary {output_dir}.barcode.summary.csv -1 {read1} -2 {read2} -b {read_barcode} > {output_dir}.log.txt 2>&1"
     logging.info(f"Running command: {cmd}")
-    try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
-        logging.info(f"Command output: {result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Command failed with error: {e.stderr}")
+    run_shell_cmd(cmd)
 
     # Append the subpool to the barcodes in the fragment file.
     if subpool:
