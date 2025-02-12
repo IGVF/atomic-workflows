@@ -1,0 +1,50 @@
+name: IGVF Chromap CI
+
+on:
+  push:
+    branches: [ "dev", "main" ]
+    paths:
+      - 'modules/igvf-chromap/**'
+  pull_request:
+    branches: [ "dev", "main" ]
+    paths:
+      - 'modules/igvf-chromap/**'
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker Image Tag (default: branch_name)'
+
+env:
+  PROJECT_NAME: IGVF atomic workflows CI
+  # Github repo name
+  REPOSITORY_NAME: ${{ github.event.repository.name }}
+  # Region-specific Google Docker repository where GOOGLE_PROJECT/REPOSITORY_NAME can be found
+  DOCKER_REGISTRY: docker.io
+  DOCKER_PATH: igvf/chromap
+  TAG: ${{ github.event.inputs.image_tag || github.head_ref || github.ref_name }}
+
+jobs:
+
+  build-and-test:
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: modules/igvf-chromap
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Check out the repository
+      run: |
+        echo "Checking out the repository"
+        pwd
+        ls -lht
+    - name: Build the Docker image
+      run: docker build . --file docker_builder.dockerfile --tag ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }}
+#    - name: Run tests in Docker container
+#      run: |
+#        docker run --init --rm -v ${{ github.workspace }}/test_data:/software/test_data ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }} pytest /software/tests/test_run_chromap.py
+    - name: log in to DockerHub
+      run: ${{ secrets.DOCKER_LOGIN_CMD }}
+    - name: Push image
+      run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_PATH }}:${{ env.TAG }}
