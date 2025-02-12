@@ -66,6 +66,7 @@ def check_and_unzip(file_path):
 
 
 def append_suffix_to_h5ad(h5ad_file, suffix):
+    suffix = (f"_{suffix}").encode("utf-8")
     # Open the h5ad file for modification
     with h5py.File(h5ad_file, "r+") as h5file:
         # Access the dataset containing the list of byte strings
@@ -97,14 +98,16 @@ def index():
     pass
 
 @index.command("standard")
+@click.option('--temp_dir', type=str, help='Path to the temp directory.', required=False, default=None)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
 @click.option('--genome_fasta', type=click.Path(exists=True), help='Path to the genome fasta file.', required=True)
 @click.option('--gtf', type=click.Path(exists=True), help='Path to the GTF file.', required=True)
-def index_standard(output_dir, genome_fasta, gtf):
+def index_standard(output_dir, temp_dir, genome_fasta, gtf):
     """
     Creates the kallisto reference index for standard analysis and archives the output directory.
 
     Args:
+        temp_dir (str): Path to the temp directory.
         output_dir (Path): The directory where the kallisto index and related files will be created.
         genome_fasta (File): The path to the genome FASTA file.
         gtf (File): The path to the GTF file.
@@ -113,37 +116,28 @@ def index_standard(output_dir, genome_fasta, gtf):
         {output_dir}.tar.gz: A tarball of the output directory containing all the indexes.
     """
     logging.info(f"Creating standard kallisto index in {output_dir}.")
-    genome_fasta = check_and_unzip(genome_fasta)
-    gtf = check_and_unzip(gtf)
+    temp_dir_param = f"--tmp {temp_dir}" if temp_dir else ""
     # Create the command line string and run it using subprocess
-    cmd = f"kb ref -i {output_dir}/index.idx -g {output_dir}/t2g.txt -f1 {output_dir}/transcriptome.fa  {genome_fasta} {gtf}"
-    logging.info(f"Running command: {cmd}")
-    try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
-        logging.info(f"Command output: {result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Command failed with error: {e.stderr}")
+    cmd = f"kb ref {temp_dir_param} -i {output_dir}/index.idx -g {output_dir}/t2g.txt -f1 {output_dir}/transcriptome.fa  {genome_fasta} {gtf}"
+    run_shell_cmd(cmd)
 
     # Archive the directory
     archive_cmd = f"tar -kzcvf {output_dir}.tar.gz {output_dir}"
-    logging.info(f"Running archive command: {archive_cmd}")
-    try:
-        result = subprocess.run(archive_cmd, shell=True, capture_output=True, text=True, check=True)
-        logging.info(f"Archive command output: {result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Archive command failed with error: {e.stderr}")
+    run_shell_cmd(archive_cmd)
 
 
 
 @index.command("nac")
+@click.option('--temp_dir', type=str, help='Path to the temp directory.', required=False, default=None)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
 @click.option('--genome_fasta', type=click.Path(exists=True), help='Path to the genome fasta file.', required=True)
 @click.option('--gtf', type=click.Path(exists=True), help='Path to the GTF file.', required=True)
-def index_nac(output_dir, genome_fasta, gtf):
+def index_nac(output_dir, temp_dir, genome_fasta, gtf):
     """
     Creates the kallisto reference index for nac analysis and archives the output directory.
 
     Args:
+        temp_dir (str): Path to the temp directory.
         output_dir (str): The directory where the kallisto index and related files will be created.
         genome_fasta (str): The path to the genome FASTA file.
         gtf (str): The path to the GTF file.
@@ -152,25 +146,14 @@ def index_nac(output_dir, genome_fasta, gtf):
         {output_dir}.tar.gz (File): A tarball of the output directory containing all the indexes.
     """
     logging.info(f"Creating nac kallisto index in {output_dir}.")
-    genome_fasta = check_and_unzip(genome_fasta)
-    gtf = check_and_unzip(gtf)
+    temp_dir_param = f"--tmp {temp_dir}" if temp_dir else ""
     # Create the command line string and run it using subprocess
-    cmd = f"kb ref --workflow=nac -i {output_dir}/index.idx -g {output_dir}/t2g.txt -c1 ~{output_dir}/cdna.txt -c2 ~{output_dir}/nascent.txt -f1 ~{output_dir}/cdna.fasta -f2 ~{output_dir}/nascent.fasta ~{genome_fasta} {gtf}"
-    logging.info(f"Running command: {cmd}")
-    try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
-        logging.info(f"Command output: {result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Command failed with error: {e.stderr}")
+    cmd = f"kb ref {temp_dir_param} --workflow=nac -i {output_dir}/index.idx -g {output_dir}/t2g.txt -c1 {output_dir}/cdna.txt -c2 {output_dir}/nascent.txt -f1 {output_dir}/cdna.fasta -f2 {output_dir}/nascent.fasta {genome_fasta} {gtf}"
+    run_shell_cmd(cmd)
     
     # Archive the directory
     archive_cmd = f"tar -kzcvf {output_dir}.tar.gz {output_dir}"
-    logging.info(f"Running archive command: {archive_cmd}")
-    try:
-        result = subprocess.run(archive_cmd, shell=True, capture_output=True, text=True, check=True)
-        logging.info(f"Archive command output: {result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Archive command failed with error: {e.stderr}")
+    run_shell_cmd(archive_cmd)
 
 
 # Quantification sub-command
@@ -180,6 +163,7 @@ def quantify():
     pass
 
 @quantify.command("standard")
+@click.option('--temp_dir', type=str, help='Path to the temp directory.', required=False, default=None)
 @click.option('--index_dir', type=click.Path(exists=True), help='Path to the index directory.', required=True)
 @click.option('--read_format', type=str, help='String indicating the position of umi and barcode.', required=True)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
@@ -189,11 +173,12 @@ def quantify():
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
 @click.option('--replacement_list', type=click.Path(exists=True), default=None, help='Replacement list file.')
 @click.argument('interleaved_fastqs', nargs=-1, type=str, required=True)
-def quantify_standard(index_dir, read_format, output_dir, strand, subpool, threads, barcode_onlist, replacement_list, interleaved_fastqs):
+def quantify_standard(temp_dir, index_dir, read_format, output_dir, strand, subpool, threads, barcode_onlist, replacement_list, interleaved_fastqs):
     """
     Runs the standard quantification pipeline using kallisto and bustools.
 
     Parameters:
+        temp_dir (str): Path to the temp directory.
         index_dir (Path): Directory containing the kallisto index and transcript-to-gene mapping files.
         read_format (str): Format of the reads (e.g., '10xv2', '10xv3').
         output_dir (Path): Directory where the output files will be saved.
@@ -210,8 +195,9 @@ def quantify_standard(index_dir, read_format, output_dir, strand, subpool, threa
     logging.info("Running standard quantification pipeline.")
     # Create the command line string and run it using subprocess
     replacement_list_param = f"-r {replacement_list}" if replacement_list else ""
+    temp_dir_param = f"--tmp {temp_dir}" if temp_dir else ""
     interleaved_fastqs_str = " ".join(interleaved_fastqs)
-    cmd = f"kb count -i {index_dir}/index.idx -g {index_dir}/t2g.txt -x {read_format} -w {barcode_onlist} --strand {strand} {replacement_list_param} -o {output_dir} --h5ad -t {threads} {interleaved_fastqs_str}"
+    cmd = f"kb count -i {index_dir}/index.idx -g {index_dir}/t2g.txt {temp_dir_param} -x {read_format} -w {barcode_onlist} --strand {strand} {replacement_list_param} -o {output_dir} --h5ad -t {threads} {interleaved_fastqs_str}"
     logging.info(f"Running command: {cmd}")
     run_shell_cmd(cmd)
 
@@ -248,6 +234,7 @@ def quantify_standard(index_dir, read_format, output_dir, strand, subpool, threa
 
 
 @quantify.command("nac")
+@click.option('--temp_dir', type=str, help='Path to the temp directory.', required=False, default=None)
 @click.option('--index_dir', type=click.Path(exists=True), help='Path to the index directory.', required=True)
 @click.option('--read_format', type=str, help='String indicating the position of umi and barcode.', required=True)
 @click.option('--output_dir', type=click.Path(exists=True), help='Path to the output directory.', required=True)
@@ -257,11 +244,12 @@ def quantify_standard(index_dir, read_format, output_dir, strand, subpool, threa
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
 @click.option('--replacement_list', type=click.Path(exists=True), help='Replacement list file.')
 @click.argument('interleaved_fastqs', nargs=-1, type=str, required=True)
-def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, barcode_onlist, replacement_list, interleaved_fastqs):
+def quantify_nac(temp_dir, index_dir, read_format, output_dir, strand, subpool, threads, barcode_onlist, replacement_list, interleaved_fastqs):
     """
     Runs the nac quantification pipeline using kallisto and bustools.
 
     Parameters:
+        temp_dir (str): Path to the temp directory.
         index_dir (Path): Directory containing the kallisto index and transcript-to-gene mapping files.
         read_format (str): Format of the reads.
         output_dir (Path): Directory where the output files will be saved.
@@ -277,9 +265,10 @@ def quantify_nac(index_dir, read_format, output_dir, strand, subpool, threads, b
     """
     logging.info("Running nac quantification pipeline.")
     # Create the command line string and run it using subprocess
+    temp_dir_param = f"--tmp {temp_dir}" if temp_dir else ""
     replacement_list_param = f"-r {replacement_list}" if replacement_list else ""
     interleaved_fastqs_str = " ".join(interleaved_fastqs)
-    cmd = f"kb count --workflow=nac -i {index_dir}/index.idx -g {index_dir}/t2g.txt -c1 {index_dir}/cdna.txt -c2 {index_dir}/nascent.txt --sum=total -x {read_format} -w {barcode_onlist} {replacement_list_param} --strand {strand} -o {output_dir} --h5ad -t {threads} {interleaved_fastqs_str}"
+    cmd = f"kb count --workflow=nac {temp_dir_param} -i {index_dir}/index.idx -g {index_dir}/t2g.txt -c1 {index_dir}/cdna.txt -c2 {index_dir}/nascent.txt --sum=total -x {read_format} -w {barcode_onlist} {replacement_list_param} --strand {strand} -o {output_dir} --h5ad -t {threads} {interleaved_fastqs_str}"
     logging.info(f"Running command: {cmd}")
     run_shell_cmd(cmd)
 

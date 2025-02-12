@@ -4,19 +4,8 @@
 # Based on Python
 ############################################################
 
-FROM --platform="linux/amd64" python:3.10-slim
+FROM debian:latest AS builder
 
-
-
-############################################################
-# Dockerfile for chromap
-# Based on Debian slim
-############################################################
-
-FROM debian@sha256:3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f AS builder
-
-# To prevent time zone prompt
-ENV DEBIAN_FRONTEND=noninteractive
 ENV CHROMAP_VERSION=0.2.7
 
 # Install softwares from apt repo
@@ -41,7 +30,7 @@ RUN wget https://github.com/haowenz/chromap/archive/refs/tags/v${CHROMAP_VERSION
     mv chromap-${CHROMAP_VERSION} chromap && cd chromap && make STATIC_BUILD=1
 
 
-FROM --platform="linux/amd64" python:3.10-slim
+FROM python:3.10-slim
 
 LABEL maintainer="Eugenio Mattei"
 LABEL software="IGVF single-cell pipeline"
@@ -78,6 +67,6 @@ ENV PATH="/software/:${PATH}"
 # Copy the compiled software from the builder
 COPY --from=builder --chown=$USER:$USER /software/chromap /software/
 COPY --from=builder --chown=$USER:$USER /usr/include/* /usr/include/
-COPY --from=builder --chown=$USER:$USER /usr/local/include/* /usr/local/include/
+#COPY --from=builder --chown=$USER:$USER /usr/local/include/* /usr/local/include/
 
 USER $USER
