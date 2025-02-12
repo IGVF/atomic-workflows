@@ -15,7 +15,7 @@
     ```
 3. Alternative method - Run the official docker:
     ```sh
-    docker run -it --rm -v ${PWD}:/data igvf/chromap:dev bash
+    docker run -it --rm -v ${PWD}:/data docker.io/igvf/chromap:dev bash
     ```
 
 ## Usage
