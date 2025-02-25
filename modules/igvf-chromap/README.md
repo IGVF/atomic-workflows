@@ -102,7 +102,7 @@ chromap -x <index_dir>/index
 
 The alignment step generates the following output files:
 
-- `<prefix>.log`: The log file containing information about the alignment process.
+- `<prefix>.log.txt`: The log file containing information about the alignment process.
 - `<prefix>_fragments.tsv.gz`: The fragments file in TSV format, compressed with bgzip.
 - `<prefix>_fragments.tsv.gz.tbi`: The index file for the fragments file. Generated using tabix.
 - `<prefix>.log.txt`: A summary file containing statistics about the alignment.
@@ -130,10 +130,12 @@ The `barcode.summary.csv` file contains information alignments information for e
 
 The CSV file contains the following columns:
 - `barcode`: The unique identifier for each barcode.
-- `total`: The total number of reads associated with the barcode.
-- `duplicate`: The number of duplicate reads.
-- `unmapped`: The number of unmapped reads.
-- `lowmapq`: The number of reads with low mapping quality.
+- `total`: The total number of fragments associated with the barcode.
+- `duplicate`: The number of duplicate fragmets.
+- `unmapped`: The number of unmapped fragments.
+- `lowmapq`: The number of fragments with low mapping quality.
+
+**Duplication rate (saturation)**: `duplicate`/(`total` - `unmapped` - `lowmapq`)
 
 Example rows:
 ```
@@ -141,9 +143,23 @@ barcode,total,duplicate,unmapped,lowmapq
 ATCGTAGC_subpool,7,0,0,1
 GCTAGCTA_subpool,5,0,0,2
 ```
- 
+## Format of `log.txt`
+The `log.txt` file will containt he complete output of chromap. At the end of the file there are going to be useful metrics like:
 
-
+- `Number of reads`: Total count of sequencing reads processed.
+- `Number of mapped reads`: Reads successfully aligned to the reference genome.
+- `Number of uniquely mapped reads`: Reads aligned to a single location in the genome.
+- `Number of reads with multi-mappings`: Reads aligned to multiple locations in the genome.
+- `Number of candidates`: Potential mapping locations considered during alignment.
+- `Number of mappings`: Total successful alignments, including multiple mappings per read.
+- `Number of uni-mappings`: Total alignments where reads map to a single location.
+- `Number of multi-mappings`: Total alignments where reads map to multiple locations.
+- `Number of barcodes in whitelist`: Barcodes matching the expected list of valid barcodes.
+- `Number of corrected barcodes`: Barcodes adjusted to match valid entries in the whitelist.
+- `# uni-mappings`: Number of fragments mapping to single location in the genome.
+- `# multi-mappings`: Number of fragments mappig in multiple locations in the genome.
+- `Total`: Sum of `uni-mappings` and `multi-mappings`.
+- `Number of output mappings (passed filters)`: Final count of fragments after deduplication and filtering.
 
 
 ## Logging
