@@ -13,7 +13,7 @@
     ```sh
     docker build -t igvf-chromap:dev -f docker_builder.dockerfile .
     ```
-3. Alternative method - Run the official docker:
+Alternative method - Run the official docker:
     ```sh
     docker run -it --rm -v ${PWD}:/data docker.io/igvf/chromap:dev bash
     ```
