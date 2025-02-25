@@ -86,7 +86,7 @@ Additionally, two FASTA files containing the sequences for the nascent and matur
 - `interleaved_fastqs`: Path to the input FASTQ file(s).
 
 
-### Quantification
+### Command
 To run the nac quantification pipeline, use the following command:
 ```sh
 run_kallisto quantify nac \
