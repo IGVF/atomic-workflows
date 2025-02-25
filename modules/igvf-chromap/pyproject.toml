@@ -1,0 +1,18 @@
+[project]
+name = "igvf-chromap"
+version = "1.0.0"
+description = "Align scATAC using chromap"
+requires-python = "==3.10.16"
+dependencies = [
+    "click>=8.1.7"
+]
+
+[project.scripts]
+run_chromap = "run_chromap:cli"
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.module]
+name = "run_chromap"
