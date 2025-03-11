@@ -1,0 +1,16 @@
+[project]
+name = "atomic-workflows-notebooks"
+version = "0.1.0"
+description = "Environment to run useful notebooks for IGVF"
+authors = [
+    { name = "Eugenio Mattei" }
+]
+readme = "README.md"
+requires-python = ">=3.12"
+
+[project.dependencies]
+marimo = "0.11.17"
+
+[build-system]
+requires = ["flit_core>=3.2,<4"]
+build-backend = "flit_core.buildapi"
