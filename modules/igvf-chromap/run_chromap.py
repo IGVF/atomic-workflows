@@ -139,8 +139,12 @@ def index_nac(output_dir, genome_fasta):
 
 
 # Alignment sub-command
-@cli.command("align")
+@cli.group("align")
+def align():
+    """Manages the alignment step."""
+    pass
 
+@align.command("fragments")
 @click.option('--index_dir', type=click.Path(exists=True), help='Path to the index directory.', required=True)
 @click.option('--read_format', type=str, help='String indicating the position and the file containing the barcode.', required=True)
 @click.option('--reference_fasta', type=click.Path(exists=True), help='Path to the reference fasta file.', required=True)
@@ -152,7 +156,7 @@ def index_nac(output_dir, genome_fasta):
 @click.option('--read1', type=str, default=None, help='FASTQ read1.', required=True)
 @click.option('--read2', type=str, default=None, help='FASTQ read2.', required=True)
 @click.option('--read_barcode', type=str, default=None, help='FASTQ barcode.')
-def align(index_dir, read_format, reference_fasta, prefix, subpool, threads, barcode_onlist, barcode_translate, read1, read2, read_barcode):
+def generate_fragments(index_dir, read_format, reference_fasta, prefix, subpool, threads, barcode_onlist, barcode_translate, read1, read2, read_barcode):
     """
     Aligns reads to the reference using chromap and generates a fragments file.
 
@@ -170,6 +174,7 @@ def align(index_dir, read_format, reference_fasta, prefix, subpool, threads, bar
         read_barcode (File): Path to the FASTQ file containing the barcode.
 
     Returns:
+        Fragment file and barcode summary file.
         Please refer to the chromap documentation for the output files.
     """
     logging.info("Running alignment.")
@@ -177,6 +182,70 @@ def align(index_dir, read_format, reference_fasta, prefix, subpool, threads, bar
     barcode_translate_param = f"--barcode-translate {barcode_translate}" if barcode_translate else ""
 
     cmd = f"chromap -x {index_dir}/index --read-format {read_format} -r {reference_fasta} --remove-pcr-duplicates --remove-pcr-duplicates-at-cell-level --trim-adapters --low-mem --BED -l 2000 --bc-error-threshold 1 -t {threads} --bc-probability-threshold 0.90 -q 30 --barcode-whitelist {barcode_onlist} {barcode_translate_param} -o {prefix}.fragments.tsv --summary {prefix}.barcode.summary.csv -1 {read1} -2 {read2} -b {read_barcode} > {prefix}.log.txt 2>&1"
+    run_shell_cmd(cmd)
+
+    # Append the subpool to the barcodes in the fragment file.
+    if subpool:
+        process_fragments(subpool, f"{prefix}.fragments.tsv")
+        process_summary(subpool, f"{prefix}.barcode.summary.csv")
+
+
+    # Compress the fragments file and create an index using tabix
+    bgzip_cmd = f"bgzip -c {prefix}.fragments.tsv > {prefix}.fragments.tsv.gz"
+    logging.info(f"Running bgzip command: {bgzip_cmd}")
+    try:
+        result = subprocess.run(bgzip_cmd, shell=True, capture_output=True, text=True, check=True)
+        logging.info(f"bgzip command output: {result.stdout}")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"bgzip command failed with error: {e.stderr}")
+
+    tabix_cmd = f"tabix --zero-based --preset bed {prefix}.fragments.tsv.gz"
+    logging.info(f"Running tabix command: {tabix_cmd}")
+    try:
+        result = subprocess.run(tabix_cmd, shell=True, capture_output=True, text=True, check=True)
+        logging.info(f"tabix command output: {result.stdout}")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"tabix command failed with error: {e.stderr}")
+
+
+@align.command("bam")
+@click.option('--index_dir', type=click.Path(exists=True), help='Path to the index directory.', required=True)
+@click.option('--read_format', type=str, help='String indicating the position and the file containing the barcode.', required=True)
+@click.option('--reference_fasta', type=click.Path(exists=True), help='Path to the reference fasta file.', required=True)
+@click.option('--prefix', type=str, help='Path to the output directory.', required=False, default="output")
+@click.option('--subpool', type=str, help='Subpool ID string to append to the barcode.', required=False, default=None)
+@click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
+@click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
+@click.option('--barcode_translate', type=click.Path(exists=True), help='Barcode conversion file for 10x.', required=False)
+@click.option('--read1', type=str, default=None, help='FASTQ read1.', required=True)
+@click.option('--read2', type=str, default=None, help='FASTQ read2.', required=True)
+@click.option('--read_barcode', type=str, default=None, help='FASTQ barcode.')
+def generate_bam(index_dir, read_format, reference_fasta, prefix, subpool, threads, barcode_onlist, barcode_translate, read1, read2, read_barcode):
+    """
+    Aligns reads to the reference using chromap and generates a fragments file.
+
+    Parameters:
+        index_dir (Path): Directory containing the chromap.
+        read_format (str): Format of the reads.
+        reference_fasta (Path): Path to the reference fasta file.
+        prefix (str): Prefix for the output files.
+        subpool (str): Subpool ID string to append to the barcode.
+        threads (int): Number of threads to use for the computation.
+        barcode_onlist (File): Path to the whitelist of barcodes.
+        barcode_translate (File): Path to the barcode translation file for 10x data.
+        read1 (File): Path to the FASTQ file containing read 1.
+        read2 (File): Path to the FASTQ file containing read 2.
+        read_barcode (File): Path to the FASTQ file containing the barcode.
+
+    Returns:
+        Alignments in BAM format.
+        Please refer to the chromap documentation for the output files.
+    """
+    logging.info("Running alignment.")
+    # Create the command line string and run it using subprocess
+    barcode_translate_param = f"--barcode-translate {barcode_translate}" if barcode_translate else ""
+
+    cmd = f"chromap -x {index_dir}/index --read-format {read_format} -r {reference_fasta} --remove-pcr-duplicates --remove-pcr-duplicates-at-cell-level --trim-adapters --low-mem --SAM -l 2000 --bc-error-threshold 1 -t {threads} --bc-probability-threshold 0.90 -q 30 --barcode-whitelist {barcode_onlist} {barcode_translate_param} --summary {prefix}.barcode.summary.csv -1 {read1} -2 {read2} -b {read_barcode} | awk -v suffix={subpool} '{{OFS=\"\\t\"; for (i=12; i<=NF; i++) if ($i ~ /^CB:Z:/) $i = $i\"_\"suffix; print $0}}' | samtools view -bS - > {prefix}.bam"
     run_shell_cmd(cmd)
 
     # Append the subpool to the barcodes in the fragment file.
