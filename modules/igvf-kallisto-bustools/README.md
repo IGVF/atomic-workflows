@@ -28,7 +28,7 @@ The igvf-kallisto-bustools tool provides a command-line interface (CLI) with sev
 
 ### Arguments
 - `--output_directory`: Directory where the output files will be saved.
-- `--genome_fasta`: Patht to the genome FASTA file.
+- `--genome_fasta`: Path to the genome FASTA file.
 - `--gtf`: Path to the GTF file.
 - `--temp_dir`: Path to the temporary directory (Optional)
 
@@ -59,7 +59,7 @@ kb ref \
 ```
 
 ### Outputs
-A compressed file called `<output_dir>.tar.gz` in `tar.gz` format containing the genome index. The structure of the `tar` file is:
+A compressed file called `<output_dir>.tar.gz` in `tar.gz` format containing the transcriptome index. The structure of the `tar` file is:
 
 ```
 <output_dir>/
