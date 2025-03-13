@@ -148,7 +148,7 @@ def index_nac(output_dir, genome_fasta):
 @click.option('--subpool', type=str, help='Subpool ID string to append to the barcode.', required=False, default=None)
 @click.option('--threads', default=1, type=int, help='Number of threads to use. Default is 1.')
 @click.option('--barcode_onlist', type=click.Path(exists=True), help='Barcode onlist file.', required=True)
-@click.option('--barcode_translate', type=click.Path(exists=True), help='Barcode conversion file for 10x.', required=True)
+@click.option('--barcode_translate', type=click.Path(exists=True), help='Barcode conversion file for 10x.', required=False)
 @click.option('--read1', type=str, default=None, help='FASTQ read1.', required=True)
 @click.option('--read2', type=str, default=None, help='FASTQ read2.', required=True)
 @click.option('--read_barcode', type=str, default=None, help='FASTQ barcode.')
