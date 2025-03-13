@@ -129,7 +129,7 @@ def index_nac(output_dir, genome_fasta):
     run_shell_cmd(cmd)
     
     # Archive the directory
-    archive_cmd = f"tar -kzcvf {output_dir}.tar.gz -C {output_dir} ."
+    archive_cmd = f"tar -kzcvf ../{output_dir}.tar.gz -C {output_dir} ."
     logging.info(f"Running archive command: {archive_cmd}")
     try:
         result = subprocess.run(archive_cmd, shell=True, capture_output=True, text=True, check=True)
