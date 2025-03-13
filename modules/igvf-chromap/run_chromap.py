@@ -250,23 +250,4 @@ def generate_bam(index_dir, read_format, reference_fasta, prefix, subpool, threa
 
     # Append the subpool to the barcodes in the fragment file.
     if subpool:
-        process_fragments(subpool, f"{prefix}.fragments.tsv")
         process_summary(subpool, f"{prefix}.barcode.summary.csv")
-
-
-    # Compress the fragments file and create an index using tabix
-    bgzip_cmd = f"bgzip -c {prefix}.fragments.tsv > {prefix}.fragments.tsv.gz"
-    logging.info(f"Running bgzip command: {bgzip_cmd}")
-    try:
-        result = subprocess.run(bgzip_cmd, shell=True, capture_output=True, text=True, check=True)
-        logging.info(f"bgzip command output: {result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"bgzip command failed with error: {e.stderr}")
-
-    tabix_cmd = f"tabix --zero-based --preset bed {prefix}.fragments.tsv.gz"
-    logging.info(f"Running tabix command: {tabix_cmd}")
-    try:
-        result = subprocess.run(tabix_cmd, shell=True, capture_output=True, text=True, check=True)
-        logging.info(f"tabix command output: {result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"tabix command failed with error: {e.stderr}")
