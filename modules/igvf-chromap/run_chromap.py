@@ -245,7 +245,7 @@ def generate_bam(index_dir, read_format, reference_fasta, prefix, subpool, threa
     # Create the command line string and run it using subprocess
     barcode_translate_param = f"--barcode-translate {barcode_translate}" if barcode_translate else ""
 
-    cmd = f"chromap -x {index_dir}/index --read-format {read_format} -r {reference_fasta} --remove-pcr-duplicates --remove-pcr-duplicates-at-cell-level --trim-adapters --low-mem --SAM -l 2000 --bc-error-threshold 1 -t {threads} --bc-probability-threshold 0.90 -q 30 --barcode-whitelist {barcode_onlist} {barcode_translate_param} --summary {prefix}.barcode.summary.csv -1 {read1} -2 {read2} -b {read_barcode} | awk -v suffix={subpool} '{{OFS=\"\\t\"; for (i=12; i<=NF; i++) if ($i ~ /^CB:Z:/) $i = $i\"_\"suffix; print $0}}' | samtools view -bS - > {prefix}.bam"
+    cmd = f"chromap -x {index_dir}/index --read-format {read_format} -r {reference_fasta} --remove-pcr-duplicates --remove-pcr-duplicates-at-cell-level --trim-adapters --low-mem --SAM -l 2000 --bc-error-threshold 1 -t {threads} --bc-probability-threshold 0.90 -q 30 --barcode-whitelist {barcode_onlist} {barcode_translate_param} --summary {prefix}.barcode.summary.csv -1 {read1} -2 {read2} -b {read_barcode} -o /dev/stdout | awk -v suffix={subpool} '{{OFS=\"\\t\"; for (i=12; i<=NF; i++) if ($i ~ /^CB:Z:/) $i = $i\"_\"suffix; print $0}}' | samtools view -bS - > {prefix}.bam"
     run_shell_cmd(cmd)
 
     # Append the subpool to the barcodes in the fragment file.
