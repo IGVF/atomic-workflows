@@ -122,7 +122,7 @@ def index_nac(output_dir, temp_dir, genome_fasta, gtf):
     run_shell_cmd(cmd)
     
     # Archive the directory
-    archive_cmd = f"tar --exclude='*.fasta' -kzcvf ../{output_dir}.tar.gz -C {output_dir} ."
+    archive_cmd = f"tar --exclude='*.fasta' -zcvf {output_dir}.tar.gz -C {output_dir} ."
     run_shell_cmd(archive_cmd)
 
 
