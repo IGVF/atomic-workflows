@@ -4,7 +4,7 @@
 # Based on Python
 ############################################################
 
-FROM python:3.10-slim
+FROM python:3.10.16-slim
 
 LABEL maintainer="Eugenio Mattei"
 LABEL software="IGVF single-cell pipeline"
