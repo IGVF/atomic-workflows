@@ -166,6 +166,7 @@ def quantify_nac(temp_dir, index_dir, read_format, output_dir, strand, subpool, 
     # Create the command line string and run it using subprocess
     temp_dir_param = f"--tmp {temp_dir}" if temp_dir else ""
     replacement_list_param = f"-r {replacement_list}" if replacement_list else ""
+    h5ad_location_suffix = f"_modified" if replacement_list else ""
     interleaved_fastqs_str = " ".join(interleaved_fastqs)
     cmd = f"kb count --workflow=nac {temp_dir_param} -i {index_dir}/index.idx -g {index_dir}/t2g.txt -c1 {index_dir}/cdna.txt -c2 {index_dir}/nascent.txt --sum=total -x {read_format} -w {barcode_onlist} {replacement_list_param} --strand {strand} -o {output_dir} --h5ad -t {threads} {interleaved_fastqs_str}"
     logging.info(f"Running command: {cmd}")
@@ -173,10 +174,10 @@ def quantify_nac(temp_dir, index_dir, read_format, output_dir, strand, subpool, 
 
     # Append the subpool to the barcodes in the h5ad file
     if subpool:
-        h5ad_file = f"{output_dir}/counts_unfiltered/adata.h5ad"
+        h5ad_file = f"{output_dir}/counts_unfiltered{h5ad_location_suffix}/adata.h5ad"
         append_suffix_to_h5ad(h5ad_file, subpool)
         logging.info(f"Appended subpool '{subpool}' to barcodes in {h5ad_file}.")
-        cmd = f"sed -i 's/$/_{subpool}/' {output_dir}/counts_unfiltered/cells_x_genes.barcodes.txt"
+        cmd = f"sed -i 's/$/_{subpool}/' {output_dir}/counts_unfiltered{h5ad_location_suffix}/cells_x_genes.barcodes.txt"
         logging.info(f"Running command: {cmd}")
         try:
             result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
@@ -185,7 +186,7 @@ def quantify_nac(temp_dir, index_dir, read_format, output_dir, strand, subpool, 
             logging.error(f"Command failed with error: {e.stderr}")
 
     # Rename the h5ad file
-    cmd = f"mv {output_dir}/counts_unfiltered/adata.h5ad {output_dir}.h5ad"
+    cmd = f"mv {output_dir}/counts_unfiltered{h5ad_location_suffix}/adata.h5ad {output_dir}.h5ad"
     logging.info(f"Running command: {cmd}")
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=True)
