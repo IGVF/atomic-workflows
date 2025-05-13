@@ -2,7 +2,7 @@ name: IGVF kallisto-bustools CI
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "dev", "main", "v1" ]
     paths:
       - 'modules/igvf-kallisto-bustools/**'
   pull_request:
