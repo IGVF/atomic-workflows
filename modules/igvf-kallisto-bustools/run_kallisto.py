@@ -194,8 +194,10 @@ def quantify_nac(temp_dir, index_dir, read_format, output_dir, strand, subpool, 
     except subprocess.CalledProcessError as e:
         logging.error(f"Command failed with error: {e.stderr}")
 
+    work_dir = os.environ["HOME"]
+
     # Archive the directory
-    archive_cmd = f"tar -kzcvf {output_dir}.tar.gz {output_dir}"
+    archive_cmd = f"tar -zcvf {output_dir}.tar.gz -C /software README.md -C {work_dir} {output_dir}"
     logging.info(f"Running archive command: {archive_cmd}")
     try:
         result = subprocess.run(archive_cmd, shell=True, capture_output=True, text=True, check=True)
