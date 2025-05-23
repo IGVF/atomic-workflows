@@ -1,6 +1,6 @@
 [project]
 name = "igvf-kallisto-bustools"
-version = "1.0.0"
+version = "1.1.0"
 description = "Align scRNA using kallisto-bustools"
 requires-python = "==3.10.16"
 dependencies = [

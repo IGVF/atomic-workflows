@@ -2,7 +2,7 @@ name: IGVF Chromap CI
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "dev", "main", "v1" ]
     paths:
       - 'modules/igvf-chromap/**'
   pull_request:
