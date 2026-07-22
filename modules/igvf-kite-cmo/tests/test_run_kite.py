@@ -122,7 +122,7 @@ def test_prepare_barcodes_local_file(runner, tmp_path):
 @patch('run_kite.download_igvf_tabular_file')
 def test_prepare_barcodes_accession(mock_download, mock_session, runner, tmp_path):
     rows = [{'multiseq_bc': 'TTGTCACGGTAATTA', 'CMO ID': 'CMO301'}]
-    mock_download.return_value = _make_csv_gz(rows, ['multiseq_bc', 'CMO ID'])
+    mock_download.return_value = (_make_csv_gz(rows, ['multiseq_bc', 'CMO ID']), 'csv')
     mock_session.return_value = MagicMock()
     output = tmp_path / "out.tsv.gz"
 
@@ -157,6 +157,36 @@ def test_prepare_barcodes_custom_columns(runner, tmp_path):
     with gzip.open(output, 'rt') as fh:
         lines = fh.read().splitlines()
     assert lines == ['TTGTCACGGTAATTA\tCMO301']
+
+
+def test_prepare_barcodes_local_tsv_file(runner, tmp_path):
+    def _make_tsv_gz(rows, fieldnames):
+        buf = io.StringIO()
+        writer = csv.DictWriter(buf, fieldnames=fieldnames, delimiter='\t')
+        writer.writeheader()
+        writer.writerows(rows)
+        return gzip.compress(buf.getvalue().encode())
+
+    tsv_gz = tmp_path / "barcodes.tsv.gz"
+    rows = [
+        {'barcode': 'TGAGACCT', 'sample description': 'sample_A'},
+        {'barcode': 'GCACACGC', 'sample description': 'sample_B'},
+    ]
+    tsv_gz.write_bytes(_make_tsv_gz(rows, ['barcode', 'sample description']))
+    output = tmp_path / "out.tsv.gz"
+
+    result = runner.invoke(cli, [
+        'prepare-barcodes',
+        '--input', str(tsv_gz),
+        '--sequence-col', 'barcode',
+        '--name-col', 'sample description',
+        '--output', str(output),
+    ])
+
+    assert result.exit_code == 0, result.output
+    with gzip.open(output, 'rt') as fh:
+        lines = fh.read().splitlines()
+    assert lines == ['TGAGACCT\tsample_A', 'GCACACGC\tsample_B']
 
 
 def test_prepare_barcodes_missing_column(runner, tmp_path):

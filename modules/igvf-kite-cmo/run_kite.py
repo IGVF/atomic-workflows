@@ -27,11 +27,16 @@ def igvf_session():
 
 
 def download_igvf_tabular_file(accession, session):
-    url = f"{IGVF_API_BASE}/tabular-files/{accession}/@@download/{accession}.csv.gz"
-    logging.info(f"Downloading {accession} from {url}")
+    meta = session.get(f"{IGVF_API_BASE}/tabular-files/{accession}/?format=json")
+    meta.raise_for_status()
+    meta_data = meta.json()
+    href = meta_data["href"]
+    file_format = meta_data.get("file_format", "tsv")
+    url = f"{IGVF_API_BASE}{href}"
+    logging.info(f"Downloading {accession} from {url} (format: {file_format})")
     resp = session.get(url, stream=True, allow_redirects=True)
     resp.raise_for_status()
-    return resp.content
+    return resp.content, file_format
 
 
 def run_shell_cmd(cmd):
@@ -204,14 +209,16 @@ def prepare_barcodes(accession, input_file, sequence_col, name_col, output):
 
     if accession:
         session = igvf_session()
-        raw = download_igvf_tabular_file(accession, session)
+        raw, file_format = download_igvf_tabular_file(accession, session)
     else:
         with open(input_file, 'rb') as fh:
             raw = fh.read()
+        file_format = 'tsv' if input_file.endswith(('.tsv', '.tsv.gz')) else 'csv'
 
     text = gzip.decompress(raw).decode() if raw[:2] == b'\x1f\x8b' else raw.decode()
+    delimiter = '\t' if file_format == 'tsv' else ','
 
-    reader = csv.DictReader(io.StringIO(text))
+    reader = csv.DictReader(io.StringIO(text), delimiter=delimiter)
     fieldnames = reader.fieldnames or []
     if sequence_col not in fieldnames:
         raise click.ClickException(
