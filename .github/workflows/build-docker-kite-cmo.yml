@@ -2,11 +2,11 @@ name: IGVF kite-cmo CI
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "main", "add-igvf-kite-cmo-module" ]
     paths:
       - 'modules/igvf-kite-cmo/**'
   pull_request:
-    branches: [ "dev", "main" ]
+    branches: [ "main", "add-igvf-kite-cmo-module" ]
     paths:
       - 'modules/igvf-kite-cmo/**'
   workflow_dispatch:
