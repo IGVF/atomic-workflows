@@ -19,7 +19,7 @@ def test_index_kite(mock_run_shell_cmd, runner, tmp_path):
     output_dir.mkdir()
 
     result = runner.invoke(cli, [
-        'index', 'kite',
+        'index',
         '--output_dir', str(output_dir),
         '--cmo_barcodes', str(cmo_barcodes),
     ])
@@ -43,7 +43,7 @@ def test_index_kite_with_temp_dir(mock_run_shell_cmd, runner, tmp_path):
     output_dir.mkdir()
 
     result = runner.invoke(cli, [
-        'index', 'kite',
+        'index',
         '--output_dir', str(output_dir),
         '--cmo_barcodes', str(cmo_barcodes),
         '--temp_dir', str(tmp_path),
@@ -69,7 +69,7 @@ def test_quantify_kite(mock_run_shell_cmd, runner, tmp_path):
     r2.write_text("")
 
     result = runner.invoke(cli, [
-        'quantify', 'kite',
+        'quantify',
         '--index_dir', str(index_dir),
         '--output_dir', str(output_dir),
         '--barcode_onlist', str(onlist),

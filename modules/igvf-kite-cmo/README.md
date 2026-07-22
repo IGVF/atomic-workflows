@@ -36,7 +36,7 @@ The `igvf-kite-cmo` tool provides a CLI with subcommands for index creation and 
 
 ### Command
 ```sh
-run_kite index kite \
+run_kite index \
     --output_dir <output_dir> \
     --cmo_barcodes <cmo_barcodes.tsv> \
     --temp_dir <temp_dir>
@@ -78,7 +78,7 @@ A compressed file `<output_dir>.tar.gz` containing:
 
 ### Command
 ```sh
-run_kite quantify kite \
+run_kite quantify \
     --index_dir <index_dir> \
     --output_dir <output_dir> \
     --barcode_onlist <onlist.tsv> \

@@ -51,21 +51,14 @@ def cli():
     pass
 
 
-# Index sub-command
-@cli.group("index")
-def index():
-    """Manages the KITE index creation step."""
-    pass
-
-
-@index.command("kite")
+@cli.command("index")
 @click.option('--output_dir', type=click.Path(exists=True), required=True,
               help='Directory where index files will be saved.')
 @click.option('--cmo_barcodes', type=click.Path(exists=True), required=True,
               help='CMO barcode TSV file (two columns: sequence, name; no header).')
 @click.option('--temp_dir', type=str, required=False, default=None,
               help='Path to a temporary directory.')
-def index_kite(output_dir, cmo_barcodes, temp_dir):
+def index(output_dir, cmo_barcodes, temp_dir):
     """
     Creates the kb KITE index from a CMO barcode TSV and archives the output.
 
@@ -93,14 +86,7 @@ def index_kite(output_dir, cmo_barcodes, temp_dir):
     logging.info(f"Index archive created: {output_dir}.tar.gz")
 
 
-# Quantification sub-command
-@cli.group("quantify")
-def quantify():
-    """Manages the KITE quantification step."""
-    pass
-
-
-@quantify.command("kite")
+@cli.command("quantify")
 @click.option('--index_dir', type=click.Path(exists=True), required=True,
               help='Directory containing the KITE index files (cmo.idx, cmo_t2g.txt).')
 @click.option('--output_dir', type=click.Path(exists=True), required=True,
@@ -116,7 +102,7 @@ def quantify():
 @click.option('--temp_dir', type=str, required=False, default=None,
               help='Path to a temporary directory.')
 @click.argument('fastqs', nargs=2, type=str, required=True)
-def quantify_kite(index_dir, output_dir, barcode_onlist, read_format, threads, memory, temp_dir, fastqs):
+def quantify(index_dir, output_dir, barcode_onlist, read_format, threads, memory, temp_dir, fastqs):
     """
     Runs the KITE CMO quantification pipeline.
 
