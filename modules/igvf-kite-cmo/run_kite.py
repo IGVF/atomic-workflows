@@ -176,10 +176,10 @@ def quantify(index_dir, output_dir, barcode_onlist, read_format, threads, memory
               help='IGVF file accession (e.g. IGVFFI9308MNHO). Downloads the CSV.gz from the IGVF portal.')
 @click.option('--input', 'input_file', type=click.Path(exists=True), default=None,
               help='Local CSV or CSV.gz file to use instead of downloading from IGVF.')
-@click.option('--sequence-col', type=str, default='sequence',
-              help='Column name for the CMO barcode sequence. Default: sequence.')
-@click.option('--name-col', type=str, default='name',
-              help='Column name for the CMO label. Default: name.')
+@click.option('--sequence-col', type=str, default='multiseq_bc',
+              help='Column name for the CMO barcode sequence. Default: multiseq_bc.')
+@click.option('--name-col', type=str, default='CMO ID',
+              help='Column name for the CMO label. Default: CMO ID.')
 @click.option('--output', type=str, required=True,
               help='Output path for the gzipped two-column TSV (sequence\\tname, no header).')
 def prepare_barcodes(accession, input_file, sequence_col, name_col, output):
@@ -192,8 +192,8 @@ def prepare_barcodes(accession, input_file, sequence_col, name_col, output):
     Args:
         accession (str): IGVF file accession for the CMO barcode CSV.
         input_file (str): Local CSV or CSV.gz path.
-        sequence_col (str): Column name for barcode sequences.
-        name_col (str): Column name for barcode labels.
+        sequence_col (str): Column name for barcode sequences (IGVF: multiseq_bc).
+        name_col (str): Column name for barcode labels (IGVF: CMO ID).
         output (str): Output .tsv.gz path.
 
     Returns:

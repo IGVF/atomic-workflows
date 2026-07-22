@@ -100,10 +100,10 @@ def _make_csv_gz(rows, fieldnames):
 def test_prepare_barcodes_local_file(runner, tmp_path):
     csv_gz = tmp_path / "barcodes.csv.gz"
     rows = [
-        {'sequence': 'TTGTCACGGTAATTA', 'name': 'CMO301'},
-        {'sequence': 'CCGTGCCTAGCAAGT', 'name': 'CMO302'},
+        {'multiseq_bc': 'TTGTCACGGTAATTA', 'CMO ID': 'CMO301'},
+        {'multiseq_bc': 'CCGTGCCTAGCAAGT', 'CMO ID': 'CMO302'},
     ]
-    csv_gz.write_bytes(_make_csv_gz(rows, ['sequence', 'name']))
+    csv_gz.write_bytes(_make_csv_gz(rows, ['multiseq_bc', 'CMO ID']))
     output = tmp_path / "out.tsv.gz"
 
     result = runner.invoke(cli, [
@@ -121,8 +121,8 @@ def test_prepare_barcodes_local_file(runner, tmp_path):
 @patch('run_kite.igvf_session')
 @patch('run_kite.download_igvf_tabular_file')
 def test_prepare_barcodes_accession(mock_download, mock_session, runner, tmp_path):
-    rows = [{'sequence': 'TTGTCACGGTAATTA', 'name': 'CMO301'}]
-    mock_download.return_value = _make_csv_gz(rows, ['sequence', 'name'])
+    rows = [{'multiseq_bc': 'TTGTCACGGTAATTA', 'CMO ID': 'CMO301'}]
+    mock_download.return_value = _make_csv_gz(rows, ['multiseq_bc', 'CMO ID'])
     mock_session.return_value = MagicMock()
     output = tmp_path / "out.tsv.gz"
 
@@ -161,19 +161,19 @@ def test_prepare_barcodes_custom_columns(runner, tmp_path):
 
 def test_prepare_barcodes_missing_column(runner, tmp_path):
     csv_gz = tmp_path / "barcodes.csv.gz"
-    rows = [{'sequence': 'TTGTCACGGTAATTA', 'name': 'CMO301'}]
-    csv_gz.write_bytes(_make_csv_gz(rows, ['sequence', 'name']))
+    rows = [{'multiseq_bc': 'TTGTCACGGTAATTA', 'CMO ID': 'CMO301'}]
+    csv_gz.write_bytes(_make_csv_gz(rows, ['multiseq_bc', 'CMO ID']))
     output = tmp_path / "out.tsv.gz"
 
     result = runner.invoke(cli, [
         'prepare-barcodes',
         '--input', str(csv_gz),
-        '--name-col', 'label',
+        '--name-col', 'nonexistent_col',
         '--output', str(output),
     ])
 
     assert result.exit_code != 0
-    assert 'label' in result.output
+    assert 'nonexistent_col' in result.output
 
 
 def test_prepare_barcodes_mutual_exclusion(runner, tmp_path):
@@ -183,7 +183,7 @@ def test_prepare_barcodes_mutual_exclusion(runner, tmp_path):
     assert result.exit_code != 0
 
     csv_gz = tmp_path / "f.csv.gz"
-    csv_gz.write_bytes(_make_csv_gz([], ['sequence', 'name']))
+    csv_gz.write_bytes(_make_csv_gz([], ['multiseq_bc', 'CMO ID']))
     result = runner.invoke(cli, [
         'prepare-barcodes',
         '--accession', 'IGVFFI9308MNHO',

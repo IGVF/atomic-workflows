@@ -34,8 +34,8 @@ Converts a CMO barcode CSV (from IGVF or a local file) into the gzipped two-colu
 ### Arguments
 - `--accession`: IGVF file accession (e.g. `IGVFFI9308MNHO`). Downloads the CSV.gz from the IGVF portal using `IGVF_API_KEY` and `IGVF_SECRET_KEY` from a `.env` file.
 - `--input`: Local CSV or CSV.gz file (mutually exclusive with `--accession`).
-- `--sequence-col`: Column name for barcode sequences (default: `sequence`).
-- `--name-col`: Column name for barcode labels (default: `name`).
+- `--sequence-col`: Column name for barcode sequences (default: `multiseq_bc`, matching IGVF `IGVFFI9308MNHO`).
+- `--name-col`: Column name for barcode labels (default: `CMO ID`, matching IGVF `IGVFFI9308MNHO`).
 - `--output`: Output path for the gzipped TSV (`sequence\tname`, no header).
 
 ### Command
