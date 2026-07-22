@@ -158,3 +158,7 @@ def quantify_kite(index_dir, output_dir, barcode_onlist, read_format, threads, m
     logging.info(f"Running archive command: {archive_cmd}")
     run_shell_cmd(archive_cmd)
     logging.info(f"Done. Results: {output_dir}")
+
+
+if __name__ == "__main__":
+    cli()
