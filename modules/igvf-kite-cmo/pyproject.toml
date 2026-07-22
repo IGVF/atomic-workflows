@@ -1,0 +1,19 @@
+[project]
+name = "igvf-kite-cmo"
+version = "1.0.0"
+description = "Quantify CMO tags per cell barcode using the kb KITE workflow"
+requires-python = "==3.12.1"
+dependencies = [
+    "click>=8.1.7",
+    "kb-python==0.29.1",
+]
+
+[project.scripts]
+run_kite = "run_kite:cli"
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.module]
+name = "run_kite"
