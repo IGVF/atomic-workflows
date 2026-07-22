@@ -1,12 +1,37 @@
+import csv
+import gzip
+import io
 import click
 import logging
 import os
+import requests
 import signal
 import subprocess
 import sys
+from dotenv import find_dotenv, load_dotenv
 
 # Configure logging
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+
+IGVF_API_BASE = "https://api.data.igvf.org"
+
+
+def igvf_session():
+    load_dotenv(find_dotenv(usecwd=True))
+    session = requests.Session()
+    key = os.environ.get("IGVF_API_KEY")
+    secret = os.environ.get("IGVF_SECRET_KEY")
+    if key and secret:
+        session.auth = (key, secret)
+    return session
+
+
+def download_igvf_tabular_file(accession, session):
+    url = f"{IGVF_API_BASE}/tabular-files/{accession}/@@download/{accession}.csv.gz"
+    logging.info(f"Downloading {accession} from {url}")
+    resp = session.get(url, stream=True, allow_redirects=True)
+    resp.raise_for_status()
+    return resp.content
 
 
 def run_shell_cmd(cmd):
@@ -144,6 +169,67 @@ def quantify(index_dir, output_dir, barcode_onlist, read_format, threads, memory
     logging.info(f"Running archive command: {archive_cmd}")
     run_shell_cmd(archive_cmd)
     logging.info(f"Done. Results: {output_dir}")
+
+
+@cli.command("prepare-barcodes")
+@click.option('--accession', type=str, default=None,
+              help='IGVF file accession (e.g. IGVFFI9308MNHO). Downloads the CSV.gz from the IGVF portal.')
+@click.option('--input', 'input_file', type=click.Path(exists=True), default=None,
+              help='Local CSV or CSV.gz file to use instead of downloading from IGVF.')
+@click.option('--sequence-col', type=str, default='sequence',
+              help='Column name for the CMO barcode sequence. Default: sequence.')
+@click.option('--name-col', type=str, default='name',
+              help='Column name for the CMO label. Default: name.')
+@click.option('--output', type=str, required=True,
+              help='Output path for the gzipped two-column TSV (sequence\\tname, no header).')
+def prepare_barcodes(accession, input_file, sequence_col, name_col, output):
+    """
+    Converts a CMO barcode CSV (from IGVF or a local file) to a gzipped two-column TSV
+    for use with the KITE index command.
+
+    Exactly one of --accession or --input must be provided.
+
+    Args:
+        accession (str): IGVF file accession for the CMO barcode CSV.
+        input_file (str): Local CSV or CSV.gz path.
+        sequence_col (str): Column name for barcode sequences.
+        name_col (str): Column name for barcode labels.
+        output (str): Output .tsv.gz path.
+
+    Returns:
+        output: Gzipped TSV with columns (sequence, name), no header.
+    """
+    if (accession is None) == (input_file is None):
+        raise click.UsageError("Provide exactly one of --accession or --input.")
+
+    if accession:
+        session = igvf_session()
+        raw = download_igvf_tabular_file(accession, session)
+    else:
+        with open(input_file, 'rb') as fh:
+            raw = fh.read()
+
+    text = gzip.decompress(raw).decode() if raw[:2] == b'\x1f\x8b' else raw.decode()
+
+    reader = csv.DictReader(io.StringIO(text))
+    fieldnames = reader.fieldnames or []
+    if sequence_col not in fieldnames:
+        raise click.ClickException(
+            f"Column '{sequence_col}' not found. Available columns: {fieldnames}"
+        )
+    if name_col not in fieldnames:
+        raise click.ClickException(
+            f"Column '{name_col}' not found. Available columns: {fieldnames}"
+        )
+
+    rows = [(row[sequence_col], row[name_col]) for row in reader]
+    logging.info(f"Writing {len(rows)} barcodes to {output}")
+
+    with gzip.open(output, 'wt') as out:
+        for seq, name in rows:
+            out.write(f"{seq}\t{name}\n")
+
+    logging.info(f"Done. Barcode file written to {output}")
 
 
 if __name__ == "__main__":

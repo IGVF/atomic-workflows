@@ -23,7 +23,44 @@ Alternative method 2 - Run the official docker:
     ```
 
 ## Usage
-The `igvf-kite-cmo` tool provides a CLI with subcommands for index creation and quantification.
+The `igvf-kite-cmo` tool provides a CLI with three subcommands: barcode preparation, index creation, and quantification.
+
+---
+
+## Barcode Preparation
+
+Converts a CMO barcode CSV (from IGVF or a local file) into the gzipped two-column TSV format required by the KITE index command.
+
+### Arguments
+- `--accession`: IGVF file accession (e.g. `IGVFFI9308MNHO`). Downloads the CSV.gz from the IGVF portal using `IGVF_API_KEY` and `IGVF_SECRET_KEY` from a `.env` file.
+- `--input`: Local CSV or CSV.gz file (mutually exclusive with `--accession`).
+- `--sequence-col`: Column name for barcode sequences (default: `sequence`).
+- `--name-col`: Column name for barcode labels (default: `name`).
+- `--output`: Output path for the gzipped TSV (`sequence\tname`, no header).
+
+### Command
+```sh
+# From IGVF portal
+run_kite prepare-barcodes \
+    --accession IGVFFI9308MNHO \
+    --output cmo_barcodes_for_kite.tsv.gz
+
+# From local file with custom column names
+run_kite prepare-barcodes \
+    --input cmo_barcodes.csv.gz \
+    --sequence-col barcode_seq \
+    --name-col cmo_id \
+    --output cmo_barcodes_for_kite.tsv.gz
+```
+
+IGVF authentication requires a `.env` file in the working directory (or any parent) with:
+```
+IGVF_API_KEY=<your_key>
+IGVF_SECRET_KEY=<your_secret>
+```
+
+### Output
+- `cmo_barcodes_for_kite.tsv.gz`: Gzipped TSV with columns (sequence, name), no header. Pass directly to `run_kite index --cmo_barcodes`.
 
 ---
 

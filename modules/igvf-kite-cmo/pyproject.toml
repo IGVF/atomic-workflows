@@ -6,6 +6,8 @@ requires-python = "==3.12.1"
 dependencies = [
     "click>=8.1.7",
     "kb-python==0.29.1",
+    "requests>=2.32",
+    "python-dotenv>=1.0",
 ]
 
 [project.scripts]
