@@ -129,10 +129,16 @@ def index(output_dir, cmo_barcodes, temp_dir):
               help='Number of threads. Default: 8.')
 @click.option('--memory', type=str, default='4G',
               help='Memory limit for bustools sort. Default: 4G.')
+@click.option('--strand', type=click.Choice(['unstranded', 'forward', 'reverse']),
+              default='unstranded',
+              help='Strandedness passed to kb count. Default: unstranded. Set to '
+                   '"forward" to disambiguate feature tags that are reverse '
+                   'complements of one another; under unstranded counting such a '
+                   'pair collapses to the same equivalence class and both drop to 0.')
 @click.option('--temp_dir', type=str, required=False, default=None,
               help='Path to a temporary directory.')
 @click.argument('fastqs', nargs=2, type=str, required=True)
-def quantify(index_dir, output_dir, barcode_onlist, read_format, threads, memory, temp_dir, fastqs):
+def quantify(index_dir, output_dir, barcode_onlist, read_format, threads, memory, strand, temp_dir, fastqs):
     """
     Runs the KITE CMO quantification pipeline.
 
@@ -160,6 +166,7 @@ def quantify(index_dir, output_dir, barcode_onlist, read_format, threads, memory
         f"-i {index_dir}/cmo.idx "
         f"-g {index_dir}/cmo_t2g.txt "
         f"-x {read_format} "
+        f"--strand {strand} "
         f"-w {barcode_onlist} "
         f"--h5ad "
         f"-t {threads} "
